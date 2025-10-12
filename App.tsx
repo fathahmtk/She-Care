@@ -7,34 +7,33 @@ import Footer from './components/Footer';
 import AnimatedSection from './components/AnimatedSection';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import TestimonialCarousel from './components/TestimonialCarousel';
-import RecipeGenerator from './components/RecipeGenerator';
 import { CartProvider } from './contexts/CartContext';
+import { SearchProvider } from './contexts/SearchContext';
 
 const App: React.FC = () => {
   return (
     <CartProvider>
-      <div className="bg-gradient-to-br from-background-start to-background-end text-text-primary font-body">
-        <Header />
-        <main>
-          <Hero />
+      <SearchProvider>
+        <div className="bg-gradient-to-br from-background-start to-background-end text-text-primary font-body">
+          <Header />
+          <main>
+            <Hero />
+            <AnimatedSection>
+              <ProductShowcase />
+            </AnimatedSection>
+            <AnimatedSection>
+              <TestimonialCarousel />
+            </AnimatedSection>
+            <AnimatedSection>
+              <Cta />
+            </AnimatedSection>
+          </main>
           <AnimatedSection>
-            <ProductShowcase />
+            <Footer />
           </AnimatedSection>
-          <AnimatedSection>
-            <TestimonialCarousel />
-          </AnimatedSection>
-          <AnimatedSection>
-            <RecipeGenerator />
-          </AnimatedSection>
-          <AnimatedSection>
-            <Cta />
-          </AnimatedSection>
-        </main>
-        <AnimatedSection>
-          <Footer />
-        </AnimatedSection>
-        <ScrollToTopButton />
-      </div>
+          <ScrollToTopButton />
+        </div>
+      </SearchProvider>
     </CartProvider>
   );
 };

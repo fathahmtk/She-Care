@@ -2,7 +2,7 @@ import React from 'react';
 
 const Logo: React.FC = () => {
   return (
-    <a href="#" aria-label="SHE CARE Home">
+    <a href="#" aria-label="shecare.co Home">
       <svg
         viewBox="0 0 150 40"
         xmlns="http://www.w3.org/2000/svg"
@@ -29,15 +29,15 @@ const Logo: React.FC = () => {
           </g>
         </g>
         <text
-          x="55"
+          x="52"
           y="26"
           fontFamily="Cormorant Garamond, serif"
-          fontSize="20"
+          fontSize="18"
           fontWeight="600"
           fill="currentColor"
           letterSpacing="0.05em"
         >
-          SHE CARE
+          shecare.co
         </text>
       </svg>
     </a>

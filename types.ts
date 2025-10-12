@@ -1,9 +1,29 @@
-import type * as React from 'react';
+// FIX: Switched from a namespace import to a default import for React. The namespace import was preventing TypeScript from correctly applying the global JSX type augmentations, which is necessary for recognizing custom elements like 'model-viewer'.
+import React from 'react';
+
+// FIX: Globally declare the 'model-viewer' custom element to ensure TypeScript recognizes it in JSX across the application.
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'model-viewer': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement> & {
+          src?: string;
+          alt?: string;
+          cameraControls?: boolean;
+          autoRotate?: boolean;
+          shadowIntensity?: string;
+          style?: React.CSSProperties;
+        },
+        HTMLElement
+      >;
+    }
+  }
+}
 
 export interface Product {
   id: number;
   name: string;
-  description: string;
+  description:string;
   imageUrls: string[];
   modelUrl?: string;
   category: string;
@@ -14,6 +34,9 @@ export interface Product {
   inStock: boolean;
   tag: string;
   color: string;
+  materials?: string;
+  dimensions?: string;
+  careInstructions?: string;
 }
 
 export interface Testimonial {

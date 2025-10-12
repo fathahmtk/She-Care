@@ -5,7 +5,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 1,
     name: "Menstrual Pain Relief Belt – Pink Edition",
-    description: "SHE CARE’s smart thermal pain-relief belt delivers soothing warmth and vibration therapy to ease menstrual cramps instantly. Designed in a soft pastel pink with adjustable comfort fit for all-day relief.",
+    description: "shecare.co’s smart thermal pain-relief belt delivers soothing warmth and vibration therapy to ease menstrual cramps instantly. Designed in a soft pastel pink with adjustable comfort fit for all-day relief.",
     imageUrls: [
       "https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
       "https://images.pexels.com/photos/7262911/pexels-photo-7262911.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
@@ -23,6 +23,9 @@ export const PRODUCTS: Product[] = [
     color: "Pink",
     category: "Women Wellness",
     rating: 5,
+    materials: "Premium soft-touch microfiber, medical-grade silicone",
+    dimensions: "Adjustable strap fits waists 24-48 inches",
+    careInstructions: "Wipe clean with a damp cloth. Do not submerge in water. Store in a cool, dry place.",
   },
   {
     id: 2,
@@ -50,7 +53,7 @@ export const PRODUCTS: Product[] = [
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: 1,
-    quote: "SHE CARE has transformed my skin. The Golden Elixir Serum feels like pure luxury and has given me a glow I haven't seen in years. Absolutely worth it!",
+    quote: "shecare.co has transformed my skin. The Golden Elixir Serum feels like pure luxury and has given me a glow I haven't seen in years. Absolutely worth it!",
     author: "Eleanor Vance",
     rating: 5
   },

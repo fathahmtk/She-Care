@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-2 mb-8 md:mb-0">
-            <h2 className="text-2xl font-heading font-bold text-accent tracking-widest mb-4">SHE CARE</h2>
+            <h2 className="text-2xl font-heading font-bold text-accent tracking-widest mb-4">shecare.co</h2>
             <p className="text-text-secondary max-w-sm">
               Premium wellness and skincare dedicated to celebrating and nurturing the essence of womanhood.
             </p>
@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
 
         <div className="mt-16 pt-8 border-t border-border-color flex flex-col md:flex-row justify-between items-center">
           <p className="text-text-secondary/80 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SHE CARE. All Rights Reserved.
+            &copy; {new Date().getFullYear()} shecare.co. All Rights Reserved.
           </p>
           <div className="flex space-x-4">
             {SOCIAL_LINKS.map(social => (

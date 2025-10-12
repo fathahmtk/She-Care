@@ -5,7 +5,7 @@
 import React from 'react';
 import ImageWithFallback from './ImageWithFallback';
 
-// FIX: Use camelCase for web component props (e.g., cameraControls) in JSX type definitions to align with React's conventions. This resolves TypeScript errors with kebab-cased attributes in JSX.
+// FIX: Add global JSX type definition for the 'model-viewer' custom element to resolve JSX type errors.
 declare global {
   namespace JSX {
     interface IntrinsicElements {

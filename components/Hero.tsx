@@ -6,7 +6,7 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 bg-background-start opacity-40"></div>
       <div className="relative z-10 px-6 flex flex-col items-center">
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-4 tracking-wider leading-tight">
-          SHE CARE
+          shecare.co
         </h1>
         <p className="text-lg md:text-xl font-body font-light mb-8 max-w-2xl mx-auto">
           Experience instant menstrual pain relief with our smart thermal belt — designed for modern women.

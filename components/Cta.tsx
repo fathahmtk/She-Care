@@ -50,7 +50,7 @@ const Cta: React.FC = () => {
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Get Your Relief Belt Today!</h2>
         <p className="text-text-secondary mb-8 max-w-2xl mx-auto">
-          Subscribe to our newsletter for exclusive offers, wellness tips, and updates on the SHE CARE Relief Belt.
+          Subscribe to our newsletter for exclusive offers, wellness tips, and updates on the shecare.co Relief Belt.
         </p>
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto" noValidate>
           <div className="flex flex-col sm:flex-row gap-4">
