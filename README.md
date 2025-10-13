@@ -1,20 +1,36 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# She-Care — Ecommerce (Scaffold)
 
-# Run and deploy your AI Studio app
+This branch contains a production-ready scaffold for the She-Care ecommerce app.
 
-This contains everything you need to run your app locally.
+Stack:
+- Next.js (TypeScript)
+- Tailwind CSS
+- Prisma + PostgreSQL
+- Redis (optional)
+- Stripe for payments
+- Docker + docker-compose for local dev
+- GitHub Actions CI for test/build
 
-View your app in AI Studio: https://ai.studio/apps/drive/1USYi_KPnxYfbuHRm9E7VkWyAIuTRthnI
+Quickstart (local)
+1. Copy environment variables:
+   cp .env.example .env
+2. Start Postgres and Redis:
+   docker-compose up -d
+3. Install deps:
+   pnpm install
+4. Apply migrations:
+   pnpm prisma migrate dev --name init
+5. Start dev server:
+   pnpm dev
 
-## Run Locally
+Important scripts
+- pnpm dev — start Next dev server
+- pnpm build — production build
+- pnpm start — start production server after build
+- pnpm prisma:migrate — run prisma migrations
+- pnpm lint — run ESLint
+- pnpm test — run tests (if added)
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Notes
+- Replace Stripe keys and SMTP settings in .env before testing payments/emails.
+- This scaffold includes example webhook handling and a minimal data model.
