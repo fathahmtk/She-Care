@@ -5,24 +5,8 @@
 import React from 'react';
 import ImageWithFallback from './ImageWithFallback';
 
-// FIX: Add global JSX type definition for the 'model-viewer' custom element to resolve JSX type errors.
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'model-viewer': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement> & {
-          src?: string;
-          alt?: string;
-          cameraControls?: boolean;
-          autoRotate?: boolean;
-          shadowIntensity?: string;
-          style?: React.CSSProperties;
-        },
-        HTMLElement
-      >;
-    }
-  }
-}
+// FIX: Removed redundant global JSX type definition for 'model-viewer'.
+// This is now handled globally in index.tsx to fix a type conflict and avoid duplication.
 
 interface ProductGalleryProps {
   images: string[];

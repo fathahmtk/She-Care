@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 
 const Cta: React.FC = () => {
@@ -50,7 +51,7 @@ const Cta: React.FC = () => {
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Get Your Relief Belt Today!</h2>
         <p className="text-text-secondary mb-8 max-w-2xl mx-auto">
-          Subscribe to our newsletter for exclusive offers, wellness tips, and updates on the shecare.co Relief Belt.
+          Subscribe to our newsletter for exclusive offers, wellness tips, and updates on the shecarehub.com Relief Belt.
         </p>
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto" noValidate>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -72,7 +73,7 @@ const Cta: React.FC = () => {
             </div>
             <button 
               type="submit" 
-              className="bg-accent text-background-start font-body font-semibold py-3 px-8 border-2 border-accent hover:bg-transparent hover:text-accent transition-all duration-300 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed"
+              className="bg-accent text-background-start font-body font-semibold py-3 px-8 border-2 border-accent hover:bg-accent-hover transition-all duration-300 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-105"
               disabled={isLoading}
             >
               {isLoading ? (

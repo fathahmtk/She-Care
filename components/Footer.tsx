@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="lg:col-span-2 mb-8 md:mb-0">
-            <h2 className="text-2xl font-heading font-bold text-accent tracking-widest mb-4">shecare.co</h2>
+            <h2 className="text-2xl font-heading font-bold text-accent tracking-widest mb-4">shecarehub</h2>
             <p className="text-text-secondary max-w-sm">
               Premium wellness and skincare dedicated to celebrating and nurturing the essence of womanhood.
             </p>
@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               {FOOTER_LINKS.company.map(link => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-text-secondary hover:text-accent transition-colors">{link.name}</a>
+                  <a href={link.href} className="inline-block text-text-secondary hover:text-accent transition-all duration-300 ease-in-out hover:-translate-y-0.5">{link.name}</a>
                 </li>
               ))}
             </ul>
@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               {FOOTER_LINKS.support.map(link => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-text-secondary hover:text-accent transition-colors">{link.name}</a>
+                  <a href={link.href} className="inline-block text-text-secondary hover:text-accent transition-all duration-300 ease-in-out hover:-translate-y-0.5">{link.name}</a>
                 </li>
               ))}
             </ul>
@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               {FOOTER_LINKS.legal.map(link => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-text-secondary hover:text-accent transition-colors">{link.name}</a>
+                  <a href={link.href} className="inline-block text-text-secondary hover:text-accent transition-all duration-300 ease-in-out hover:-translate-y-0.5">{link.name}</a>
                 </li>
               ))}
             </ul>
@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
 
         <div className="mt-16 pt-8 border-t border-border-color flex flex-col md:flex-row justify-between items-center">
           <p className="text-text-secondary/80 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} shecare.co. All Rights Reserved.
+            &copy; {new Date().getFullYear()} shecarehub.com. All Rights Reserved.
           </p>
           <div className="flex space-x-4">
             {SOCIAL_LINKS.map(social => (
@@ -58,7 +58,7 @@ const Footer: React.FC = () => {
                 href={social.href} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-text-secondary hover:text-accent transition-colors"
+                className="text-text-secondary hover:text-accent transition-all duration-300 ease-in-out transform hover:scale-110 hover:-translate-y-1"
               >
                 <span className="sr-only">{social.name}</span>
                 <social.icon className="h-6 w-6" />

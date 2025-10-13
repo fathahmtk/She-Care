@@ -65,14 +65,14 @@ const TestimonialCarousel: React.FC = () => {
           {/* Navigation Arrows */}
           <button 
             onClick={prevTestimonial} 
-            className="absolute top-1/2 left-0 md:-left-12 transform -translate-y-1/2 p-2 rounded-full bg-surface shadow-md hover:bg-accent hover:text-background-start transition-colors text-text-primary z-10"
+            className="absolute top-1/2 left-0 md:-left-12 transform -translate-y-1/2 p-2 rounded-full bg-surface shadow-md hover:bg-accent hover:text-background-start transition-all duration-300 text-text-primary z-10 hover:scale-110"
             aria-label="Previous testimonial"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
           </button>
           <button 
             onClick={nextTestimonial} 
-            className="absolute top-1/2 right-0 md:-right-12 transform -translate-y-1/2 p-2 rounded-full bg-surface shadow-md hover:bg-accent hover:text-background-start transition-colors text-text-primary z-10"
+            className="absolute top-1/2 right-0 md:-right-12 transform -translate-y-1/2 p-2 rounded-full bg-surface shadow-md hover:bg-accent hover:text-background-start transition-all duration-300 text-text-primary z-10 hover:scale-110"
             aria-label="Next testimonial"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>

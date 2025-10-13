@@ -8,7 +8,7 @@ const ProductReviews: React.FC = () => {
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">From Our Community</h2>
         <p className="text-text-secondary mb-12 max-w-3xl mx-auto">
-          Real stories from real customers. See how SHE CARE is making a difference.
+          Real stories from real customers. See how shecarehub is making a difference.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {REVIEWS.map(review => (

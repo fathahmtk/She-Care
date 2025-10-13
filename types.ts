@@ -1,24 +1,5 @@
-// FIX: Switched from a namespace import to a default import for React. The namespace import was preventing TypeScript from correctly applying the global JSX type augmentations, which is necessary for recognizing custom elements like 'model-viewer'.
-import React from 'react';
-
-// FIX: Globally declare the 'model-viewer' custom element to ensure TypeScript recognizes it in JSX across the application.
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'model-viewer': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement> & {
-          src?: string;
-          alt?: string;
-          cameraControls?: boolean;
-          autoRotate?: boolean;
-          shadowIntensity?: string;
-          style?: React.CSSProperties;
-        },
-        HTMLElement
-      >;
-    }
-  }
-}
+// FIX: Re-added `import React from "react"`. The previous removal of this import from this widely-used types file appears to have caused a global JSX type resolution failure, leading to widespread "Property 'div' does not exist" errors. Reinstating it ensures React's types are loaded correctly.
+import React from "react";
 
 export interface Product {
   id: number;
@@ -57,12 +38,6 @@ export interface Review {
 export interface FooterLink {
   name: string;
   href: string;
-}
-
-export interface SocialLink {
-  name: string;
-  href: string;
-  icon: (props: React.SVGProps<SVGSVGElement>) => React.ReactElement;
 }
 
 export interface Recipe {

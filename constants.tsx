@@ -1,18 +1,19 @@
 import React from 'react';
-import type { Product, Testimonial, Review, FooterLink, SocialLink } from './types';
+// FIX: Removed SocialLink from this import as it's now defined locally in this file.
+import type { Product, Testimonial, Review, FooterLink } from './types';
 
 export const PRODUCTS: Product[] = [
   {
     id: 1,
     name: "Menstrual Pain Relief Belt – Pink Edition",
-    description: "shecare.co’s smart thermal pain-relief belt delivers soothing warmth and vibration therapy to ease menstrual cramps instantly. Designed in a soft pastel pink with adjustable comfort fit for all-day relief.",
+    description: "shecarehub.com’s smart thermal pain-relief belt delivers soothing warmth and vibration therapy to ease menstrual cramps instantly. Designed in a soft pastel pink with adjustable comfort fit for all-day relief.",
     imageUrls: [
-      "https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "https://images.pexels.com/photos/7262911/pexels-photo-7262911.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "https://images.pexels.com/photos/3738347/pexels-photo-3738347.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "https://images.pexels.com/photos/7262402/pexels-photo-7262402.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "https://images.pexels.com/photos/3785424/pexels-photo-3785424.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      "https://m.media-amazon.com/images/I/71YqDc-POJL.jpg",
+      "https://m.media-amazon.com/images/I/71yD2O6p7JL.jpg",
+      "https://m.media-amazon.com/images/I/71wE7-p-nRL.jpg",
+      "https://m.media-amazon.com/images/I/71b2-rJ+j+L.jpg",
+      "https://m.media-amazon.com/images/I/71JgXb7pYKL.jpg",
+      "https://m.media-amazon.com/images/I/61Nl-N-xSjL.jpg"
     ],
     modelUrl: undefined,
     price: 699,
@@ -53,7 +54,7 @@ export const PRODUCTS: Product[] = [
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: 1,
-    quote: "shecare.co has transformed my skin. The Golden Elixir Serum feels like pure luxury and has given me a glow I haven't seen in years. Absolutely worth it!",
+    quote: "shecarehub.com has transformed my skin. The Golden Elixir Serum feels like pure luxury and has given me a glow I haven't seen in years. Absolutely worth it!",
     author: "Eleanor Vance",
     rating: 5
   },
@@ -112,6 +113,14 @@ export const FOOTER_LINKS: { [key: string]: FooterLink[] } = {
     { name: "Terms of Service", href: "#" },
   ]
 };
+
+// FIX: Moved the SocialLink interface here from types.ts.
+// This co-locates the type definition with its usage and resolves a global JSX type conflict.
+export interface SocialLink {
+  name: string;
+  href: string;
+  icon: (props: React.SVGProps<SVGSVGElement>) => React.ReactElement;
+}
 
 // FIX: Replaced `React.FC` with explicit prop typing to match the `SocialLink` interface.
 const SocialIconFacebook = (props: React.SVGProps<SVGSVGElement>) => (

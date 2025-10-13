@@ -3,6 +3,7 @@ import Logo from './Logo';
 import { useCart } from '../contexts/CartContext';
 import CartDisplay from './CartDisplay';
 import { useSearch } from '../contexts/SearchContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const CartIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
@@ -16,11 +17,23 @@ const SearchIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     </svg>
 );
 
-const Header: React.FC = () => {
+const UserIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+);
+
+interface HeaderProps {
+  onLoginClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { cartItems } = useCart();
   const { searchQuery, setSearchQuery } = useSearch();
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,9 +52,18 @@ const Header: React.FC = () => {
         
         <div className="hidden md:flex items-center gap-8">
             <nav className="flex items-center space-x-8">
-              <a href="#products" className="text-text-primary hover:text-accent transition-colors duration-300 font-body tracking-wider">Product</a>
-              <a href="#testimonials" className="text-text-primary hover:text-accent transition-colors duration-300 font-body tracking-wider">Testimonials</a>
-              <a href="#contact" className="text-text-primary hover:text-accent transition-colors duration-300 font-body tracking-wider">Subscribe</a>
+              <a href="#products" className="relative text-text-primary font-body tracking-wider group transition-colors duration-300 hover:text-accent pb-1">
+                Product
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>
+              </a>
+              <a href="#testimonials" className="relative text-text-primary font-body tracking-wider group transition-colors duration-300 hover:text-accent pb-1">
+                Testimonials
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>
+              </a>
+              <a href="#contact" className="relative text-text-primary font-body tracking-wider group transition-colors duration-300 hover:text-accent pb-1">
+                Subscribe
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>
+              </a>
             </nav>
             <div className="relative">
               <input
@@ -58,12 +80,47 @@ const Header: React.FC = () => {
             </div>
         </div>
         
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
+          {/* Auth Section */}
+           <div className="relative">
+              {isAuthenticated && user ? (
+                 <div className="flex items-center gap-4">
+                    <span className="hidden md:block text-sm text-text-secondary">Welcome, {user.name.split(' ')[0]}!</span>
+                    <button onClick={logout} className="hidden md:block text-sm font-semibold text-text-primary hover:text-accent transition-colors duration-300">
+                        Logout
+                    </button>
+                    <button onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} className="md:hidden text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110" aria-label="Open profile menu" aria-expanded={isProfileMenuOpen}>
+                      <UserIcon />
+                    </button>
+                 </div>
+              ) : (
+                <>
+                  <button onClick={onLoginClick} className="hidden md:block bg-accent text-background-start font-body font-semibold py-2 px-5 border-2 border-accent hover:bg-accent-hover transition-all duration-300 ease-in-out text-sm rounded-md transform hover:scale-105">
+                      Login
+                  </button>
+                  <button onClick={onLoginClick} className="md:hidden text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110" aria-label="Open login modal">
+                      <UserIcon />
+                  </button>
+                </>
+              )}
+               {isAuthenticated && isProfileMenuOpen && (
+                 <div className="md:hidden absolute top-full right-0 mt-4 animate-fade-in z-50 bg-surface p-4 rounded-lg shadow-2xl border border-border-color w-48">
+                    <div className="pb-2 mb-2 border-b border-border-color">
+                      <p className="text-sm font-semibold text-text-primary">{user?.name}</p>
+                      <p className="text-xs text-text-secondary truncate">{user?.email}</p>
+                    </div>
+                    <button onClick={() => { logout(); setIsProfileMenuOpen(false); }} className="w-full text-left text-sm text-text-primary hover:text-accent transition-colors">
+                      Logout
+                    </button>
+                 </div>
+               )}
+          </div>
+
           {/* Cart Icon and Dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsCartOpen(!isCartOpen)}
-              className="relative text-text-primary hover:text-accent transition-colors duration-300"
+              className="relative text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110"
               aria-label={`Open cart with ${cartItems.length} items`}
               aria-expanded={isCartOpen}
             >
@@ -82,7 +139,7 @@ const Header: React.FC = () => {
             )}
           </div>
         
-          <button className="md:hidden text-text-primary">
+          <button className="md:hidden text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
