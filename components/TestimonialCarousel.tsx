@@ -85,7 +85,7 @@ const TestimonialCarousel: React.FC = () => {
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${currentIndex === index ? 'bg-accent' : 'bg-border-color hover:bg-accent/50'}`}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${currentIndex === index ? 'bg-accent scale-110' : 'bg-border-color hover:bg-accent/50 transform hover:scale-125'}`}
               aria-label={`Go to testimonial ${index + 1}`}
             ></button>
           ))}

@@ -1,11 +1,15 @@
+
 import React from 'react';
-// FIX: Removed SocialLink from this import as it's now defined locally in this file.
 import type { Product, Testimonial, Review, FooterLink } from './types';
+import SocialIconFacebook from './components/icons/SocialIconFacebook';
+import SocialIconInstagram from './components/icons/SocialIconInstagram';
+import SocialIconTwitter from './components/icons/SocialIconTwitter';
 
 export const PRODUCTS: Product[] = [
   {
     id: 1,
     name: "Menstrual Pain Relief Belt – Pink Edition",
+    brand: "SheCareHub",
     description: "shecarehub.com’s smart thermal pain-relief belt delivers soothing warmth and vibration therapy to ease menstrual cramps instantly. Designed in a soft pastel pink with adjustable comfort fit for all-day relief.",
     imageUrls: [
       "https://m.media-amazon.com/images/I/71YqDc-POJL.jpg",
@@ -13,7 +17,15 @@ export const PRODUCTS: Product[] = [
       "https://m.media-amazon.com/images/I/71wE7-p-nRL.jpg",
       "https://m.media-amazon.com/images/I/71b2-rJ+j+L.jpg",
       "https://m.media-amazon.com/images/I/71JgXb7pYKL.jpg",
-      "https://m.media-amazon.com/images/I/61Nl-N-xSjL.jpg"
+      "https://m.media-amazon.com/images/I/61Nl-N-xSjL.jpg",
+      "https://worldbeautycare.in/cdn/shop/files/3_140f7d24-320c-43f1-b957-e685f02c6114.jpg?v=1711690947",
+      "https://worldbeautycare.in/cdn/shop/files/4_61159816-7788-46d5-91f8-086782a2dae7.jpg?v=1711690947",
+      "https://worldbeautycare.in/cdn/shop/files/5_ff1acb6c-8438-4e89-af0a-85d18d4ed04e.jpg?v=1711690947",
+      "https://worldbeautycare.in/cdn/shop/files/7_70d10b78-b3d9-482f-871d-531e2898c56c.jpg?v=1711690947",
+      "https://worldbeautycare.in/cdn/shop/files/2_ef9e1a12-658b-4963-8a9d-cae979a784d1.jpg?v=1711690947",
+      "https://worldbeautycare.in/cdn/shop/files/6_714d3b84-6997-4007-bd8b-70337c7edde0.jpg?v=1711690947",
+      "https://worldbeautycare.in/cdn/shop/files/8_86a11756-319c-43f1-b960-934c9f131a19.jpg?v=1711690947",
+      "https://worldbeautycare.in/cdn/shop/files/9_c931448b-e85d-4f1b-a579-24250106208a.jpg?v=1711690947"
     ],
     modelUrl: undefined,
     price: 699,
@@ -23,7 +35,8 @@ export const PRODUCTS: Product[] = [
     tag: "New Arrival",
     color: "Pink",
     category: "Women Wellness",
-    rating: 5,
+    rating: 4.8,
+    reviewCount: 152,
     materials: "Premium soft-touch microfiber, medical-grade silicone",
     dimensions: "Adjustable strap fits waists 24-48 inches",
     careInstructions: "Wipe clean with a damp cloth. Do not submerge in water. Store in a cool, dry place.",
@@ -31,6 +44,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 2,
     name: "Golden Elixir Serum",
+    brand: "Elysian Glow",
     description: "A luxurious, lightweight serum infused with 24k gold flakes to hydrate, brighten, and firm the skin. Its potent blend of botanical extracts revitalizes your complexion for a youthful, radiant glow.",
     imageUrls: [
       "https://images.pexels.com/photos/5430631/pexels-photo-5430631.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
@@ -46,8 +60,36 @@ export const PRODUCTS: Product[] = [
     tag: "Best Seller",
     color: "Gold",
     category: "Skincare",
-    rating: 5,
+    rating: 4.9,
+    reviewCount: 98,
   },
+  {
+    id: 3,
+    name: "Ayurvedic Radiance Lipstick",
+    brand: "AyurHue",
+    description: "Indulge in the richness of nature with our Ayurvedic Radiance Lipstick. Infused with Ghee and Almond Oil, this lipstick collection offers vibrant color while deeply moisturizing your lips. Available in shades inspired by the beauty of India.",
+    imageUrls: [
+      "https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "https://images.pexels.com/photos/1377034/pexels-photo-1377034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "https://images.pexels.com/photos/2080548/pexels-photo-2080548.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    ],
+    shades: [
+      { name: "Lotus Pink", hex: "#E58A9E" },
+      { name: "Terracotta Nude", hex: "#C87A6A" },
+      { name: "Ruby Red", hex: "#A4293A" },
+      { name: "Mahogany Brown", hex: "#6F3E37" },
+      { name: "Coral Sunset", hex: "#E96D59" },
+    ],
+    price: 750,
+    mrp: 999,
+    discount: "25%",
+    inStock: true,
+    tag: "New Arrival",
+    color: "Multiple",
+    category: "Skincare",
+    rating: 4.5,
+    reviewCount: 76,
+  }
 ];
 
 
@@ -114,35 +156,11 @@ export const FOOTER_LINKS: { [key: string]: FooterLink[] } = {
   ]
 };
 
-// FIX: Moved the SocialLink interface here from types.ts.
-// This co-locates the type definition with its usage and resolves a global JSX type conflict.
 export interface SocialLink {
   name: string;
   href: string;
-  icon: (props: React.SVGProps<SVGSVGElement>) => React.ReactElement;
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }
-
-// FIX: Replaced `React.FC` with explicit prop typing to match the `SocialLink` interface.
-const SocialIconFacebook = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
-  </svg>
-);
-
-// FIX: Replaced `React.FC` with explicit prop typing to match the `SocialLink` interface.
-const SocialIconInstagram = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664 4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163zm0 1.441c-3.171 0-3.535.012-4.774.069-2.694.123-3.999 1.428-4.122 4.122-.057 1.239-.069 1.603-.069 4.774s.012 3.535.069 4.774c.123 2.694 1.428 3.999 4.122 4.122 1.239.057 1.603.069 4.774.069s3.535-.012 4.774-.069c2.694-.123 3.999-1.428 4.122-4.122.057-1.239.069-1.603.069-4.774s-.012-3.535-.069-4.774c-.123-2.694-1.428-3.999-4.122-4.122C15.535 3.616 15.171 3.604 12 3.604zM12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5zm0 1.441a2.309 2.309 0 110 4.618 2.309 2.309 0 010-4.618zM16.949 6.27a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" />
-  </svg>
-);
-
-// FIX: Replaced `React.FC` with explicit prop typing to match the `SocialLink` interface.
-const SocialIconTwitter = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-    <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733a4.67 4.67 0 002.048-2.578 9.3 9.3 0 01-2.958 1.13 4.66 4.66 0 00-7.938 4.25 13.229 13.229 0 01-9.602-4.868c-.333.57-.523 1.234-.523 1.947 0 1.615.823 3.043 2.072 3.878a4.65 4.65 0 01-2.11-.583v.06a4.66 4.66 0 003.733 4.568 4.69 4.69 0 01-2.104.08 4.661 4.661 0 004.35 3.234 9.348 9.348 0 01-5.786 1.995c-.376 0-.747-.022-1.112-.065a13.175 13.175 0 007.14 2.093c8.57 0 13.255-7.098 13.255-13.254 0-.202-.005-.403-.014-.602a9.454 9.454 0 002.323-2.41z" />
-  </svg>
-);
-
 
 export const SOCIAL_LINKS: SocialLink[] = [
   { name: "Facebook", href: "#", icon: SocialIconFacebook },

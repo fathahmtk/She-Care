@@ -46,7 +46,8 @@ const RecipeGenerator: React.FC = () => {
     setRecipe(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+      // FIX: Removed `as string` type assertion to strictly follow API key handling guidelines.
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const prompt = `You are a creative chef. Based on the following ingredients, create a delicious and easy-to-follow recipe. If the ingredients seem nonsensical, create a fun, imaginative recipe anyway. Ingredients: ${ingredients}`;
       
       const response = await ai.models.generateContent({
@@ -63,7 +64,7 @@ const RecipeGenerator: React.FC = () => {
 
     } catch (err) {
       console.error('Error generating recipe:', err);
-      setError('Sorry, I couldn\'t come up with a recipe. Please try again with different ingredients.');
+      setError('An error occurred while generating the recipe. It could be a temporary issue with the AI service or your network. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +87,7 @@ const RecipeGenerator: React.FC = () => {
                 if(error) setError('');
               }}
               placeholder="e.g., chicken, rice, broccoli, soy sauce"
-              className="w-full flex-grow px-4 py-3 bg-surface border border-border-color text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition-all disabled:opacity-50"
+              className="w-full flex-grow px-4 py-3 bg-surface border border-border-color text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all disabled:opacity-50"
               disabled={isLoading}
             />
             <button
@@ -105,7 +106,17 @@ const RecipeGenerator: React.FC = () => {
               ) : 'Generate Recipe'}
             </button>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2 text-left">{error}</p>}
+          {error && (
+            <div className="mt-4 text-left bg-red-500/10 border border-red-500/20 text-red-600 p-4 rounded-lg flex items-start gap-3" role="alert">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <p className="font-semibold">Generation Failed</p>
+                <p className="text-sm">{error}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {recipe && !isLoading && (

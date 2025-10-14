@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF--8" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>shecarehub.com – Premium Women’s Wellness</title>
     <meta name="description" content="Luxury wellness and skincare for modern women." />
@@ -11,53 +11,46 @@
     <meta property="og:url" content="https://shecarehub.com/" />
     <meta property="og:title" content="shecarehub.com – Premium Women’s Wellness" />
     <meta property="og:description" content="Luxury wellness and skincare for modern women." />
-    <meta property="og:image" content="https://m.media-amazon.com/images/I/71YqDc-POJL.jpg" />
+    <meta property="og:image" content="https://shecarehub.com/logo.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://shecarehub.com/" />
     <meta property="twitter:title" content="shecarehub.com – Premium Women’s Wellness" />
     <meta property="twitter:description" content="Luxury wellness and skincare for modern women." />
-    <meta property="twitter:image" content="https://m.media-amazon.com/images/I/71YqDc-POJL.jpg" />
+    <meta property="twitter:image" content="https://shecarehub.com/logo.png" />
 
-    <!-- 
-      NOTE: The Tailwind CSS CDN is used here for rapid prototyping in this development environment.
-      The console warning is expected. For a production deployment, Tailwind should be installed via npm 
-      and integrated into a build process (e.g., PostCSS) to enable optimizations like CSS purging.
-    -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <!-- 3D Model Viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
     
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'background-start': '#F8E1DD',
-              'background-end': '#E8D5B5',
-              'surface': '#FFFFFF',
-              'accent': '#B07A3C',
-              'accent-hover': '#9C6A32',
-              'text-primary': '#3A2E2E',
-              'text-secondary': '#6B5E5E',
-              'border-color': '#E0D8CC',
-            },
-            fontFamily: {
-              heading: ['"Cormorant Garamond"', 'serif'],
-              body: ['Poppins', 'sans-serif'],
-            }
-          }
-        }
-      }
-    </script>
-    
     <style>
+      :root {
+        --color-background-start: 248 225 221; /* #F8E1DD */
+        --color-background-end: 232 213 181;   /* #E8D5B5 */
+        --color-surface: 255 255 255;          /* #FFFFFF */
+        --color-accent: 176 122 60;            /* #B07A3C */
+        --color-accent-hover: 156 106 50;      /* #9C6A32 */
+        --color-text-primary: 58 46 46;        /* #3A2E2E */
+        --color-text-secondary: 107 94 94;     /* #6B5E5E */
+        --color-border: 224 216 204;           /* #E0D8CC */
+      }
+
+      html.dark {
+        --color-background-start: 28 30 32;    /* #1C1E20 */
+        --color-background-end: 40 42 44;      /* #282A2C */
+        --color-surface: 50 52 55;             /* #323437 */
+        --color-accent: 212 168 106;           /* #D4A86A */
+        --color-accent-hover: 230 186 126;     /* #E6BA7E */
+        --color-text-primary: 240 240 240;     /* #F0F0F0 */
+        --color-text-secondary: 168 168 168;   /* #A8A8A8 */
+        --color-border: 69 71 74;              /* #45474A */
+      }
+
       html {
         scroll-behavior: smooth;
       }
@@ -79,6 +72,33 @@
       }
     </style>
 
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // Enable class-based dark mode
+        theme: {
+          extend: {
+            colors: {
+              // Using rgb values allows for opacity modifiers in Tailwind, e.g., bg-surface/50
+              'background-start': 'rgb(var(--color-background-start) / <alpha-value>)',
+              'background-end': 'rgb(var(--color-background-end) / <alpha-value>)',
+              'surface': 'rgb(var(--color-surface) / <alpha-value>)',
+              'accent': 'rgb(var(--color-accent) / <alpha-value>)',
+              'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+              'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
+              'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
+              'border-color': 'rgb(var(--color-border) / <alpha-value>)',
+              'action-blue': 'rgb(59 130 246 / <alpha-value>)',
+              'action-blue-hover': 'rgb(37 99 235 / <alpha-value>)',
+            },
+            fontFamily: {
+              heading: ['"Cormorant Garamond"', 'serif'],
+              body: ['Poppins', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    
   <script type="importmap">
 {
   "imports": {

@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { GoogleGenAI, Type } from "@google/genai";
+import UploadIcon from './icons/UploadIcon';
 
 // Self-contained constants and types to minimize file changes
 const FOUNDATION_SHADES = [
@@ -22,8 +23,8 @@ interface ShadeFinderResult {
 const shadeFinderSchema = {
   type: Type.OBJECT,
   properties: {
-    shadeName: { type: Type.STRING, description: "The name of the recommended foundation shade from the provided list." },
-    description: { type: Type.STRING, description: "A personalized, one-sentence explanation for why this shade is a good match for the user's skin tone." },
+    shadeName: { type: Type.STRING, description: "The name of the single closest matching foundation shade from the provided list." },
+    description: { type: Type.STRING, description: "A detailed, personalized explanation for the recommendation, considering skin depth and undertones." },
   },
   required: ["shadeName", "description"],
 };
@@ -44,13 +45,6 @@ const fileToBase64 = (file: File): Promise<string> => {
     reader.onerror = error => reject(error);
   });
 };
-
-const UploadIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-    </svg>
-);
-
 
 const ShadeFinder: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -120,7 +114,8 @@ const ShadeFinder: React.FC = () => {
 
     try {
       const base64Image = await fileToBase64(imageFile);
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+      // FIX: Removed `as string` type assertion to strictly follow API key handling guidelines.
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
       const imagePart = {
         inlineData: { mimeType: imageFile.type, data: base64Image },
@@ -128,7 +123,7 @@ const ShadeFinder: React.FC = () => {
 
       const shadeList = FOUNDATION_SHADES.map(s => s.name).join(', ');
       const textPart = {
-        text: `You are an expert makeup artist. Analyze the person's skin tone in this photo. Recommend the best foundation shade from this list: [${shadeList}]. Provide a personalized, one-sentence reason for your choice.`,
+        text: `As a virtual beauty consultant, analyze the skin tone in this photo. From this list of available shades - [${shadeList}] - identify the single best match. Provide a detailed, personalized explanation for your recommendation, considering factors like skin depth and undertones (e.g., warm, cool, neutral).`,
       };
       
       const response = await ai.models.generateContent({
@@ -152,7 +147,7 @@ const ShadeFinder: React.FC = () => {
 
     } catch (err) {
       console.error("Error finding shade:", err);
-      setError("AI analysis failed. This could be due to a poor quality image or a network issue. Please try again with a different photo.");
+      setError("The AI analysis failed. This could be due to a poor quality image (e.g., bad lighting, blur) or a temporary network issue. Please try again with a different photo.");
     } finally {
       setIsLoading(false);
     }
@@ -212,9 +207,14 @@ const ShadeFinder: React.FC = () => {
                     <p className="mt-4 text-text-secondary">Finding your perfect shade...</p>
                   </div>
                 ) : error ? (
-                   <div className="text-red-500 bg-red-500/10 p-4 rounded-lg text-center" role="alert">
-                    <p className="font-semibold">Oops!</p>
-                    <p className="text-sm">{error}</p>
+                   <div className="bg-red-500/10 border border-red-500/20 text-red-600 p-4 rounded-lg flex items-start text-left gap-3 w-full" role="alert">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                          <p className="font-semibold">Analysis Failed</p>
+                          <p className="text-sm">{error}</p>
+                      </div>
                    </div>
                 ) : result && recommendedShade ? (
                   <div className="text-center w-full animate-fade-in">

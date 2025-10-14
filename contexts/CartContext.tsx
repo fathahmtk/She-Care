@@ -1,56 +1,80 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import type { Product } from '../types';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import type { Product, CartItem } from '../types';
 
-/**
- * Defines the shape of the cart context, including the cart items
- * and a function to add items to the cart.
- */
 interface CartContextType {
-  cartItems: Product[];
-  addToCart: (product: Product) => void;
+  cartItems: CartItem[];
+  addToCart: (product: Product, quantity: number) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
+  cartTotal: number;
 }
 
-// Create the context with an undefined default value.
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-/**
- * The CartProvider component wraps the application and provides the cart state
- * and functionality to all child components.
- */
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<Product[]>([]);
+const getInitialCart = (): CartItem[] => {
+    try {
+        const item = window.localStorage.getItem('shecarehub-cart');
+        return item ? JSON.parse(item) : [];
+    } catch (error) {
+        console.error("Could not parse cart from localStorage", error);
+        return [];
+    }
+};
 
-  /**
-   * Adds a product to the cart.
-   * For this implementation, we simply append the product to the array.
-   * A more complex implementation might handle quantities.
-   * @param {Product} product - The product to add to the cart.
-   */
-  const addToCart = (product: Product) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [cartItems, setCartItems] = useState<CartItem[]>(getInitialCart);
+
+  useEffect(() => {
+    try {
+        window.localStorage.setItem('shecarehub-cart', JSON.stringify(cartItems));
+    } catch (error) {
+        console.error("Could not save cart to localStorage", error);
+    }
+  }, [cartItems]);
+
+  const addToCart = (product: Product, quantity: number) => {
     setCartItems(prevItems => {
-      console.log(`Adding ${product.name} to cart.`);
-      const newCart = [...prevItems, product];
-      console.log('Current cart items:', newCart.map(p => p.name));
-      return newCart;
+      const existingItem = prevItems.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevItems.map(item =>
+          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
+        );
+      }
+      return [...prevItems, { ...product, quantity }];
     });
   };
 
+  const removeFromCart = (productId: number) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  };
+  
+  const updateQuantity = (productId: number, quantity: number) => {
+      if (quantity < 1) {
+          removeFromCart(productId);
+          return;
+      }
+      setCartItems(prevItems => prevItems.map(item =>
+        item.id === productId ? { ...item, quantity } : item
+      ));
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
+  const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-/**
- * A custom hook to easily access the cart context.
- * This abstracts away the `useContext` hook and provides error handling.
- * @returns {CartContextType} The cart context.
- */
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (context === undefined) {
-    // This error is thrown if useCart is used outside of a CartProvider.
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;

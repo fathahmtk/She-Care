@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
-import { PRODUCTS, REVIEWS } from '../constants';
+import { REVIEWS } from '../constants';
 import ProductCard from './ProductCard';
 import ReviewCard from './ReviewCard';
 import { useSearch } from '../contexts/SearchContext';
+import { useProducts } from '../contexts/ProductContext';
 
 const ProductShowcase: React.FC = () => {
+  const { products } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedTag, setSelectedTag] = useState('All');
   const { searchQuery } = useSearch();
 
   // Dynamically get unique categories from products and add "All"
-  const categories = ['All', ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
+  const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
+  
+  // Dynamically get unique tags from products and add "All"
+  const tags = ['All', ...Array.from(new Set(products.map(p => p.tag)))];
 
-  // Filter products based on the selected category and search query
-  const filteredProducts = PRODUCTS
+  // Filter products based on the selected category, tag, and search query
+  const filteredProducts = products
     .filter(product => {
       // Category filter
       return selectedCategory === 'All' || product.category === selectedCategory;
+    })
+    .filter(product => {
+      // Tag filter
+      return selectedTag === 'All' || product.tag === selectedTag;
     })
     .filter(product => {
       // Search query filter
@@ -33,7 +43,7 @@ const ProductShowcase: React.FC = () => {
           <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Our Products</h2>
           
           {/* Category Filter Buttons */}
-          <div className="flex justify-center flex-wrap gap-4 mb-12">
+          <div className="flex justify-center flex-wrap gap-4 mb-6">
             {categories.map(category => (
               <button
                 key={category}
@@ -45,6 +55,23 @@ const ProductShowcase: React.FC = () => {
                 }`}
               >
                 {category}
+              </button>
+            ))}
+          </div>
+          
+          {/* Tag Filter Chips */}
+          <div className="flex justify-center flex-wrap gap-3 mb-12">
+            {tags.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(tag)}
+                className={`px-4 py-1 text-sm font-body font-medium rounded-full transition-all duration-300 border ${
+                  selectedTag === tag
+                    ? 'bg-accent/20 text-accent border-accent/30'
+                    : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'
+                }`}
+              >
+                {tag}
               </button>
             ))}
           </div>

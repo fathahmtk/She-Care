@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 
 const Cta: React.FC = () => {
@@ -64,7 +62,7 @@ const Cta: React.FC = () => {
                     if (error) setError(''); // Clear error when user starts typing
                 }}
                 placeholder="Enter your email" 
-                className={`w-full px-4 py-3 bg-surface border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 transition-all disabled:opacity-50 ${error ? 'border-red-500 focus:ring-red-500' : 'border-border-color focus:ring-accent'}`}
+                className={`w-full px-4 py-3 bg-surface border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 transition-all disabled:opacity-50 ${error ? 'border-red-500 focus:ring-red-500' : 'border-border-color focus:border-accent focus:ring-accent'}`}
                 required
                 aria-invalid={!!error}
                 aria-describedby="email-error"

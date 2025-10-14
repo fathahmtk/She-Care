@@ -1,140 +1,211 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import CloseIcon from './icons/CloseIcon';
+import EmailIcon from './icons/EmailIcon';
+import ShieldCheckIcon from './icons/ShieldCheckIcon';
+import InfoIcon from './icons/InfoIcon';
+import ArrowLeftIcon from './icons/ArrowLeftIcon';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialView?: 'login' | 'register';
 }
 
-const CloseIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-  </svg>
-);
+type AuthStep = 'enter-email' | 'enter-otp';
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = 'login' }) => {
-  const [view, setView] = useState(initialView);
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { login } = useAuth();
   
-  // Form state
-  const [name, setName] = useState('');
+  const [step, setStep] = useState<AuthStep>('enter-email');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    setView(initialView);
-  }, [initialView]);
+  const [otp, setOtp] = useState<string[]>(new Array(6).fill(''));
+  const [mockOtp, setMockOtp] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   
+  const otpInputsRef = useRef<(HTMLInputElement | null)[]>([]);
+
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose();
+        handleClose();
       }
     };
     window.addEventListener('keydown', handleEsc);
-
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
   }, [onClose]);
 
+  useEffect(() => {
+    if (step === 'enter-otp') {
+      otpInputsRef.current[0]?.focus();
+    }
+  }, [step]);
+  
   if (!isOpen) return null;
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    login(email, 'Jane Doe'); // Mock login
-    onClose();
-    resetForm();
+  const resetState = () => {
+    setStep('enter-email');
+    setEmail('');
+    setOtp(new Array(6).fill(''));
+    setMockOtp('');
+    setIsLoading(false);
+    setError('');
   };
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    login(email, name); // Mock register and login
+  const handleClose = () => {
+    resetState();
     onClose();
-    resetForm();
   };
 
-  const resetForm = () => {
-      setName('');
-      setEmail('');
-      setPassword('');
-  }
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    setError('');
+    setIsLoading(true);
+    
+    // Simulate API call to send OTP
+    setTimeout(() => {
+      const generatedOtp = '123456'; // For simulation purposes
+      setMockOtp(generatedOtp);
+      setIsLoading(false);
+      setStep('enter-otp');
+    }, 1000);
+  };
+  
+  const handleOtpChange = (element: HTMLInputElement, index: number) => {
+    if (isNaN(Number(element.value))) return; // Only allow numbers
+
+    const newOtp = [...otp];
+    newOtp[index] = element.value.slice(-1); // Only take the last digit
+    setOtp(newOtp);
+
+    // Focus next input
+    if (element.value && index < 5) {
+      otpInputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      otpInputsRef.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const enteredOtp = otp.join('');
+    if (enteredOtp.length !== 6) {
+      setError('Please enter the complete 6-digit code.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    
+    // Simulate OTP verification
+    setTimeout(() => {
+      if (enteredOtp === mockOtp) {
+        // In a real app, you might get user details from the API
+        login(email, 'Valued Customer');
+        handleClose();
+      } else {
+        setError('The code you entered is incorrect. Please try again.');
+        setIsLoading(false);
+        setOtp(new Array(6).fill(''));
+        otpInputsRef.current[0]?.focus();
+      }
+    }, 1000);
+  };
 
   return (
     <div 
-      className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 animate-fade-in"
-      onClick={onClose}
+      className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 animate-fade-in backdrop-blur-sm"
+      onClick={handleClose}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="auth-modal-title"
     >
       <div 
-        className="bg-surface rounded-lg shadow-2xl p-8 w-full max-w-md relative border border-border-color"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+        className="bg-surface rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-border-color overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
         <button 
-          onClick={onClose} 
+          onClick={handleClose} 
           className="absolute top-4 right-4 text-text-secondary hover:text-accent transition-all duration-300 ease-in-out transform hover:scale-125 hover:rotate-90"
           aria-label="Close authentication modal"
         >
           <CloseIcon />
         </button>
 
-        <div className="flex border-b border-border-color mb-6">
-          <button 
-            onClick={() => setView('login')}
-            className={`flex-1 py-3 font-body font-semibold tracking-wider transition-colors duration-300 ${view === 'login' ? 'text-accent border-b-2 border-accent' : 'text-text-secondary hover:text-text-primary'}`}
-          >
-            LOGIN
-          </button>
-          <button 
-            onClick={() => setView('register')}
-            className={`flex-1 py-3 font-body font-semibold tracking-wider transition-colors duration-300 ${view === 'register' ? 'text-accent border-b-2 border-accent' : 'text-text-secondary hover:text-text-primary'}`}
-          >
-            SIGN UP
-          </button>
+        <div className={`transition-all duration-300 ease-in-out ${step === 'enter-otp' ? '-translate-x-full opacity-0 absolute' : 'translate-x-0 opacity-100'}`}>
+          <h2 className="text-3xl font-heading text-text-primary mb-2 text-center">Login or Sign Up</h2>
+          <p className="text-text-secondary mb-8 text-center text-sm">Enter your email to receive a secure code.</p>
+          <form onSubmit={handleEmailSubmit} className="space-y-6">
+            <div className="relative">
+              <label htmlFor="login-email" className="sr-only">Email Address</label>
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <EmailIcon className="h-5 w-5 text-text-secondary" />
+              </div>
+              <input 
+                id="login-email" 
+                name="email" 
+                type="email" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
+                autoComplete="email" 
+                required 
+                placeholder="you@example.com"
+                className="w-full pl-12 pr-4 py-3 bg-surface border border-border-color rounded-lg text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all" 
+              />
+            </div>
+            <button type="submit" disabled={isLoading} className="w-full bg-accent text-surface py-3 rounded-lg transition-all duration-300 font-body font-semibold tracking-wider text-lg shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed">
+              {isLoading ? 'Sending...' : 'Send Code'}
+            </button>
+          </form>
+        </div>
+        
+        <div className={`transition-all duration-300 ease-in-out ${step === 'enter-email' ? 'translate-x-full opacity-0 absolute' : 'translate-x-0 opacity-100'}`}>
+            <button onClick={() => setStep('enter-email')} className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent mb-4">
+                <ArrowLeftIcon className="w-4 h-4" /> Back
+            </button>
+            <h2 className="text-3xl font-heading text-text-primary mb-2 text-center">Verify Code</h2>
+            <p className="text-text-secondary mb-6 text-center text-sm">Enter the code sent to <br/><span className="font-semibold text-text-primary">{email}</span></p>
+            
+            <div className="bg-accent/10 text-accent border border-accent/20 rounded-lg p-3 flex items-start gap-3 text-sm mb-6">
+              <InfoIcon className="w-5 h-5 mt-0.5 shrink-0" />
+              <div>
+                  <span className="font-semibold">For this simulation, your code is:</span>
+                  <p className="font-mono text-lg tracking-widest">{mockOtp}</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleOtpSubmit}>
+                <div className="flex justify-center gap-2 mb-4">
+                  {otp.map((data, index) => (
+                    <input
+                      key={index}
+                      // FIX: The ref callback function must return void. The implicit return of the assignment `el` was causing a type error. Wrapping the assignment in braces ensures a void return.
+                      ref={el => { otpInputsRef.current[index] = el; }}
+                      type="text"
+                      maxLength={1}
+                      value={data}
+                      onChange={e => handleOtpChange(e.target, index)}
+                      onKeyDown={e => handleKeyDown(e, index)}
+                      className="w-12 h-14 text-center text-2xl font-semibold bg-surface border border-border-color rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                    />
+                  ))}
+                </div>
+                {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
+                <button type="submit" disabled={isLoading} className="mt-6 w-full bg-accent text-surface py-3 rounded-lg transition-all duration-300 font-body font-semibold tracking-wider text-lg shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed">
+                  {isLoading ? 'Verifying...' : 'Verify & Login'}
+                </button>
+            </form>
         </div>
 
-        {view === 'login' ? (
-          <div>
-            <h2 id="auth-modal-title" className="text-3xl font-heading text-text-primary mb-6 text-center">Welcome Back</h2>
-            <form onSubmit={handleLoginSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="login-email" className="block text-sm font-medium text-text-secondary mb-2">Email Address</label>
-                <input id="login-email" name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" required className="w-full px-4 py-3 bg-surface border border-border-color rounded-md text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition-all" />
-              </div>
-              <div>
-                <label htmlFor="login-password" className="block text-sm font-medium text-text-secondary mb-2">Password</label>
-                <input id="login-password" name="password" type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" required className="w-full px-4 py-3 bg-surface border border-border-color rounded-md text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition-all" />
-              </div>
-              <button type="submit" className="w-full bg-accent text-surface py-3 rounded-md transition-all duration-300 font-body font-semibold tracking-wider text-lg shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-accent-hover">
-                Login
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div>
-            <h2 id="auth-modal-title" className="text-3xl font-heading text-text-primary mb-6 text-center">Create Account</h2>
-            <form onSubmit={handleRegisterSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="register-name" className="block text-sm font-medium text-text-secondary mb-2">Full Name</label>
-                <input id="register-name" name="name" type="text" value={name} onChange={e => setName(e.target.value)} autoComplete="name" required className="w-full px-4 py-3 bg-surface border border-border-color rounded-md text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition-all" />
-              </div>
-              <div>
-                <label htmlFor="register-email" className="block text-sm font-medium text-text-secondary mb-2">Email Address</label>
-                <input id="register-email" name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" required className="w-full px-4 py-3 bg-surface border border-border-color rounded-md text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition-all" />
-              </div>
-              <div>
-                <label htmlFor="register-password" className="block text-sm font-medium text-text-secondary mb-2">Password</label>
-                <input id="register-password" name="password" type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="new-password" required className="w-full px-4 py-3 bg-surface border border-border-color rounded-md text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent transition-all" />
-              </div>
-              <button type="submit" className="w-full bg-accent text-surface py-3 rounded-md transition-all duration-300 font-body font-semibold tracking-wider text-lg shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-accent-hover">
-                Create Account
-              </button>
-            </form>
-          </div>
-        )}
       </div>
     </div>
   );

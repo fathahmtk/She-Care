@@ -6,63 +6,52 @@ type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
 };
 
 /**
- * An enhanced `<img>` component that displays a fallback image if the primary `src` fails to load.
- * It also features a progressive, blur-up loading effect for a better user experience.
+ * An enhanced `<img>` component that uses native browser lazy-loading.
+ * It displays a fallback image if the primary `src` fails and features a smooth fade-in effect.
  *
- * @param {string} src - The primary image source URL.
- * @param {string} alt - The alternative text for the image, crucial for accessibility.
- * @param {string} [fallbackSrc="..."] - The URL for the fallback image.
- * @param {string} [className] - Additional CSS classes to apply to the image.
+ * @param {string | null | undefined} src - The primary image source URL.
+ * @param {string} alt - The alternative text for the image.
+ * @param {string} [fallbackSrc] - The URL for the fallback image.
+ * @param {string} [className] - Additional CSS classes.
  */
 const ImageWithFallback = forwardRef<HTMLImageElement, Props>(
   ({ src, alt, fallbackSrc = "https://m.media-amazon.com/images/I/71YqDc-POJL.jpg", className, ...rest }, ref) => {
-    // State to track if the primary image has failed to load.
-    // Initialize to true if the src is initially falsy.
     const [hasError, setHasError] = useState(!src);
-    // State to manage the loading visualization (e.g., blur effect).
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    // Effect to reset the error and loading state whenever the `src` prop changes.
+    // Reset component state if the image source changes
     useEffect(() => {
-      setIsLoading(true);
-      setHasError(!src); // If the new src is falsy, set error state immediately.
+      setHasError(!src);
+      setIsLoaded(false);
     }, [src]);
-    
-    // Determine the source to use: fallback if there's an error or no src, otherwise use the primary src.
-    const currentSrc = hasError ? fallbackSrc : (src as string);
+
+    const currentSrc = hasError ? fallbackSrc : src;
 
     const handleLoad = () => {
-      setIsLoading(false);
+      setIsLoaded(true);
     };
 
     const handleError = () => {
-      // This will only be triggered for non-falsy `src` values that fail to load.
-      setIsLoading(false);
-      setHasError(true);
+      // If the primary src fails, set error to true to try the fallback
+      if (!hasError) {
+        setHasError(true);
+      }
+      // Mark as loaded even on error to hide the placeholder
+      setIsLoaded(true);
     };
 
     return (
-      // Container to manage the aspect ratio and hold both the placeholder and the main image.
+      // This container provides the placeholder background color.
       <div className="relative w-full h-full bg-border-color/20 overflow-hidden">
-        {/* Blurred Placeholder: A low-res, blurred version of the image shown during loading. */}
-        <img
-          src={currentSrc}
-          alt="" // Decorative, so alt text is empty.
-          aria-hidden="true"
-          className={`absolute inset-0 w-full h-full object-cover filter blur-lg scale-110 transition-opacity duration-300 ease-in-out ${
-            isLoading ? "opacity-100" : "opacity-0"
-          }`}
-          // We don't need load/error handlers here as they are on the main image.
-        />
-        {/* Main Image: The high-resolution image. */}
         <img
           ref={ref}
           src={currentSrc}
           alt={alt || ""}
           onLoad={handleLoad}
           onError={handleError}
-          className={`relative w-full h-full object-cover transition-opacity duration-300 ease-in-out ${
-            isLoading ? "opacity-0" : "opacity-100"
+          loading="lazy" // Use native browser lazy-loading
+          className={`relative w-full h-full object-cover transition-opacity duration-500 ease-out ${
+            isLoaded ? "opacity-100" : "opacity-0"
           } ${className || ""}`}
           {...rest}
         />
