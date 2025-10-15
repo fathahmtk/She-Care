@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import '../types';
 // FIX: Switched to generateContent with gemini-2.5-flash-image to address quota issues.
 import { GoogleGenAI, Modality } from "@google/genai";
+import BrandLogo from './BrandLogo';
 
 const FALLBACK_IMAGE_URL = "https://m.media-amazon.com/images/I/71yD2O6p7JL.jpg";
 
@@ -66,8 +67,8 @@ const Hero: React.FC = () => {
       )}
 
       <div className="relative z-10 px-6 flex flex-col items-center">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-body font-normal mb-4 tracking-widest leading-tight text-white" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)' }}>
-          shecare<span className="font-light">hub</span>
+        <h1 className="mb-4" aria-label="shecarehub.com">
+          <BrandLogo variant="solid" className="h-16 md:h-20 lg:h-24 w-auto text-white" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))' }} />
         </h1>
         <p className="text-lg md:text-xl font-body font-light mb-8 max-w-2xl mx-auto text-white/90 drop-shadow-md">
           Experience instant menstrual pain relief with our smart thermal belt — designed for modern women.

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
+// FIX: Corrected the import for 'types.ts' to ensure global JSX namespace augmentations for the 'model-viewer' custom element are correctly applied.
+// An empty named import forces module evaluation for side-effects like global type declarations.
+import {} from '../types';
 import ImageWithFallback from './ImageWithFallback';
 import Icon3D from './icons/Icon3D';
 import IconImage from './icons/IconImage';

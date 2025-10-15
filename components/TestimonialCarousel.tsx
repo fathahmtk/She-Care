@@ -62,7 +62,7 @@ const TestimonialCarousel: React.FC = () => {
                 {testimonials.map((testimonial, index) => (
                   <div
                     key={testimonial.id}
-                    className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                    className={`absolute inset-0 transition-all duration-500 ease-in-out ${index === currentIndex ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-5 scale-95 pointer-events-none'}`}
                     aria-hidden={index !== currentIndex}
                   >
                     <div className="flex flex-col items-center justify-center h-full px-4 md:px-10">
@@ -86,14 +86,14 @@ const TestimonialCarousel: React.FC = () => {
                   <>
                     <button 
                         onClick={prevTestimonial} 
-                        className="absolute top-1/2 left-0 md:-left-16 transform -translate-y-1/2 w-12 h-12 rounded-full bg-surface/80 backdrop-blur-sm shadow-lg hover:bg-accent hover:text-surface transition-all duration-300 text-text-primary z-10 hover:scale-110 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-accent" 
+                        className="absolute top-1/2 left-0 md:-left-10 transform -translate-y-1/2 w-14 h-14 rounded-full bg-surface border-2 border-border-color shadow-xl text-text-primary transition-all duration-300 ease-in-out hover:bg-accent hover:text-surface hover:border-accent hover:scale-110 z-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface/50 focus:ring-accent"
                         aria-label="Previous testimonial"
                     >
                         <ArrowLeftIcon className="w-6 h-6" />
                     </button>
                     <button 
                         onClick={nextTestimonial} 
-                        className="absolute top-1/2 right-0 md:-right-16 transform -translate-y-1/2 w-12 h-12 rounded-full bg-surface/80 backdrop-blur-sm shadow-lg hover:bg-accent hover:text-surface transition-all duration-300 text-text-primary z-10 hover:scale-110 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-accent" 
+                        className="absolute top-1/2 right-0 md:-right-10 transform -translate-y-1/2 w-14 h-14 rounded-full bg-surface border-2 border-border-color shadow-xl text-text-primary transition-all duration-300 ease-in-out hover:bg-accent hover:text-surface hover:border-accent hover:scale-110 z-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface/50 focus:ring-accent"
                         aria-label="Next testimonial"
                     >
                         <ArrowRightIcon className="w-6 h-6" />

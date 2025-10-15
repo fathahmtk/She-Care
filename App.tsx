@@ -1,10 +1,8 @@
-
-
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import './types';
 // FIX: Import React before augmenting its types.
 // This ensures that the base JSX namespace is available before being extended.
 import React, { useState, useEffect } from 'react';
+// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
+import './types';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';

@@ -10,8 +10,7 @@ declare global {
       // FIX: Use camelCase props for custom element attributes to align with React's convention.
       // React automatically converts camelCase props to kebab-case attributes for web components.
       // Use `React.DetailedHTMLProps` for augmenting IntrinsicElements to ensure all properties like `ref` and `key` are included.
-      // FIX: Simplified to React.HTMLAttributes to resolve potential type conflicts with custom elements.
-      'model-viewer': React.HTMLAttributes<HTMLElement> & {
+      'model-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         src?: string;
         alt?: string;
         cameraControls?: boolean;
