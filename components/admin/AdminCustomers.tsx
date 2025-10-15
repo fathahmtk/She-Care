@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
-import { useOrders } from '../../hooks/useOrders';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
+import { useOrders } from '../../contexts/OrderContext';
 import type { ShippingInfo } from '../../types';
 import AdminEmptyState from './AdminEmptyState';
 import EmptyCustomersIcon from '../icons/EmptyCustomersIcon';
@@ -10,7 +12,7 @@ interface Customer extends ShippingInfo {
 }
 
 const AdminCustomers: React.FC = () => {
-  const { orders } = useOrders();
+  const { orders, loading } = useOrders();
 
   const customers = useMemo(() => {
     const customerMap = new Map<string, Customer>();
@@ -47,7 +49,9 @@ const AdminCustomers: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {customers.length > 0 ? (
+            {loading ? (
+                <tr><td colSpan={4} className="p-4 text-center text-text-secondary">Loading customer data...</td></tr>
+            ) : customers.length > 0 ? (
                 customers.map((customer, index) => (
               <tr key={index} className="border-b border-border-color hover:bg-accent/5">
                 <td className="p-3 text-sm text-text-primary font-semibold">{customer.fullName}</td>

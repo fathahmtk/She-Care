@@ -1,9 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
+import { GoogleGenAI } from "@google/genai";
+
+const FALLBACK_IMAGE_URL = "https://m.media-amazon.com/images/I/71yD2O6p7JL.jpg";
 
 const Hero: React.FC = () => {
+  const [imageUrl, setImageUrl] = useState(FALLBACK_IMAGE_URL);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const generateHeroImage = async () => {
+      setIsLoading(true);
+      try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const prompt = "A minimalist flat lay of premium women's wellness and skincare products on a soft, textured background. Include items like a sleek menstrual pain relief belt, elegant serum bottles, and natural elements like rose petals. The color palette should be soft pinks, creams, and gold accents, evoking a sense of luxury and calm.";
+        
+        const response = await ai.models.generateImages({
+          model: 'imagen-4.0-generate-001',
+          prompt: prompt,
+          config: {
+            numberOfImages: 1,
+            outputMimeType: 'image/jpeg',
+            aspectRatio: '16:9',
+          },
+        });
+
+        if (response.generatedImages && response.generatedImages.length > 0) {
+          const base64ImageBytes: string = response.generatedImages[0].image.imageBytes;
+          const generatedUrl = `data:image/jpeg;base64,${base64ImageBytes}`;
+          setImageUrl(generatedUrl);
+        } else {
+            console.warn("AI image generation returned no images, using fallback.");
+        }
+      } catch (error) {
+        console.error("Failed to generate hero image with AI, using fallback:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    generateHeroImage();
+  }, []);
+
   return (
-    <section className="relative h-screen flex items-center justify-center text-center text-text-primary bg-cover bg-center" style={{ backgroundImage: "url('https://m.media-amazon.com/images/I/71yD2O6p7JL.jpg')" }}>
+    <section 
+      className="relative h-screen flex items-center justify-center text-center text-text-primary bg-cover bg-center transition-all duration-1000" 
+      style={{ backgroundImage: `url('${imageUrl}')` }}
+    >
       <div className="absolute inset-0 bg-background-start/40 dark:bg-black/60"></div>
+      
+      {isLoading && (
+        <div className="absolute inset-0 bg-black/20 animate-pulse duration-1000"></div>
+      )}
+
       <div className="relative z-10 px-6 flex flex-col items-center">
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-4 tracking-wider leading-tight text-surface drop-shadow-lg">
           shecarehub

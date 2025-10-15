@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 
 // FIX: This file was empty. An empty .tsx file without imports/exports is not
 // treated as a module by TypeScript, which can lead to global scope pollution

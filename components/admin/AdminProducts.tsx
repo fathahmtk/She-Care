@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+
+
+import React, { useState, useRef } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 import { useProducts } from '../../contexts/ProductContext';
 import type { Product } from '../../types';
 import EditIcon from '../icons/EditIcon';
@@ -6,10 +10,19 @@ import DeleteIcon from '../icons/DeleteIcon';
 import CloseIcon from '../icons/CloseIcon';
 import AdminEmptyState from './AdminEmptyState';
 import EmptyProductsIcon from '../icons/EmptyProductsIcon';
+import UploadIcon from '../icons/UploadIcon';
 
-// FIX: Add missing properties `rating` and `reviewCount` to satisfy the Omit<Product, 'id'> type.
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
+
 const emptyProduct: Omit<Product, 'id'> = {
-  name: '', brand: '', description: '', imageUrls: [''], category: 'Skincare', price: 0, mrp: 0,
+  name: '', brand: '', description: '', imageUrls: [], category: 'Skincare', price: 0, mrp: 0,
   discount: '', inStock: true, tag: 'New Arrival', color: '',
   materials: '', dimensions: '', careInstructions: '', rating: 0, reviewCount: 0,
 };
@@ -17,9 +30,11 @@ const emptyProduct: Omit<Product, 'id'> = {
 const ProductFormModal: React.FC<{
   product: Product | Omit<Product, 'id'> | null;
   onClose: () => void;
-  onSave: (productData: Product | Omit<Product, 'id'>) => void;
+  onSave: (productData: Product | Omit<Product, 'id'>) => Promise<void>;
 }> = ({ product, onClose, onSave }) => {
   const [formData, setFormData] = useState(product || emptyProduct);
+  const [isSaving, setIsSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -32,25 +47,38 @@ const ProductFormModal: React.FC<{
     }
   };
 
-  const handleImageUrlChange = (index: number, value: string) => {
-    const newImageUrls = [...formData.imageUrls];
-    newImageUrls[index] = value;
-    setFormData(prev => ({ ...prev, imageUrls: newImageUrls }));
-  };
+  const handleFileChange = async (files: FileList | null) => {
+    if (!files) return;
 
-  const addImageUrlField = () => {
-    setFormData(prev => ({ ...prev, imageUrls: [...prev.imageUrls, ''] }));
+    try {
+        const base64Promises = Array.from(files).map(fileToBase64);
+        const newImageUrls = await Promise.all(base64Promises);
+        setFormData(prev => ({
+            ...prev,
+            imageUrls: [...prev.imageUrls, ...newImageUrls],
+        }));
+    } catch (error) {
+        console.error("Error converting files to Base64", error);
+        alert("There was an error processing your images. Please try again.");
+    }
   };
   
-  const removeImageUrlField = (index: number) => {
-    const newImageUrls = formData.imageUrls.filter((_, i) => i !== index);
-    setFormData(prev => ({ ...prev, imageUrls: newImageUrls }));
+  const handleRemoveImage = (indexToRemove: number) => {
+      setFormData(prev => ({
+          ...prev,
+          imageUrls: prev.imageUrls.filter((_, index) => index !== indexToRemove)
+      }));
   };
 
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    if (formData.imageUrls.length === 0) {
+        alert("Please upload at least one image for the product.");
+        return;
+    }
+    setIsSaving(true);
+    await onSave(formData);
+    setIsSaving(false);
   };
   
   const inputStyles = "w-full mt-1 p-2 bg-surface border border-border-color rounded-md text-text-primary focus:ring-2 focus:ring-accent focus:border-accent";
@@ -71,15 +99,50 @@ const ProductFormModal: React.FC<{
                 <label className="text-sm font-medium">Description</label>
                 <textarea name="description" value={formData.description} onChange={handleChange} className={inputStyles} rows={3} required></textarea>
             </div>
-            <div>
-                <label className="text-sm font-medium">Image URLs</label>
-                {formData.imageUrls.map((url, index) => (
-                    <div key={index} className="flex items-center gap-2 mt-1">
-                        <input type="text" value={url} onChange={(e) => handleImageUrlChange(index, e.target.value)} className={inputStyles} placeholder="https://example.com/image.jpg" required/>
-                        {formData.imageUrls.length > 1 && <button type="button" onClick={() => removeImageUrlField(index)} className="p-2 text-red-500 hover:bg-red-500/10 rounded-md"><DeleteIcon className="w-4 h-4"/></button>}
+             <div>
+                <label className="text-sm font-medium">Images</label>
+                <div
+                    className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-border-color border-dashed rounded-md cursor-pointer hover:border-accent transition-colors"
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                        e.preventDefault();
+                        handleFileChange(e.dataTransfer.files);
+                    }}
+                >
+                    <div className="space-y-1 text-center">
+                        <UploadIcon className="mx-auto h-12 w-12 text-text-secondary" />
+                        <div className="flex text-sm text-text-secondary">
+                            <p className="pl-1">Click to upload, or drag and drop</p>
+                        </div>
+                        <p className="text-xs text-text-secondary">PNG, JPG, WEBP</p>
                     </div>
-                ))}
-                 <button type="button" onClick={addImageUrlField} className="mt-2 text-sm text-accent font-semibold">+ Add another image</button>
+                </div>
+                <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={(e) => handleFileChange(e.target.files)}
+                    className="hidden"
+                />
+                 {formData.imageUrls.length > 0 && (
+                    <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                        {formData.imageUrls.map((url, index) => (
+                            <div key={index} className="relative aspect-square group">
+                                <img src={url} alt={`Preview ${index + 1}`} className="w-full h-full object-cover rounded-md border border-border-color" />
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveImage(index)}
+                                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 shadow-md hover:bg-red-700 transition-all opacity-0 group-hover:opacity-100"
+                                    aria-label="Remove image"
+                                >
+                                    <CloseIcon className="w-4 h-4" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
             <div className="grid grid-cols-2 gap-4">
                  <div>
@@ -146,7 +209,9 @@ const ProductFormModal: React.FC<{
 
             <div className="flex justify-end gap-4 pt-4 border-t border-border-color">
                 <button type="button" onClick={onClose} className="px-4 py-2 bg-black/10 dark:bg-white/10 text-text-primary rounded-md hover:bg-black/20 dark:hover:bg-white/20">Cancel</button>
-                <button type="submit" className="px-6 py-2 bg-accent text-surface rounded-md hover:bg-accent-hover">Save Product</button>
+                <button type="submit" disabled={isSaving} className="px-6 py-2 bg-accent text-surface rounded-md hover:bg-accent-hover disabled:opacity-70 disabled:cursor-wait">
+                    {isSaving ? 'Saving...' : 'Save Product'}
+                </button>
             </div>
         </form>
       </div>
@@ -155,7 +220,7 @@ const ProductFormModal: React.FC<{
 };
 
 const AdminProducts: React.FC = () => {
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { products, addProduct, updateProduct, deleteProduct, loading } = useProducts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
@@ -175,11 +240,11 @@ const AdminProducts: React.FC = () => {
     }
   };
 
-  const handleSaveProduct = (productData: Product | Omit<Product, 'id'>) => {
+  const handleSaveProduct = async (productData: Product | Omit<Product, 'id'>) => {
     if ('id' in productData) {
-      updateProduct(productData as Product);
+      await updateProduct(productData as Product);
     } else {
-      addProduct(productData);
+      await addProduct(productData);
     }
     setIsModalOpen(false);
     setEditingProduct(null);
@@ -207,7 +272,9 @@ const AdminProducts: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {products.length > 0 ? (
+            {loading ? (
+                <tr><td colSpan={6} className="p-4 text-center text-text-secondary">Loading products...</td></tr>
+            ) : products.length > 0 ? (
                 products.map(product => (
               <tr key={product.id} className="border-b border-border-color hover:bg-accent/5">
                 <td className="p-3 text-sm flex items-center gap-3">

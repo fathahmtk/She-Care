@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 
 const BrandStory: React.FC = () => {
   return (

@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
+import '../types';
 import { useProducts } from '../contexts/ProductContext';
 import type { Product } from '../types';
 import StarRating from './StarRating';

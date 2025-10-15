@@ -1,4 +1,8 @@
 import React, { useEffect } from 'react';
+// FIX: Add a side-effect import for the global types file.
+// This ensures that the JSX namespace augmentations are loaded and applied
+// before any JSX is rendered within this component tree.
+import '../types';
 import { useSearch } from '../contexts/SearchContext';
 import SearchIcon from './icons/SearchIcon';
 

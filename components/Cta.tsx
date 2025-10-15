@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 
 const Cta: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +14,7 @@ const Cta: React.FC = () => {
     return regex.test(email);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isLoading) return;
     setIsSubmitted(false);
@@ -30,26 +32,45 @@ const Cta: React.FC = () => {
     setError('');
     setIsLoading(true);
 
-    // Simulate network request
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    setIsLoading(false);
-    setIsSubmitted(true);
-    console.log('Successfully subscribed:', email);
-    setEmail(''); // Clear input after successful submission
-
-    // Hide success message after a few seconds
+    // Simulate network delay & save to localStorage
     setTimeout(() => {
-        setIsSubmitted(false);
-    }, 3000);
+      try {
+        const subscribersKey = 'shecarehub-newsletter-subscribers';
+        const existingSubscribersRaw = localStorage.getItem(subscribersKey);
+        let subscribers: string[] = existingSubscribersRaw ? JSON.parse(existingSubscribersRaw) : [];
+
+        if (subscribers.includes(email)) {
+          setError('This email is already subscribed.');
+          setIsLoading(false);
+          return;
+        }
+
+        subscribers.push(email);
+        localStorage.setItem(subscribersKey, JSON.stringify(subscribers));
+        
+        setIsLoading(false);
+        setIsSubmitted(true);
+        console.log('Successfully subscribed and stored:', email);
+        setEmail('');
+
+        // Hide success message after a few seconds
+        setTimeout(() => {
+          setIsSubmitted(false);
+        }, 4000);
+      } catch (err) {
+        console.error('Failed to save email to localStorage', err);
+        setError('Could not process your subscription. Please try again.');
+        setIsLoading(false);
+      }
+    }, 1000);
   };
 
   return (
     <section id="contact" className="py-24">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Get Your Relief Belt Today!</h2>
+        <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Join Our Wellness Community</h2>
         <p className="text-text-secondary mb-8 max-w-2xl mx-auto">
-          Subscribe to our newsletter for exclusive offers, wellness tips, and updates on the shecarehub.com Relief Belt.
+          Subscribe to our newsletter for exclusive offers, wellness tips, and a first look at our new product launches.
         </p>
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto" noValidate>
           <div className="flex flex-col sm:flex-row gap-4">

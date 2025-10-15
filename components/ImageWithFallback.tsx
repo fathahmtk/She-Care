@@ -1,4 +1,6 @@
 import React, { useState, useEffect, forwardRef } from "react";
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 
 type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
   /** A default image URL to display if the primary `src` fails to load. */

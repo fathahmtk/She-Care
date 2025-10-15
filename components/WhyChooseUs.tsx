@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
+import '../types';
 import { GoogleGenAI, Type } from "@google/genai";
 import type { WhyChooseUsItem } from '../types';
 import QualityIcon from './icons/QualityIcon';
@@ -25,12 +27,17 @@ const featurePillars = [
   }
 ];
 
-const descriptionSchema = {
-  type: Type.OBJECT,
-  properties: {
-    description: { type: Type.STRING, description: "A concise, elegant, and persuasive description (around 20-25 words) for the feature." },
-  },
-  required: ["description"],
+// Define a schema for an array of feature descriptions
+const descriptionsSchema = {
+    type: Type.ARRAY,
+    items: {
+        type: Type.OBJECT,
+        properties: {
+            title: { type: Type.STRING },
+            description: { type: Type.STRING, description: "A concise, elegant, and persuasive description (around 20-25 words) for the feature." },
+        },
+        required: ["title", "description"],
+    },
 };
 
 
@@ -44,25 +51,29 @@ const WhyChooseUs: React.FC = () => {
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         
-        const generatedFeatures = await Promise.all(featurePillars.map(async (pillar) => {
-          const prompt = `You are a branding expert for SheCareHub.com, a luxury women's wellness brand in India. Write a compelling, short description for the following brand pillar: "${pillar.title}". The tone should be elegant, trustworthy, and aspirational.`;
-
-          const response = await ai.models.generateContent({
+        const pillarTitles = featurePillars.map(p => `"${p.title}"`).join(', ');
+        const prompt = `You are a branding expert for SheCareHub.com, a luxury women's wellness brand in India. For each of the following brand pillars, write a compelling, short description. The tone should be elegant, trustworthy, and aspirational. The pillars are: ${pillarTitles}. Return the result as a JSON array where each object has a "title" and "description" key, in the same order as the input titles.`;
+        
+        const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
             config: {
-              responseMimeType: 'application/json',
-              responseSchema: descriptionSchema,
+                responseMimeType: 'application/json',
+                responseSchema: descriptionsSchema,
             },
-          });
-          
-          const result = JSON.parse(response.text);
-          return {
-            ...pillar,
-            description: result.description,
-          };
-        }));
+        });
         
+        const results = JSON.parse(response.text) as { title: string; description: string }[];
+        
+        // Map the AI-generated descriptions back to our feature pillars with icons
+        const generatedFeatures = featurePillars.map(pillar => {
+            const foundResult = results.find(r => r.title === pillar.title);
+            return {
+                ...pillar,
+                description: foundResult ? foundResult.description : "A commitment to excellence and your well-being in every product we offer.", // Fallback description
+            };
+        });
+
         setFeatures(generatedFeatures);
 
       } catch (error) {

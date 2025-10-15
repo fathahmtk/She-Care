@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import type { ShippingInfo, PaymentInfo, Order } from '../types';
 import { useCart } from '../contexts/CartContext';
 import AnimatedSection from '../components/AnimatedSection';
-import { useOrders } from '../hooks/useOrders';
+import { useOrders } from '../contexts/OrderContext';
 
 const CheckoutPage: React.FC = () => {
   const { cartItems, cartTotal, clearCart } = useCart();
@@ -14,14 +16,16 @@ const CheckoutPage: React.FC = () => {
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
     cardNumber: '', expiryDate: '', cvv: '', nameOnCard: ''
   });
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStep(2);
   };
 
-  const handlePaymentSubmit = (e: React.FormEvent) => {
+  const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsProcessing(true);
     
     const newOrder: Order = {
         id: `ORD-${Date.now()}`,
@@ -33,8 +37,9 @@ const CheckoutPage: React.FC = () => {
         payment: paymentInfo
     };
 
-    addOrder(newOrder);
+    await addOrder(newOrder);
     clearCart();
+    setIsProcessing(false);
     window.location.hash = '#/confirmation';
   };
   
@@ -48,8 +53,6 @@ const CheckoutPage: React.FC = () => {
   };
   
   if (cartItems.length === 0 && step !== 3) {
-      // Redirect to cart if it's empty, but not from the confirmation page.
-      // A small delay helps prevent race conditions with routing.
       setTimeout(() => {
         if(window.location.hash === '#/checkout') {
             window.location.hash = '#/cart';
@@ -64,9 +67,7 @@ const CheckoutPage: React.FC = () => {
         <h1 className="text-4xl md:text-5xl font-heading text-accent mb-8 text-center">Checkout</h1>
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
           
-          {/* Left Column: Form */}
           <div className="bg-surface p-8 rounded-lg shadow-md">
-            {/* Stepper */}
             <div className="flex items-center mb-8">
               <div className="flex items-center text-accent">
                 <div className="rounded-full transition duration-500 ease-in-out h-8 w-8 flex items-center justify-center border-2 border-accent bg-accent text-surface">1</div>
@@ -137,14 +138,15 @@ const CheckoutPage: React.FC = () => {
                 </div>
                  <div className="flex items-center justify-between mt-8">
                     <button type="button" onClick={() => setStep(1)} className="text-accent hover:underline"> &larr; Back to Shipping</button>
-                    <button type="submit" className="bg-accent text-surface py-3 px-8 rounded-lg transition-all duration-300 font-body font-semibold tracking-wider hover:bg-accent-hover">Pay ₹{cartTotal.toFixed(2)}</button>
+                    <button type="submit" disabled={isProcessing} className="bg-accent text-surface py-3 px-8 rounded-lg transition-all duration-300 font-body font-semibold tracking-wider hover:bg-accent-hover disabled:opacity-70 disabled:cursor-not-allowed">
+                        {isProcessing ? 'Processing...' : `Pay ₹${cartTotal.toFixed(2)}`}
+                    </button>
                 </div>
               </form>
             )}
 
           </div>
 
-          {/* Right Column: Order Summary */}
           <div className="bg-surface/50 p-8 rounded-lg h-fit sticky top-32">
               <h2 className="text-2xl font-semibold text-text-primary border-b border-border-color pb-4 mb-4">Your Order</h2>
               <div className="space-y-4 max-h-64 overflow-y-auto no-scrollbar pr-2">

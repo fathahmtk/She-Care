@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
+import '../types';
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { Shade } from '../types';
 import CloseIcon from './icons/CloseIcon';

@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import Hero from '../components/Hero';
 import ProductShowcase from '../components/ProductShowcase';
 import Cta from '../components/Cta';
@@ -6,9 +8,9 @@ import AnimatedSection from '../components/AnimatedSection';
 import TestimonialCarousel from '../components/TestimonialCarousel';
 import ShadeFinder from '../components/ShadeFinder';
 import BrandStory from '../components/BrandStory';
-import RecipeGenerator from '../components/RecipeGenerator';
 import WhyChooseUs from '../components/WhyChooseUs';
 import VirtualMirror from '../components/VirtualMirror';
+import FaqSection from '../components/FaqSection';
 
 const HomePage: React.FC = () => {
   return (
@@ -26,14 +28,14 @@ const HomePage: React.FC = () => {
       <AnimatedSection>
         <WhyChooseUs />
       </AnimatedSection>
+      <AnimatedSection>
+        <FaqSection />
+      </AnimatedSection>
        <AnimatedSection>
         <VirtualMirror />
       </AnimatedSection>
       <AnimatedSection>
         <ShadeFinder />
-      </AnimatedSection>
-      <AnimatedSection>
-        <RecipeGenerator />
       </AnimatedSection>
       <AnimatedSection>
         <Cta />

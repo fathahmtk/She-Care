@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
+import '../../types';
 
 const HeartIcon: React.FC<React.SVGProps<SVGSVGElement> & { filled?: boolean }> = ({ filled = false, ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill={filled ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" {...props}>

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
+import '../types';
 import ArrowLeftIcon from '../components/icons/ArrowLeftIcon';
 import QuestionIcon from '../components/icons/QuestionIcon';
 import ChevronDownIcon from '../components/icons/ChevronDownIcon';

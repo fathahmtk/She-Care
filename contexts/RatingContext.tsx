@@ -1,41 +1,44 @@
 
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+
+
+import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
 import type { UserRating } from '../types';
+import * as api from '../utils/api';
 
 interface RatingContextType {
   ratings: UserRating[];
-  addRating: (productId: number, rating: number) => void;
+  loading: boolean;
+  addRating: (productId: number, rating: number) => Promise<void>;
   getRatingsForProduct: (productId: number) => UserRating[];
   getProductRatingSummary: (productId: number) => { average: number; count: number };
 }
 
 const RatingContext = createContext<RatingContextType | undefined>(undefined);
 
-const getInitialRatings = (): UserRating[] => {
-    try {
-        const item = window.localStorage.getItem('shecarehub-ratings');
-        return item ? JSON.parse(item) : [];
-    } catch (error) {
-        console.error("Could not parse ratings from localStorage", error);
-        return [];
-    }
-};
-
 export const RatingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [ratings, setRatings] = useState<UserRating[]>(getInitialRatings);
+  const [ratings, setRatings] = useState<UserRating[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchRatings = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await api.getRatings();
+      setRatings(data);
+    } catch (err) {
+      console.error("Failed to fetch ratings:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    try {
-        window.localStorage.setItem('shecarehub-ratings', JSON.stringify(ratings));
-    } catch (error) {
-        console.error("Could not save ratings to localStorage", error);
-    }
-  }, [ratings]);
+    fetchRatings();
+  }, [fetchRatings]);
 
-  const addRating = (productId: number, rating: number) => {
+  const addRating = async (productId: number, rating: number) => {
     const newRating: UserRating = { productId, rating };
-    // A real app would also associate this with a userId
-    setRatings(prevRatings => [...prevRatings, newRating]);
+    await api.addRating(newRating);
+    await fetchRatings();
   };
 
   const getRatingsForProduct = (productId: number) => {
@@ -54,7 +57,7 @@ export const RatingProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   };
 
   return (
-    <RatingContext.Provider value={{ ratings, addRating, getRatingsForProduct, getProductRatingSummary }}>
+    <RatingContext.Provider value={{ ratings, loading, addRating, getRatingsForProduct, getProductRatingSummary }}>
       {children}
     </RatingContext.Provider>
   );

@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 
 const SocialIconFacebook: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg fill="currentColor" viewBox="0 0 24 24" {...props}>

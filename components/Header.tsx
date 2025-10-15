@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import Logo from './Logo';
 import { useCart } from '../contexts/CartContext';
 import { useSearch } from '../contexts/SearchContext';

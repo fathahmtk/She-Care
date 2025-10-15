@@ -1,4 +1,6 @@
 import React, { useRef } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 
 interface AnimatedSectionProps {

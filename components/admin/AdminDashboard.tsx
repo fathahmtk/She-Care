@@ -1,5 +1,7 @@
 import React from 'react';
-import { useOrders } from '../../hooks/useOrders';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
+import { useOrders } from '../../contexts/OrderContext';
 import { useProducts } from '../../contexts/ProductContext';
 import OrdersIcon from '../icons/OrdersIcon';
 import ProductsIcon from '../icons/ProductsIcon';
@@ -17,39 +19,47 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: React.Re
 );
 
 const AdminDashboard: React.FC = () => {
-  const { orders } = useOrders();
-  const { products } = useProducts();
+  const { orders, loading: ordersLoading } = useOrders();
+  const { products, loading: productsLoading } = useProducts();
 
   const totalRevenue = orders.reduce((acc, order) => acc + order.total, 0);
   const totalOrders = orders.length;
   const totalProducts = products.length;
 
   const recentOrders = [...orders].sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()).slice(0, 5);
+  
+  const isLoading = ordersLoading || productsLoading;
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-text-primary mb-6">Dashboard</h1>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <StatCard 
-          title="Total Revenue" 
-          value={`₹${totalRevenue.toLocaleString('en-IN')}`} 
-          icon={<span className="text-2xl">₹</span>}
-        />
-        <StatCard 
-          title="Total Orders" 
-          value={totalOrders} 
-          icon={<OrdersIcon className="w-6 h-6"/>}
-        />
-        <StatCard 
-          title="Total Products" 
-          value={totalProducts} 
-          icon={<ProductsIcon className="w-6 h-6" />}
-        />
-      </div>
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 animate-pulse">
+            <div className="bg-surface p-6 rounded-lg shadow-sm h-24"></div>
+            <div className="bg-surface p-6 rounded-lg shadow-sm h-24"></div>
+            <div className="bg-surface p-6 rounded-lg shadow-sm h-24"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <StatCard 
+            title="Total Revenue" 
+            value={`₹${totalRevenue.toLocaleString('en-IN')}`} 
+            icon={<span className="text-2xl">₹</span>}
+            />
+            <StatCard 
+            title="Total Orders" 
+            value={totalOrders} 
+            icon={<OrdersIcon className="w-6 h-6"/>}
+            />
+            <StatCard 
+            title="Total Products" 
+            value={totalProducts} 
+            icon={<ProductsIcon className="w-6 h-6" />}
+            />
+        </div>
+      )}
 
-      {/* Recent Orders Table */}
       <div className="bg-surface p-6 rounded-lg shadow-sm">
         <h2 className="text-xl font-semibold text-text-primary mb-4">Recent Orders</h2>
         <div className="overflow-x-auto">
@@ -64,7 +74,9 @@ const AdminDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {recentOrders.length > 0 ? recentOrders.map(order => (
+              {isLoading ? (
+                 <tr><td colSpan={5} className="p-4 text-center text-text-secondary">Loading recent orders...</td></tr>
+              ) : recentOrders.length > 0 ? recentOrders.map(order => (
                 <tr key={order.id} className="border-b border-border-color hover:bg-accent/5">
                   <td className="p-3 text-sm text-text-primary font-mono">{order.id.slice(-6)}</td>
                   <td className="p-3 text-sm text-text-secondary">{order.customer.fullName}</td>

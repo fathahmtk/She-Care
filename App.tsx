@@ -1,6 +1,10 @@
-
-
+// FIX: Import React before augmenting its types.
+// This ensures that the base JSX namespace is available before being extended.
 import React, { useState, useEffect } from 'react';
+// FIX: Add a side-effect import for the global types file.
+// This ensures that the JSX namespace augmentations are loaded and applied
+// before any JSX is rendered within this component tree.
+import './types';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -13,7 +17,8 @@ import { WishlistProvider } from './contexts/WishlistContext';
 import { RatingProvider } from './contexts/RatingContext';
 import AuthModal from './components/AuthModal';
 import HomePage from './pages/HomePage';
-import ProductDetailPage from './pages/ProductDetailPage';
+// FIX: Changed to a named import as ProductDetailPage was missing a default export.
+import { ProductDetailPage } from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -22,6 +27,7 @@ import AdminPage from './pages/admin/AdminPage';
 import AddPoliciesPage from './pages/AddPoliciesPage';
 import UserProfilePage from './pages/UserProfilePage';
 import Chatbot from './components/Chatbot';
+import { OrderProvider } from './contexts/OrderContext';
 
 const NotFound: React.FC = () => (
     <div className="container mx-auto text-center py-48 px-6">
@@ -126,13 +132,15 @@ const App: React.FC = () => {
       <AuthProvider>
         <ProductProvider>
           <RatingProvider>
-            <CartProvider>
-              <WishlistProvider>
-                <SearchProvider>
-                  <AppContent />
-                </SearchProvider>
-              </WishlistProvider>
-            </CartProvider>
+            <OrderProvider>
+              <CartProvider>
+                <WishlistProvider>
+                  <SearchProvider>
+                    <AppContent />
+                  </SearchProvider>
+                </WishlistProvider>
+              </CartProvider>
+            </OrderProvider>
           </RatingProvider>
         </ProductProvider>
       </AuthProvider>

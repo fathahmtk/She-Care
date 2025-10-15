@@ -1,5 +1,6 @@
-
 import React, { useState } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import StarIcon from './icons/StarIcon';
 
 interface StarRatingProps {

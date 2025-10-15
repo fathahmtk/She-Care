@@ -1,69 +1,65 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
 import type { Product } from '../types';
-import { PRODUCTS as initialProducts } from '../constants';
+import * as api from '../utils/api';
 
 interface ProductContextType {
   products: Product[];
-  addProduct: (product: Omit<Product, 'id'>) => void;
-  updateProduct: (updatedProduct: Product) => void;
-  deleteProduct: (productId: number) => void;
+  loading: boolean;
+  error: string | null;
+  addProduct: (product: Omit<Product, 'id'>) => Promise<void>;
+  updateProduct: (updatedProduct: Product) => Promise<void>;
+  deleteProduct: (productId: number) => Promise<void>;
   getProductById: (productId: number) => Product | undefined;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-const getInitialProducts = (): Product[] => {
-    try {
-        const item = window.localStorage.getItem('shecarehub-products');
-        // If local storage is empty, seed it with the initial data.
-        if (!item) {
-            window.localStorage.setItem('shecarehub-products', JSON.stringify(initialProducts));
-            return initialProducts;
-        }
-        return JSON.parse(item);
-    } catch (error) {
-        console.error("Could not parse products from localStorage", error);
-        return initialProducts;
-    }
-};
-
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>(getInitialProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await api.getProducts();
+      setProducts(data);
+    } catch (err) {
+      setError("Failed to fetch products.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    try {
-        window.localStorage.setItem('shecarehub-products', JSON.stringify(products));
-    } catch (error) {
-        console.error("Could not save products to localStorage", error);
-    }
-  }, [products]);
+    fetchProducts();
+  }, [fetchProducts]);
 
-  const addProduct = (productData: Omit<Product, 'id'>) => {
-    setProducts(prevProducts => {
-      const newProduct: Product = {
-        ...productData,
-        id: Date.now(), // Simple unique ID generation
-      };
-      return [...prevProducts, newProduct];
-    });
+  const addProduct = async (productData: Omit<Product, 'id'>) => {
+    await api.addProduct(productData);
+    await fetchProducts(); // Refetch to get the updated list
   };
 
-  const updateProduct = (updatedProduct: Product) => {
-    setProducts(prevProducts => 
-      prevProducts.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
-    );
+  const updateProduct = async (updatedProduct: Product) => {
+    await api.updateProduct(updatedProduct);
+    await fetchProducts();
   };
 
-  const deleteProduct = (productId: number) => {
-    setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
+  const deleteProduct = async (productId: number) => {
+    await api.deleteProduct(productId);
+    await fetchProducts();
   };
 
   const getProductById = (productId: number): Product | undefined => {
     return products.find(p => p.id === productId);
   };
 
+  const value = { products, loading, error, addProduct, updateProduct, deleteProduct, getProductById };
+
   return (
-    <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, getProductById }}>
+    <ProductContext.Provider value={value}>
       {children}
     </ProductContext.Provider>
   );

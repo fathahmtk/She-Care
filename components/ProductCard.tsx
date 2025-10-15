@@ -1,6 +1,6 @@
-
-
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import type { Product } from '../types';
 import ProductGallery from './ProductGallery';
 import { useCart } from '../contexts/CartContext';
@@ -26,11 +26,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const isWishlisted = isInWishlist(product.id);
   
-  // Combine initial data with user-submitted data for a live feel
+  // Combine initial data with user-submitted data for a live feel, memoized for performance.
   const userSubmittedRatings = getProductRatingSummary(product.id);
-  const totalReviews = product.reviewCount + userSubmittedRatings.count;
-  const totalRatingPoints = (product.rating * product.reviewCount) + (userSubmittedRatings.average * userSubmittedRatings.count);
-  const averageRating = totalReviews > 0 ? totalRatingPoints / totalReviews : 0;
+
+  const { averageRating, totalReviews } = useMemo(() => {
+    const totalStaticReviews = product.reviewCount;
+    const totalUserReviews = userSubmittedRatings.count;
+    
+    const totalReviewsCount = totalStaticReviews + totalUserReviews;
+    const totalRatingPoints = (product.rating * totalStaticReviews) + (userSubmittedRatings.average * totalUserReviews);
+    const finalAverageRating = totalReviewsCount > 0 ? totalRatingPoints / totalReviewsCount : 0;
+    
+    return { averageRating: finalAverageRating, totalReviews: totalReviewsCount };
+  }, [product.rating, product.reviewCount, userSubmittedRatings.average, userSubmittedRatings.count]);
 
 
   const handleToggleWishlist = () => {

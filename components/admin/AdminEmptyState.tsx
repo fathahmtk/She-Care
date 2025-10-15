@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 
 interface AdminEmptyStateProps {
   icon: React.ReactNode;

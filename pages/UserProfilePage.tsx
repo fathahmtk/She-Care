@@ -1,6 +1,8 @@
 import React from 'react';
+// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
+import '../types';
 import { useAuth } from '../contexts/AuthContext';
-import { useOrders } from '../hooks/useOrders';
+import { useOrders } from '../contexts/OrderContext';
 import AnimatedSection from '../components/AnimatedSection';
 import ReceiptIcon from '../components/icons/ReceiptIcon';
 import type { Order } from '../types';
@@ -19,7 +21,7 @@ const OrderStatusBadge: React.FC<{ status: Order['status'] }> = ({ status }) => 
 
 const UserProfilePage: React.FC<{ onLoginClick: () => void }> = ({ onLoginClick }) => {
   const { isAuthenticated, user } = useAuth();
-  const { orders } = useOrders();
+  const { orders, loading } = useOrders();
 
   if (!isAuthenticated || !user) {
     return (
@@ -64,7 +66,11 @@ const UserProfilePage: React.FC<{ onLoginClick: () => void }> = ({ onLoginClick 
             <div className="lg:col-span-2">
                 <div className="bg-surface p-6 rounded-lg shadow-md">
                     <h2 className="text-2xl font-semibold text-text-primary mb-4">Order History</h2>
-                    {userOrders.length > 0 ? (
+                    {loading ? (
+                        <div className="text-center py-16">
+                            <p className="text-text-secondary">Loading your orders...</p>
+                        </div>
+                    ) : userOrders.length > 0 ? (
                         <div className="space-y-6">
                             {userOrders.map(order => (
                                 <div key={order.id} className="border border-border-color rounded-lg p-4 transition-shadow hover:shadow-lg">

@@ -1,12 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import { useOrders, } from '../../hooks/useOrders';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
+import { useOrders, } from '../../contexts/OrderContext';
 import type { Order, OrderStatus } from '../../types';
 import AdminOrderDetail from './AdminOrderDetail';
 import AdminEmptyState from './AdminEmptyState';
 import EmptyOrdersIcon from '../icons/EmptyOrdersIcon';
 
 const AdminOrders: React.FC = () => {
-  const { orders, updateOrderStatus } = useOrders();
+  const { orders, loading, updateOrderStatus } = useOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [filter, setFilter] = useState<OrderStatus | 'All'>('All');
   const [sort, setSort] = useState<'date-desc' | 'date-asc' | 'total-desc' | 'total-asc'>('date-desc');
@@ -42,7 +44,6 @@ const AdminOrders: React.FC = () => {
     <div>
       <h1 className="text-3xl font-bold text-text-primary mb-6">Manage Orders</h1>
 
-      {/* Filters and Sort */}
       <div className="bg-surface p-4 rounded-lg shadow-sm mb-6 flex flex-wrap items-center gap-4">
         <div>
           <label htmlFor="status-filter" className="text-sm font-medium text-text-secondary mr-2">Filter by Status:</label>
@@ -75,7 +76,9 @@ const AdminOrders: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedOrders.length > 0 ? (
+            {loading ? (
+                <tr><td colSpan={6} className="p-4 text-center text-text-secondary">Loading orders...</td></tr>
+            ) : filteredAndSortedOrders.length > 0 ? (
               filteredAndSortedOrders.map(order => (
                 <tr key={order.id} className="border-b border-border-color hover:bg-accent/5">
                   <td className="p-3 text-sm text-text-primary font-mono">{order.id}</td>
@@ -107,15 +110,19 @@ const AdminOrders: React.FC = () => {
                     <td colSpan={6} className="p-4 text-center text-text-secondary">No orders found for the selected filter.</td>
                 </tr>
             )}
+            {!loading && orders.length === 0 && (
+                 <tr>
+                    <td colSpan={6}>
+                        <AdminEmptyState
+                            icon={<EmptyOrdersIcon className="w-20 h-20 text-border-color" />}
+                            title="No Orders Yet"
+                            description="When a new order is placed by a customer, it will appear here."
+                        />
+                    </td>
+                 </tr>
+            )}
           </tbody>
         </table>
-        {orders.length === 0 && (
-             <AdminEmptyState
-                icon={<EmptyOrdersIcon className="w-20 h-20 text-border-color" />}
-                title="No Orders Yet"
-                description="When a new order is placed by a customer, it will appear here."
-            />
-        )}
       </div>
       
       {selectedOrder && (

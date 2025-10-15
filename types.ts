@@ -5,8 +5,10 @@ import * as React from 'react';
 
 declare global {
   namespace JSX {
-    // FIX: Extend React.JSX.IntrinsicElements to augment it instead of replacing it.
-    // This ensures that standard HTML elements like 'div' are still available.
+    // FIX: The original attempt at declaration merging was failing and replacing the base types.
+    // The `extends React.JSX.IntrinsicElements` was causing the global JSX types to be overwritten.
+    // Removing it allows TypeScript's declaration merging to correctly augment the interface,
+    // which resolves errors for all standard HTML tags like `<div>`.
     interface IntrinsicElements {
       'model-viewer': React.DetailedHTMLProps<
         React.HTMLAttributes<HTMLElement> & {
@@ -97,26 +99,17 @@ export interface Testimonial {
 
 export interface Review {
   id: number;
+  productId: number;
   author: string;
   productName: string;
   rating: number;
   comment: string;
+  date: string;
 }
 
 export interface FooterLink {
   name: string;
   href: string;
-}
-
-export interface Recipe {
-  title: string;
-  description: string;
-  prepTime: string;
-  cookTime: string;
-  servings: string;
-  ingredients: string[];
-  instructions: string[];
-  tips?: string[];
 }
 
 export interface WhyChooseUsItem {
