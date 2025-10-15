@@ -11,6 +11,7 @@ import BrandStory from '../components/BrandStory';
 import WhyChooseUs from '../components/WhyChooseUs';
 import VirtualMirror from '../components/VirtualMirror';
 import FaqSection from '../components/FaqSection';
+import BlogSection from '../components/BlogSection';
 
 const HomePage: React.FC = () => {
   return (
@@ -33,6 +34,9 @@ const HomePage: React.FC = () => {
       </AnimatedSection>
        <AnimatedSection>
         <VirtualMirror />
+      </AnimatedSection>
+      <AnimatedSection>
+        <BlogSection />
       </AnimatedSection>
       <AnimatedSection>
         <ShadeFinder />

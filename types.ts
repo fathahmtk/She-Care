@@ -1,20 +1,20 @@
-// FIX: By explicitly importing React, we ensure its types, including the base JSX.IntrinsicElements,
+// By explicitly importing React, we ensure its types, including the base JSX.IntrinsicElements,
 // are loaded before our augmentation. This prevents the augmentation from overwriting the global
 // JSX types, which was causing errors for standard HTML tags like `<div>`, `<p>`, etc.
-import * as React from 'react';
+import React from 'react';
 
 declare global {
   namespace JSX {
-    // FIX: The original attempt at declaration merging was failing and replacing the base types.
-    // The `extends React.JSX.IntrinsicElements` was causing the global JSX types to be overwritten.
-    // Removing it allows TypeScript's declaration merging to correctly augment the interface,
-    // which resolves errors for all standard HTML tags like `<div>`.
+    // FIX: Removed the `extends React.JSX.IntrinsicElements` clause.
+    // Standard TypeScript declaration merging will add our custom 'model-viewer'
+    // element to the existing IntrinsicElements interface from React,
+    // resolving the errors where standard HTML elements were not found.
     interface IntrinsicElements {
       'model-viewer': React.DetailedHTMLProps<
         React.HTMLAttributes<HTMLElement> & {
           src?: string;
           alt?: string;
-          // FIX: Use camelCase for custom element attributes to align with React's JSX prop conventions. React automatically converts camelCase props to kebab-case attributes for custom elements.
+          // Use camelCase for custom element attributes to align with React's JSX prop conventions. React automatically converts camelCase props to kebab-case attributes for custom elements.
           cameraControls?: boolean;
           autoRotate?: boolean;
           shadowIntensity?: string;
@@ -113,8 +113,17 @@ export interface FooterLink {
 }
 
 export interface WhyChooseUsItem {
-  // FIX: Using React.ReactNode directly now that the `react` module is imported at the top of the file.
+  // Using React.ReactNode directly now that the `react` module is imported at the top of the file.
   icon: React.ReactNode;
   title: string;
   description: string; // This will be the AI-generated content
+}
+
+export interface BlogPost {
+  id: number;
+  category: string;
+  title: string;
+  snippet: string;
+  imageUrl: string;
+  href: string;
 }

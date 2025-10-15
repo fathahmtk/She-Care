@@ -24,7 +24,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartItems } = useCart();
@@ -36,16 +35,6 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
   
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isSearchDropdownVisible, setIsSearchDropdownVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -81,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
 
   return (
     <>
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-background-start/80 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background-start/80 backdrop-blur-sm shadow-lg">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <Logo />
         

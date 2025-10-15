@@ -7,6 +7,7 @@ import ProductCard from './ProductCard';
 import ReviewCard from './ReviewCard';
 import { useSearch } from '../contexts/SearchContext';
 import { useProducts } from '../contexts/ProductContext';
+import SearchIcon from './icons/SearchIcon';
 
 const ProductCardSkeleton: React.FC = () => (
     <div className="bg-surface rounded-2xl shadow-lg p-6 md:p-8 animate-pulse">
@@ -32,7 +33,7 @@ const ProductShowcase: React.FC = () => {
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedTag, setSelectedTag] = useState('All');
-  const { searchQuery } = useSearch();
+  const { searchQuery, setSearchQuery } = useSearch();
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -79,12 +80,29 @@ const ProductShowcase: React.FC = () => {
             ))}
           </div>
           
-          <div className="flex justify-center flex-wrap gap-3 mb-12">
+          <div className="flex justify-center flex-wrap gap-3 mb-8">
             {tags.map(tag => (
               <button key={tag} onClick={() => setSelectedTag(tag)} className={`px-4 py-1 text-sm font-body font-medium rounded-full transition-all duration-300 border ${selectedTag === tag ? 'bg-accent/20 text-accent border-accent/30' : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'}`}>
                 {tag}
               </button>
             ))}
+          </div>
+
+          <div className="max-w-xl mx-auto mb-12">
+            <div className="relative">
+              <input
+                type="search"
+                placeholder="Search within our products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-surface border border-border-color rounded-full py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 text-base font-body text-text-primary placeholder:text-text-secondary"
+                aria-label="Search for products"
+                autoComplete="off"
+              />
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <SearchIcon className="h-5 w-5 text-text-secondary" />
+              </div>
+            </div>
           </div>
 
           <div className="mt-12 flex flex-col gap-20">

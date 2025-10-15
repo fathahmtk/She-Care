@@ -55,10 +55,10 @@ const Hero: React.FC = () => {
       )}
 
       <div className="relative z-10 px-6 flex flex-col items-center">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-4 tracking-wider leading-tight text-surface drop-shadow-lg">
-          shecarehub
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-body font-normal mb-4 tracking-widest leading-tight text-white" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)' }}>
+          shecare<span className="font-light">hub</span>
         </h1>
-        <p className="text-lg md:text-xl font-body font-light mb-8 max-w-2xl mx-auto text-surface/90 drop-shadow-md">
+        <p className="text-lg md:text-xl font-body font-light mb-8 max-w-2xl mx-auto text-white/90 drop-shadow-md">
           Experience instant menstrual pain relief with our smart thermal belt — designed for modern women.
         </p>
         <a 
