@@ -40,12 +40,14 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, alt, modelUrl }
       <div className="aspect-square w-full relative">
         {is3DView && modelUrl ? (
           <div className="w-full h-full overflow-hidden rounded-lg border border-border-color">
+             {/* FIX: Replaced invalid kebab-case attributes with camelCase props. React will automatically convert these to the correct kebab-case attributes for the web component. */}
              <model-viewer
                 src={modelUrl}
                 alt={`3D model of ${alt}`}
                 cameraControls
                 autoRotate
-                shadowIntensity="1"
+                // FIX: Changed shadowIntensity to be a number to match the component's API.
+                shadowIntensity={1}
                 style={{ width: '100%', height: '100%', backgroundColor: 'rgb(var(--color-surface))' }}
               >
                 <div slot="poster" className="relative w-full h-full flex items-center justify-center">

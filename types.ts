@@ -7,13 +7,17 @@ import * as React from 'react';
 declare global {
   namespace JSX {
     interface IntrinsicElements {
+      // FIX: Use camelCase props for custom element attributes to align with React's convention.
+      // React automatically converts camelCase props to kebab-case attributes for web components.
+      // Use `React.DetailedHTMLProps` for augmenting IntrinsicElements to ensure all properties like `ref` and `key` are included.
+      // FIX: Simplified to React.HTMLAttributes to resolve potential type conflicts with custom elements.
       'model-viewer': React.HTMLAttributes<HTMLElement> & {
         src?: string;
         alt?: string;
-        // Use camelCase for custom element attributes to align with React's JSX prop conventions. React automatically converts camelCase props to kebab-case attributes for custom elements.
         cameraControls?: boolean;
         autoRotate?: boolean;
-        shadowIntensity?: string;
+        // FIX: Changed shadowIntensity type to number to match the model-viewer API.
+        shadowIntensity?: number;
       };
     }
   }

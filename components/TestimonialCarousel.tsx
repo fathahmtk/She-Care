@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 // FIX: Import 'Testimonial' type and 'types.ts' for global JSX namespace augmentation.
 import type { Testimonial } from '../types';
 import '../types';
 import * as api from '../utils/api';
 import StarIcon from './icons/StarIcon';
+import ArrowLeftIcon from './icons/ArrowLeftIcon';
+import ArrowRightIcon from './icons/ArrowRightIcon';
 
 const TestimonialCarousel: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const sliderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -38,22 +39,10 @@ const TestimonialCarousel: React.FC = () => {
 
   // Autoplay effect
   useEffect(() => {
-    if (loading) return;
+    if (loading || testimonials.length <= 1) return;
     const timer = setInterval(nextTestimonial, 5000); // Change testimonial every 5 seconds
     return () => clearInterval(timer);
-  }, [nextTestimonial, loading]);
-
-  // Smooth scroll effect
-  useEffect(() => {
-    const slider = sliderRef.current;
-    if (slider) {
-      const scrollLeft = currentIndex * slider.offsetWidth;
-      slider.scrollTo({
-        left: scrollLeft,
-        behavior: 'smooth',
-      });
-    }
-  }, [currentIndex]);
+  }, [nextTestimonial, loading, testimonials.length]);
 
   return (
     <section id="testimonials" className="py-24 bg-surface/50">
@@ -69,10 +58,14 @@ const TestimonialCarousel: React.FC = () => {
             </div>
           ) : (
             <>
-              <div ref={sliderRef} className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar">
-                {testimonials.map((testimonial) => (
-                  <div key={testimonial.id} className="w-full flex-shrink-0 snap-center">
-                    <div className="flex flex-col items-center justify-center h-72 md:h-60 px-4 md:px-10">
+              <div className="relative h-72 md:h-60 overflow-hidden">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={testimonial.id}
+                    className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                    aria-hidden={index !== currentIndex}
+                  >
+                    <div className="flex flex-col items-center justify-center h-full px-4 md:px-10">
                       <p className="text-lg md:text-xl italic text-text-primary mb-6">
                         "{testimonial.quote}"
                       </p>
@@ -89,20 +82,37 @@ const TestimonialCarousel: React.FC = () => {
                 ))}
               </div>
 
-              <button onClick={prevTestimonial} className="absolute top-1/2 left-0 md:-left-12 transform -translate-y-1/2 p-2 rounded-full bg-surface shadow-md hover:bg-accent hover:text-background-start transition-all duration-300 text-text-primary z-10 hover:scale-110" aria-label="Previous testimonial">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
-              </button>
-              <button onClick={nextTestimonial} className="absolute top-1/2 right-0 md:-right-12 transform -translate-y-1/2 p-2 rounded-full bg-surface shadow-md hover:bg-accent hover:text-background-start transition-all duration-300 text-text-primary z-10 hover:scale-110" aria-label="Next testimonial">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-              </button>
+              {testimonials.length > 1 && (
+                  <>
+                    <button 
+                        onClick={prevTestimonial} 
+                        className="absolute top-1/2 left-0 md:-left-16 transform -translate-y-1/2 w-12 h-12 rounded-full bg-surface/80 backdrop-blur-sm shadow-lg hover:bg-accent hover:text-surface transition-all duration-300 text-text-primary z-10 hover:scale-110 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-accent" 
+                        aria-label="Previous testimonial"
+                    >
+                        <ArrowLeftIcon className="w-6 h-6" />
+                    </button>
+                    <button 
+                        onClick={nextTestimonial} 
+                        className="absolute top-1/2 right-0 md:-right-16 transform -translate-y-1/2 w-12 h-12 rounded-full bg-surface/80 backdrop-blur-sm shadow-lg hover:bg-accent hover:text-surface transition-all duration-300 text-text-primary z-10 hover:scale-110 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-accent" 
+                        aria-label="Next testimonial"
+                    >
+                        <ArrowRightIcon className="w-6 h-6" />
+                    </button>
+                  </>
+              )}
             </>
           )}
         </div>
 
-        {!loading && (
+        {!loading && testimonials.length > 1 && (
             <div className="flex justify-center items-center mt-8 space-x-2">
             {testimonials.map((_, index) => (
-                <button key={index} onClick={() => setCurrentIndex(index)} className={`w-3 h-3 rounded-full transition-all duration-300 ${currentIndex === index ? 'bg-accent scale-110' : 'bg-border-color hover:bg-accent/50 transform hover:scale-125'}`} aria-label={`Go to testimonial ${index + 1}`}></button>
+                <button 
+                    key={index} 
+                    onClick={() => setCurrentIndex(index)} 
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${currentIndex === index ? 'bg-accent scale-110' : 'bg-border-color hover:bg-accent/50 transform hover:scale-125'}`} 
+                    aria-label={`Go to testimonial ${index + 1}`}
+                ></button>
             ))}
             </div>
         )}

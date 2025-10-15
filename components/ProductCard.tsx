@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 // FIX: Import 'Product' type and 'types.ts' for global JSX namespace augmentation.
 import type { Product } from '../types';
@@ -98,24 +99,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <HeartIcon className="w-6 h-6" filled={isWishlisted} />
           </button>
 
-          {/* --- START: Added Hover Effect Overlay --- */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 rounded-lg transition-all duration-300 ease-in-out flex flex-col items-center justify-center p-4">
+          {/* --- START: Refined Hover Effect Overlay --- */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 rounded-lg transition-all duration-500 ease-out flex flex-col items-center justify-center p-4">
             <a 
                 href={`#/product/${product.id}`} 
-                className="bg-surface text-text-primary font-body font-semibold py-3 px-8 mb-4 rounded-md transition-all duration-300 ease-in-out transform opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 hover:scale-105"
-                style={{ transitionDelay: '100ms' }}
+                className="bg-surface text-text-primary font-body font-semibold py-3 px-8 mb-4 rounded-md transition-all duration-500 ease-out transform opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-105 delay-100"
             >
                 View Details
             </a>
             <button 
                 onClick={handleAddToCart}
                 disabled={isAdded}
-                className={`w-auto text-surface py-3 px-8 rounded-md transition-all duration-300 font-body font-semibold tracking-wider shadow-md transform disabled:cursor-not-allowed flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 hover:scale-105 ${
+                className={`w-auto text-surface py-3 px-8 rounded-md transition-all duration-500 ease-out font-body font-semibold tracking-wider shadow-md transform disabled:cursor-not-allowed flex items-center justify-center opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-105 delay-200 ${
                 isAdded 
                     ? 'bg-emerald-500' 
                     : 'bg-accent hover:bg-accent-hover'
                 }`}
-                style={{ transitionDelay: '200ms' }}
             >
                 {isAdded ? (
                     <>
@@ -130,7 +129,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 )}
             </button>
           </div>
-          {/* --- END: Added Hover Effect Overlay --- */}
+          {/* --- END: Refined Hover Effect Overlay --- */}
 
         </div>
 
