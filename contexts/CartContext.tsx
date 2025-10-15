@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import type { Product, CartItem } from '../types';
+// FIX: Import 'CartItem' and 'Product' types to resolve 'Cannot find name' errors.
+import type { CartItem, Product } from '../types';
 
 interface CartContextType {
   cartItems: CartItem[];

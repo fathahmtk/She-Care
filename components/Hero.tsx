@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import global types to make JSX augmentations available.
+// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
 import '../types';
-import { GoogleGenAI } from "@google/genai";
+// FIX: Switched to generateContent with gemini-2.5-flash-image to address quota issues.
+import { GoogleGenAI, Modality } from "@google/genai";
 
 const FALLBACK_IMAGE_URL = "https://m.media-amazon.com/images/I/71yD2O6p7JL.jpg";
 
@@ -14,23 +15,33 @@ const Hero: React.FC = () => {
       setIsLoading(true);
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        const prompt = "A minimalist flat lay of premium women's wellness and skincare products on a soft, textured background. Include items like a sleek menstrual pain relief belt, elegant serum bottles, and natural elements like rose petals. The color palette should be soft pinks, creams, and gold accents, evoking a sense of luxury and calm.";
+        const prompt = "A minimalist flat lay of premium women's wellness and skincare products on a soft, textured background. Include items like a sleek menstrual pain relief belt, elegant serum bottles, and natural elements like rose petals. The color palette should be soft pinks, creams, and gold accents, evoking a sense of luxury and calm. 16:9 aspect ratio.";
         
-        const response = await ai.models.generateImages({
-          model: 'imagen-4.0-generate-001',
-          prompt: prompt,
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash-image',
+          contents: {
+            parts: [{ text: prompt }],
+          },
           config: {
-            numberOfImages: 1,
-            outputMimeType: 'image/jpeg',
-            aspectRatio: '16:9',
+            responseModalities: [Modality.IMAGE],
           },
         });
 
-        if (response.generatedImages && response.generatedImages.length > 0) {
-          const base64ImageBytes: string = response.generatedImages[0].image.imageBytes;
-          const generatedUrl = `data:image/jpeg;base64,${base64ImageBytes}`;
-          setImageUrl(generatedUrl);
-        } else {
+        let imageFound = false;
+        if (response.candidates && response.candidates.length > 0) {
+            for (const part of response.candidates[0].content.parts) {
+              if (part.inlineData) {
+                const base64ImageBytes: string = part.inlineData.data;
+                const mimeType = part.inlineData.mimeType;
+                const generatedUrl = `data:${mimeType};base64,${base64ImageBytes}`;
+                setImageUrl(generatedUrl);
+                imageFound = true;
+                break;
+              }
+            }
+        }
+        
+        if (!imageFound) {
             console.warn("AI image generation returned no images, using fallback.");
         }
       } catch (error) {

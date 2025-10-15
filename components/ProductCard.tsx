@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Import 'Product' type and 'types.ts' for global JSX namespace augmentation.
 import type { Product } from '../types';
+import '../types';
 import ProductGallery from './ProductGallery';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -83,7 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
         
         {/* Left Column: Image Gallery */}
-        <div className="relative">
+        <div className="relative group">
           <ProductGallery images={product.imageUrls} alt={product.name} modelUrl={product.modelUrl} />
           {product.tag && (
               <span className="pointer-events-none absolute top-4 left-4 md:left-28 z-10 bg-accent text-white text-xs px-3 py-1 rounded-full font-body tracking-wider">
@@ -97,6 +97,41 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           >
               <HeartIcon className="w-6 h-6" filled={isWishlisted} />
           </button>
+
+          {/* --- START: Added Hover Effect Overlay --- */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 rounded-lg transition-all duration-300 ease-in-out flex flex-col items-center justify-center p-4">
+            <a 
+                href={`#/product/${product.id}`} 
+                className="bg-surface text-text-primary font-body font-semibold py-3 px-8 mb-4 rounded-md transition-all duration-300 ease-in-out transform opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 hover:scale-105"
+                style={{ transitionDelay: '100ms' }}
+            >
+                View Details
+            </a>
+            <button 
+                onClick={handleAddToCart}
+                disabled={isAdded}
+                className={`w-auto text-surface py-3 px-8 rounded-md transition-all duration-300 font-body font-semibold tracking-wider shadow-md transform disabled:cursor-not-allowed flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 hover:scale-105 ${
+                isAdded 
+                    ? 'bg-emerald-500' 
+                    : 'bg-accent hover:bg-accent-hover'
+                }`}
+                style={{ transitionDelay: '200ms' }}
+            >
+                {isAdded ? (
+                    <>
+                        <CheckIcon className="h-5 w-5 mr-2" />
+                        <span>Added!</span>
+                    </>
+                ) : (
+                    <>
+                        <CartIcon className="h-5 w-5 mr-2" />
+                        <span>Add to Cart</span>
+                    </>
+                )}
+            </button>
+          </div>
+          {/* --- END: Added Hover Effect Overlay --- */}
+
         </div>
 
         {/* Right Column: Content Section */}

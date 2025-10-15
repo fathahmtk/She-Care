@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// FIX: Import global types to make JSX augmentations available.
+// FIX: Import types to resolve 'Cannot find name' errors and add global JSX augmentations.
 import '../types';
 import type { ShippingInfo, PaymentInfo, Order } from '../types';
 import { useCart } from '../contexts/CartContext';

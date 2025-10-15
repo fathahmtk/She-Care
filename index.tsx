@@ -1,6 +1,5 @@
 // FIX: Import React before augmenting its types to ensure the base JSX namespace is available.
 import React from 'react';
-import './types'; // This import is crucial for loading global JSX types.
 import ReactDOM from 'react-dom/client';
 import App from './App';
 

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Import 'Review' type and 'types.ts' for global JSX namespace augmentation.
 import type { Review } from '../types';
+import '../types';
 import * as api from '../utils/api';
 import ProductCard from './ProductCard';
 import ReviewCard from './ReviewCard';
 import { useSearch } from '../contexts/SearchContext';
 import { useProducts } from '../contexts/ProductContext';
 import SearchIcon from './icons/SearchIcon';
+import ArrowLeftIcon from './icons/ArrowLeftIcon';
+import ArrowRightIcon from './icons/ArrowRightIcon';
+
 
 const ProductCardSkeleton: React.FC = () => (
     <div className="bg-surface rounded-2xl shadow-lg p-6 md:p-8 animate-pulse">
@@ -34,6 +37,9 @@ const ProductShowcase: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedTag, setSelectedTag] = useState('All');
   const { searchQuery, setSearchQuery } = useSearch();
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 4;
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -49,14 +55,14 @@ const ProductShowcase: React.FC = () => {
     }
     fetchReviews();
   }, []);
-
-  // Dynamically get unique categories from products and add "All"
-  const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
   
-  // Dynamically get unique tags from products and add "All"
+  useEffect(() => {
+      setCurrentPage(1);
+  }, [selectedCategory, selectedTag, searchQuery]);
+
+  const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
   const tags = ['All', ...Array.from(new Set(products.map(p => p.tag)))];
 
-  // Filter products based on the selected category, tag, and search query
   const filteredProducts = products
     .filter(product => selectedCategory === 'All' || product.category === selectedCategory)
     .filter(product => selectedTag === 'All' || product.tag === selectedTag)
@@ -65,6 +71,23 @@ const ProductShowcase: React.FC = () => {
       const query = searchQuery.toLowerCase();
       return product.name.toLowerCase().includes(query) || product.description.toLowerCase().includes(query);
     });
+    
+  // Pagination Logic
+  const indexOfLastProduct = currentPage * PRODUCTS_PER_PAGE;
+  const indexOfFirstProduct = indexOfLastProduct - PRODUCTS_PER_PAGE;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    const productSection = document.getElementById('products');
+    if (productSection) {
+      // Use a slight delay to allow the DOM to update before scrolling
+      setTimeout(() => {
+        productSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  };
 
   return (
     <>
@@ -111,8 +134,8 @@ const ProductShowcase: React.FC = () => {
                     <ProductCardSkeleton />
                     <ProductCardSkeleton />
                 </>
-            ) : filteredProducts.length > 0 ? (
-                filteredProducts.map(product => (
+            ) : currentProducts.length > 0 ? (
+                currentProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))
             ) : (
@@ -122,6 +145,40 @@ const ProductShowcase: React.FC = () => {
                 </div>
             )}
           </div>
+          
+          {totalPages > 1 && (
+              <div className="mt-16 flex justify-center items-center gap-2">
+                  <button
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="flex items-center gap-2 px-4 py-2 font-body font-semibold rounded-md transition-all duration-300 border-2 bg-transparent text-accent border-accent hover:bg-accent/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label="Go to previous page"
+                  >
+                      <ArrowLeftIcon className="w-4 h-4" />
+                      <span>Previous</span>
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                      <button
+                          key={number}
+                          onClick={() => paginate(number)}
+                          className={`px-4 py-2 font-body font-semibold rounded-md transition-all duration-300 border-2 ${currentPage === number ? 'bg-accent text-surface border-accent' : 'bg-transparent text-accent border-accent hover:bg-accent/10'}`}
+                          aria-label={`Go to page ${number}`}
+                          aria-current={currentPage === number ? 'page' : undefined}
+                      >
+                          {number}
+                      </button>
+                  ))}
+                  <button
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="flex items-center gap-2 px-4 py-2 font-body font-semibold rounded-md transition-all duration-300 border-2 bg-transparent text-accent border-accent hover:bg-accent/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label="Go to next page"
+                  >
+                       <span>Next</span>
+                       <ArrowRightIcon className="w-4 h-4" />
+                  </button>
+              </div>
+          )}
         </div>
       </section>
 

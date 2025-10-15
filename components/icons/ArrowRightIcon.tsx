@@ -1,4 +1,5 @@
 import React from 'react';
+// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
 import '../../types';
 
 const ArrowRightIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (

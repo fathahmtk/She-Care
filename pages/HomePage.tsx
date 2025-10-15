@@ -1,6 +1,4 @@
 import React from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
 import Hero from '../components/Hero';
 import ProductShowcase from '../components/ProductShowcase';
 import Cta from '../components/Cta';

@@ -1,4 +1,5 @@
 import React from 'react';
+// FIX: Import the 'FooterLink' type to resolve 'Cannot find name' error.
 import type { FooterLink } from './types';
 import SocialIconFacebook from './components/icons/SocialIconFacebook';
 import SocialIconInstagram from './components/icons/SocialIconInstagram';

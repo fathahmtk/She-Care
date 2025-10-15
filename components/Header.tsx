@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import global types to make JSX augmentations available.
+// FIX: Import 'Product' type and 'types.ts' for global JSX namespace augmentation.
+import type { Product } from '../types';
 import '../types';
 import Logo from './Logo';
 import { useCart } from '../contexts/CartContext';
@@ -8,7 +9,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { useProducts } from '../contexts/ProductContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useWishlist } from '../contexts/WishlistContext';
-import type { Product } from '../types';
 import CartIcon from './icons/CartIcon';
 import SearchIcon from './icons/SearchIcon';
 import UserIcon from './icons/UserIcon';

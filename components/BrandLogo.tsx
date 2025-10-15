@@ -1,4 +1,5 @@
 import React from 'react';
+// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
 import '../types';
 
 const BrandLogo: React.FC<{ className?: string }> = ({ className }) => {
@@ -40,7 +41,7 @@ const BrandLogo: React.FC<{ className?: string }> = ({ className }) => {
         fontFamily="Poppins, sans-serif"
         fontSize="24"
         fontWeight="400"
-        className="fill-text-primary"
+        className="fill-[url(#logoGradient)]"
       >
         shecare<tspan fontWeight="300">hub</tspan>
       </text>

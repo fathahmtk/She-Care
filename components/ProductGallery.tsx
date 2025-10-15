@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// FIX: Import 'types.ts' to make the global JSX namespace augmentations for 'model-viewer' available to this component.
+// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
 import '../types';
 import ImageWithFallback from './ImageWithFallback';
 import Icon3D from './icons/Icon3D';
@@ -40,7 +40,6 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, alt, modelUrl }
       <div className="aspect-square w-full relative">
         {is3DView && modelUrl ? (
           <div className="w-full h-full overflow-hidden rounded-lg border border-border-color">
-             {/* FIX: Removed a historical JSX comment that may have been causing a parser issue. The code already uses the correct camelCase props as described in the comment. */}
              <model-viewer
                 src={modelUrl}
                 alt={`3D model of ${alt}`}

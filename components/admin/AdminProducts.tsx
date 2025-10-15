@@ -1,10 +1,9 @@
 
-
 import React, { useState, useRef } from 'react';
-// FIX: Import global types to make JSX augmentations available.
+// FIX: Import 'Product' type and 'types.ts' for global JSX namespace augmentation.
+import type { Product } from '../../types';
 import '../../types';
 import { useProducts } from '../../contexts/ProductContext';
-import type { Product } from '../../types';
 import EditIcon from '../icons/EditIcon';
 import DeleteIcon from '../icons/DeleteIcon';
 import CloseIcon from '../icons/CloseIcon';
@@ -300,26 +299,22 @@ const AdminProducts: React.FC = () => {
                     <td colSpan={6}>
                         <AdminEmptyState
                             icon={<EmptyProductsIcon className="w-20 h-20 text-border-color" />}
-                            title="No Products Yet"
-                            description="Get started by adding your first product to the catalog."
-                        >
-                            <button onClick={handleAddProduct} className="mt-6 bg-accent text-surface font-semibold px-5 py-2.5 rounded-lg hover:bg-accent-hover transition-colors">
-                                + Add Your First Product
-                            </button>
-                        </AdminEmptyState>
+                            title="No Products Found"
+                            description="You haven't added any products yet. Click 'Add Product' to get started."
+                        />
                     </td>
                 </tr>
             )}
           </tbody>
         </table>
       </div>
-
+      
       {isModalOpen && (
-        <ProductFormModal 
-            product={editingProduct}
+          <ProductFormModal
+            product={editingProduct || null}
             onClose={() => setIsModalOpen(false)}
             onSave={handleSaveProduct}
-        />
+          />
       )}
     </div>
   );

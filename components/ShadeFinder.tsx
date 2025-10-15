@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
 import { GoogleGenAI, Type } from "@google/genai";
 import UploadIcon from './icons/UploadIcon';
 
