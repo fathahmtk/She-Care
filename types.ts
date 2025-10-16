@@ -8,9 +8,8 @@ import React from 'react';
 // By placing it in this global types file, it's available application-wide.
 declare global {
   namespace JSX {
-    // FIX: Rely on declaration merging to extend IntrinsicElements.
-    // The previous `extends React.JSX.IntrinsicElements` was causing the original
-    // definitions to be overwritten, leading to errors for standard HTML tags.
+    // FIX: Rely on TypeScript's declaration merging to extend IntrinsicElements.
+    // The previous 'extends' clause was incorrectly replacing the base interface.
     interface IntrinsicElements {
       'model-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         src?: string;
@@ -43,6 +42,7 @@ export interface Product {
   description:string;
   imageUrls: string[];
   modelUrl?: string;
+  videoUrl?: string;
   category: string;
   rating: number;
   reviewCount: number;

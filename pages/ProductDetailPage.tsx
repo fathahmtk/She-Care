@@ -143,7 +143,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
 
             <div className="bg-surface rounded-2xl shadow-xl p-6 md:p-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-                    <ProductGallery images={product.imageUrls} alt={product.name} modelUrl={product.modelUrl} />
+                    <ProductGallery images={product.imageUrls} alt={product.name} modelUrl={product.modelUrl} videoUrl={product.videoUrl} />
                     
                     <div className="text-left flex flex-col h-full">
                         <span className="text-sm font-semibold tracking-widest text-text-secondary uppercase mb-2">{product.brand}</span>

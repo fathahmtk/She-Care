@@ -23,6 +23,7 @@ const emptyProduct: Omit<Product, 'id'> = {
   name: '', brand: '', description: '', imageUrls: [], category: 'Skincare', price: 0, mrp: 0,
   discount: '', inStock: true, tag: 'New Arrival', color: '',
   materials: '', dimensions: '', careInstructions: '', rating: 0, reviewCount: 0,
+  videoUrl: '', modelUrl: '',
 };
 
 const ProductFormModal: React.FC<{
@@ -176,6 +177,20 @@ const ProductFormModal: React.FC<{
                 </div>
             </div>
             
+            <fieldset className="border border-border-color p-4 rounded-md">
+              <legend className="text-sm font-semibold px-2 text-text-primary">Advanced</legend>
+              <div className="space-y-2">
+                <div>
+                    <label className="text-sm">Video URL (YouTube Embed)</label>
+                    <input type="text" name="videoUrl" value={formData.videoUrl || ''} onChange={handleChange} className={inputStyles} placeholder="https://www.youtube.com/embed/..." />
+                </div>
+                <div>
+                    <label className="text-sm">3D Model URL (.gltf)</label>
+                    <input type="text" name="modelUrl" value={formData.modelUrl || ''} onChange={handleChange} className={inputStyles} />
+                </div>
+              </div>
+            </fieldset>
+
             <fieldset className="border border-border-color p-4 rounded-md">
               <legend className="text-sm font-semibold px-2 text-text-primary">Specifications</legend>
               <div className="space-y-2">

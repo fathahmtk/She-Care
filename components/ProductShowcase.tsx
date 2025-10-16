@@ -61,7 +61,7 @@ const ProductShowcase: React.FC = () => {
   }, [selectedCategory, selectedTag, searchQuery]);
 
   const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
-  const tags = ['All', ...Array.from(new Set(products.map(p => p.tag)))];
+  const tags = ['All', ...Array.from(new Set(products.map(p => p.tag).filter(t => t)))];
 
   const filteredProducts = products
     .filter(product => selectedCategory === 'All' || product.category === selectedCategory)
@@ -95,24 +95,33 @@ const ProductShowcase: React.FC = () => {
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Our Products</h2>
           
-          <div className="w-full overflow-x-auto pb-4 no-scrollbar mb-2">
-              <div className="flex justify-start md:justify-center flex-nowrap gap-4">
-                  {categories.map(category => (
-                    <button key={category} onClick={() => setSelectedCategory(category)} className={`flex-shrink-0 px-6 py-2 font-body font-semibold rounded-full transition-all duration-300 border-2 ${selectedCategory === category ? 'bg-accent text-surface border-accent' : 'bg-transparent text-accent border-accent hover:bg-accent/10 transform hover:-translate-y-px'}`}>
-                      {category}
-                    </button>
-                  ))}
+          {/* Enhanced Filter Controls */}
+          <div className="mb-10 p-4 sm:p-6 bg-surface/30 rounded-xl border border-border-color/50 max-w-4xl mx-auto">
+              <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-text-secondary tracking-wider uppercase mb-3 text-left md:text-center">Category</h3>
+                  <div className="w-full overflow-x-auto pb-2 -mb-2 no-scrollbar">
+                      <div className="flex justify-start md:justify-center flex-nowrap gap-3">
+                          {categories.map(category => (
+                            <button key={category} onClick={() => setSelectedCategory(category)} className={`flex-shrink-0 px-5 py-2 font-body font-semibold rounded-full transition-all duration-300 border-2 text-sm ${selectedCategory === category ? 'bg-accent text-surface border-accent shadow-md' : 'bg-surface text-text-primary border-border-color hover:border-accent hover:text-accent transform hover:-translate-y-px'}`}>
+                              {category}
+                            </button>
+                          ))}
+                      </div>
+                  </div>
               </div>
-          </div>
-          
-          <div className="w-full overflow-x-auto pb-4 no-scrollbar mb-4">
-              <div className="flex justify-start md:justify-center flex-nowrap gap-3">
-                  {tags.map(tag => (
-                    <button key={tag} onClick={() => setSelectedTag(tag)} className={`flex-shrink-0 px-4 py-1 text-sm font-body font-medium rounded-full transition-all duration-300 border ${selectedTag === tag ? 'bg-accent/20 text-accent border-accent/30' : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'}`}>
-                      {tag}
-                    </button>
-                  ))}
-              </div>
+              
+              {tags.length > 1 && (
+                <div>
+                    <h3 className="text-sm font-semibold text-text-secondary tracking-wider uppercase mb-3 text-left md:text-center">Tag</h3>
+                    <div className="flex justify-start md:justify-center flex-wrap gap-2">
+                        {tags.map(tag => (
+                          <button key={tag} onClick={() => setSelectedTag(tag)} className={`flex-shrink-0 px-4 py-1 text-xs font-body font-medium rounded-full transition-all duration-300 border ${selectedTag === tag ? 'bg-accent text-surface border-accent/80 shadow-sm' : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'}`}>
+                            {tag}
+                          </button>
+                        ))}
+                    </div>
+                </div>
+              )}
           </div>
 
           <div className="max-w-xl mx-auto mb-12">

@@ -84,9 +84,40 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         {/* Left Column: Image Gallery */}
         <div className="relative group">
-          <ProductGallery images={product.imageUrls} alt={product.name} modelUrl={product.modelUrl} />
+          <ProductGallery images={product.imageUrls} alt={product.name} modelUrl={product.modelUrl} videoUrl={product.videoUrl}>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:bg-black/0 md:group-hover:bg-black/60 rounded-lg transition-all duration-500 ease-out flex flex-col items-center justify-end pb-4 md:justify-center md:pb-0 p-4">
+              <a 
+                  href={`#/product/${product.id}`} 
+                  className="bg-surface text-text-primary font-body font-semibold py-3 px-8 mb-4 rounded-md transition-all duration-500 ease-out transform opacity-100 translate-y-0 md:opacity-0 md:translate-y-8 md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:scale-105 md:delay-100"
+              >
+                  View Details
+              </a>
+              <button 
+                  onClick={handleAddToCart}
+                  disabled={isAdded}
+                  className={`w-auto text-surface py-3 px-8 rounded-md transition-all duration-500 ease-out font-body font-semibold tracking-wider shadow-md transform disabled:cursor-not-allowed flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-8 md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:scale-105 md:delay-200 ${
+                  isAdded 
+                      ? 'bg-emerald-500' 
+                      : 'bg-accent hover:bg-accent-hover'
+                  }`}
+              >
+                  {isAdded ? (
+                      <>
+                          <CheckIcon className="h-5 w-5 mr-2" />
+                          <span>Added!</span>
+                      </>
+                  ) : (
+                      <>
+                          <CartIcon className="h-5 w-5 mr-2" />
+                          <span>Add to Cart</span>
+                      </>
+                  )}
+              </button>
+            </div>
+          </ProductGallery>
+
           {product.tag && (
-              <span className="pointer-events-none absolute top-4 left-4 md:left-28 z-10 bg-accent text-white text-xs px-3 py-1 rounded-full font-body tracking-wider">
+              <span className="pointer-events-none absolute top-4 left-4 z-10 bg-accent text-white text-xs px-3 py-1 rounded-full font-body tracking-wider">
                 {product.tag}
               </span>
           )}
@@ -97,39 +128,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           >
               <HeartIcon className="w-6 h-6" filled={isWishlisted} />
           </button>
-
-          {/* --- START: Refined Hover Effect Overlay --- */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:bg-black/0 md:group-hover:bg-black/60 rounded-lg transition-all duration-500 ease-out flex flex-col items-center justify-end pb-4 md:justify-center md:pb-0 p-4">
-            <a 
-                href={`#/product/${product.id}`} 
-                className="bg-surface text-text-primary font-body font-semibold py-3 px-8 mb-4 rounded-md transition-all duration-500 ease-out transform opacity-100 translate-y-0 md:opacity-0 md:translate-y-8 md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:scale-105 md:delay-100"
-            >
-                View Details
-            </a>
-            <button 
-                onClick={handleAddToCart}
-                disabled={isAdded}
-                className={`w-auto text-surface py-3 px-8 rounded-md transition-all duration-500 ease-out font-body font-semibold tracking-wider shadow-md transform disabled:cursor-not-allowed flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-8 md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:scale-105 md:delay-200 ${
-                isAdded 
-                    ? 'bg-emerald-500' 
-                    : 'bg-accent hover:bg-accent-hover'
-                }`}
-            >
-                {isAdded ? (
-                    <>
-                        <CheckIcon className="h-5 w-5 mr-2" />
-                        <span>Added!</span>
-                    </>
-                ) : (
-                    <>
-                        <CartIcon className="h-5 w-5 mr-2" />
-                        <span>Add to Cart</span>
-                    </>
-                )}
-            </button>
-          </div>
-          {/* --- END: Refined Hover Effect Overlay --- */}
-
         </div>
 
         {/* Right Column: Content Section */}

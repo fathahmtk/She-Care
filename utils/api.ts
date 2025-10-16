@@ -9,14 +9,99 @@ const DB_REVIEWS_KEY = `${DB_PREFIX}reviews`;
 
 const SIMULATED_LATENCY = 300; // ms
 
+// --- Initial Data ---
+const INITIAL_PRODUCTS: Product[] = [
+    {
+        id: 1,
+        name: "Menstrual Pain Relief Belt",
+        brand: "SheCareHub",
+        description: "A smart, wearable device that uses a combination of heat and massage therapy to soothe menstrual cramps. Discreet, comfortable, and easy to use on the go.",
+        imageUrls: [
+            "https://m.media-amazon.com/images/I/71YqDc-POJL.jpg",
+            "https://m.media-amazon.com/images/I/81+j8S6j5gL.jpg",
+            "https://m.media-amazon.com/images/I/71I5n-o0R3L.jpg"
+        ],
+        modelUrl: "https://firebasestorage.googleapis.com/v0/b/shecarehub-f8b27.appspot.com/o/scene.gltf?alt=media&token=c148201a-6379-4560-84a8-a53d6de5d06d",
+        videoUrl: "https://www.youtube.com/embed/LXb3EKWsInQ?si=WpY-a3vaxLz2OaWz",
+        category: "Wellness Tech",
+        rating: 4.8,
+        reviewCount: 258,
+        price: 699,
+        mrp: 1499,
+        discount: "53%",
+        inStock: true,
+        tag: "Best Seller",
+        color: "Pastel Pink",
+        materials: "Soft-touch Silicone, Lycra Fabric",
+        dimensions: "18cm x 8.5cm",
+        careInstructions: "Wipe with a damp cloth. Do not submerge in water."
+    },
+    {
+        id: 2,
+        name: "Radiant Glow Vitamin C Serum",
+        brand: "Aura Botanicals",
+        description: "A potent, lightweight Vitamin C serum that brightens skin, reduces dark spots, and protects against environmental damage for a radiant, even-toned complexion.",
+        imageUrls: [
+            "https://images.pexels.com/photos/4465124/pexels-photo-4465124.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "https://images.pexels.com/photos/7262912/pexels-photo-7262912.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+        ],
+        category: "Skincare",
+        rating: 4.6,
+        reviewCount: 189,
+        price: 899,
+        mrp: 1299,
+        discount: "31%",
+        inStock: true,
+        tag: "New Arrival",
+        color: "N/A"
+    },
+    {
+        id: 3,
+        name: "Hydra-Intense Lipstick",
+        brand: "Femme Beauty",
+        description: "A creamy, long-lasting lipstick that delivers intense color and hydration. Infused with hyaluronic acid and shea butter to keep lips soft and supple.",
+        imageUrls: [
+            "https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "https://images.pexels.com/photos/3335508/pexels-photo-3335508.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+        ],
+        category: "Makeup",
+        rating: 4.9,
+        reviewCount: 302,
+        price: 549,
+        mrp: 799,
+        discount: "31%",
+        inStock: true,
+        tag: "Fan Favorite",
+        color: "Ruby Red",
+        shades: [
+            { name: 'Ruby Red', hex: '#9B111E' },
+            { name: 'Nude Rose', hex: '#C48189' },
+            { name: 'Coral Kiss', hex: '#F88379' },
+            { name: 'Deep Plum', hex: '#3E2F84' }
+        ]
+    }
+];
+
+const INITIAL_TESTIMONIALS: Testimonial[] = [
+  { id: 1, quote: "The relief belt is a lifesaver! I can finally get through my day without being doubled over in pain. It's so discreet and comfortable.", author: "Priya S., Bangalore", rating: 5 },
+  { id: 2, quote: "SheCareHub products feel so luxurious. The Vitamin C serum has completely transformed my skin's texture and glow. Highly recommend!", author: "Anjali M., Mumbai", rating: 5 },
+  { id: 3, quote: "Finally, a brand that understands what women need. The quality is exceptional, and the customer service is so helpful and kind.", author: "Riya G., Delhi", rating: 5 },
+];
+
+const INITIAL_REVIEWS: Review[] = [
+  { id: 1, productId: 1, author: "Sneha P.", productName: "Menstrual Pain Relief Belt", rating: 5, comment: "This is a game-changer. The combination of heat and massage is perfect. I used to rely on painkillers, but now I just use this belt.", date: "2023-10-15T10:00:00Z" },
+  { id: 2, productId: 2, author: "Meera K.", productName: "Radiant Glow Vitamin C Serum", rating: 4, comment: "Good serum, my skin feels brighter. The bottle is a bit small for the price, but the results are visible.", date: "2023-10-12T14:30:00Z" },
+  { id: 3, productId: 1, author: "Aditi V.", productName: "Menstrual Pain Relief Belt", rating: 5, comment: "I was skeptical, but it actually works! It's super soft and the battery lasts a long time. So glad I bought it.", date: "2023-10-10T08:45:00Z" },
+];
+
 // --- Database Simulation ---
 
 const seedData = () => {
     const initKey = `${DB_PREFIX}initialized`;
     if (!localStorage.getItem(initKey)) {
-        localStorage.setItem(DB_PRODUCTS_KEY, JSON.stringify([]));
-        localStorage.setItem(DB_TESTIMONIALS_KEY, JSON.stringify([]));
-        localStorage.setItem(DB_REVIEWS_KEY, JSON.stringify([]));
+        localStorage.setItem(DB_PRODUCTS_KEY, JSON.stringify(INITIAL_PRODUCTS));
+        localStorage.setItem(DB_TESTIMONIALS_KEY, JSON.stringify(INITIAL_TESTIMONIALS));
+        localStorage.setItem(DB_REVIEWS_KEY, JSON.stringify(INITIAL_REVIEWS));
         localStorage.setItem(DB_ORDERS_KEY, JSON.stringify([]));
         localStorage.setItem(DB_RATINGS_KEY, JSON.stringify([]));
         localStorage.setItem(initKey, 'true');
