@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
 import { useAuth } from '../contexts/AuthContext';
 import CloseIcon from './icons/CloseIcon';
 import EmailIcon from './icons/EmailIcon';
@@ -190,8 +188,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   {otp.map((data, index) => (
                     <input
                       key={index}
-                      // FIX: The ref callback function must return void. The implicit return of the assignment `el` was causing a type error. Wrapping the assignment in braces ensures a void return.
-                      ref={el => { otpInputsRef.current[index] = el; }}
+                      ref={el => { otpInputsRef.current[index] = el }}
                       type="text"
                       maxLength={1}
                       value={data}

@@ -1,6 +1,4 @@
 import React from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
 import { useCart } from '../contexts/CartContext';
 import AnimatedSection from '../components/AnimatedSection';
 import CloseIcon from '../components/icons/CloseIcon';
@@ -40,21 +38,26 @@ const CartPage: React.FC = () => {
 
               <div className="space-y-6">
                 {cartItems.map(item => (
-                  <div key={item.id} className="flex items-center justify-between gap-4 border-b border-border-color pb-6">
-                    <div className="flex items-center gap-4">
-                      <img src={item.imageUrls[0]} alt={item.name} className="w-24 h-24 object-cover rounded-md"/>
-                      <div>
+                  <div key={item.id} className="flex flex-col sm:flex-row gap-4 sm:gap-6 border-b border-border-color pb-6 last:border-b-0">
+                    {/* Left side: Image and Title */}
+                    <div className="flex items-center gap-4 flex-grow">
+                      <img src={item.imageUrls[0]} alt={item.name} className="w-24 h-24 object-cover rounded-md flex-shrink-0"/>
+                      <div className="flex-grow">
                         <a href={`#/product/${item.id}`} className="font-semibold text-text-primary hover:text-accent transition-colors">{item.name}</a>
                         <p className="text-text-secondary text-sm mt-1">₹{item.price}</p>
+                        {/* Mobile-only subtotal */}
+                        <p className="sm:hidden font-semibold text-text-primary mt-2">Subtotal: ₹{(item.price * item.quantity).toFixed(2)}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+
+                    {/* Right side: Controls */}
+                    <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
                       <div className="flex items-center border border-border-color rounded-md">
                         <button onClick={() => handleQuantityChange(item.id, item.quantity, -1)} className="px-3 py-2 text-md font-bold hover:bg-accent/10 transition-colors rounded-l-md">-</button>
                         <input type="text" readOnly value={item.quantity} className="w-12 text-center font-semibold text-md bg-transparent border-x border-border-color py-2 focus:outline-none" />
                         <button onClick={() => handleQuantityChange(item.id, item.quantity, 1)} className="px-3 py-2 text-md font-bold hover:bg-accent/10 transition-colors rounded-r-md">+</button>
                       </div>
-                      <p className="font-semibold text-lg text-text-primary w-24 text-right">₹{item.price * item.quantity}</p>
+                      <p className="hidden sm:block font-semibold text-lg text-text-primary w-24 text-right">₹{(item.price * item.quantity).toFixed(2)}</p>
                       <button onClick={() => removeFromCart(item.id)} className="text-text-secondary hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-500/10" aria-label={`Remove ${item.name}`}>
                         <CloseIcon className="w-5 h-5" />
                       </button>

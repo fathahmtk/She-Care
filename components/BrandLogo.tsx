@@ -1,6 +1,6 @@
 import React from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
+// FIX: Removed unnecessary import of 'types.ts' as the global JSX namespace is now correctly handled.
+import { useSettings } from '../contexts/SettingsContext';
 
 // FIX: Added `style` prop to allow custom inline styles.
 const BrandLogo: React.FC<{ className?: string; variant?: 'gradient' | 'solid', style?: React.CSSProperties }> = ({ className, variant = 'gradient', style }) => {

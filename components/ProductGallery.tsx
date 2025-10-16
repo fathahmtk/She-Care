@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-// FIX: Corrected the import for 'types.ts' to ensure global JSX namespace augmentations for the 'model-viewer' custom element are correctly applied.
-// An empty named import forces module evaluation for side-effects like global type declarations.
-import {} from '../types';
 import ImageWithFallback from './ImageWithFallback';
 import Icon3D from './icons/Icon3D';
 import IconImage from './icons/IconImage';
@@ -41,13 +38,11 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, alt, modelUrl }
       <div className="aspect-square w-full relative">
         {is3DView && modelUrl ? (
           <div className="w-full h-full overflow-hidden rounded-lg border border-border-color">
-             {/* FIX: Replaced invalid kebab-case attributes with camelCase props. React will automatically convert these to the correct kebab-case attributes for the web component. */}
              <model-viewer
                 src={modelUrl}
                 alt={`3D model of ${alt}`}
                 cameraControls
                 autoRotate
-                // FIX: Changed shadowIntensity to be a number to match the component's API.
                 shadowIntensity={1}
                 style={{ width: '100%', height: '100%', backgroundColor: 'rgb(var(--color-surface))' }}
               >

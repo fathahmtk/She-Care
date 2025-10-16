@@ -1,10 +1,6 @@
 import React from 'react';
-
-// FIX: This file was empty. An empty .tsx file without imports/exports is not
-// treated as a module by TypeScript, which can lead to global scope pollution
-// and issues with JSX type resolution. Added a placeholder component to make it a module.
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
 import '../../types';
+
 const EmptyCartIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     viewBox="0 0 64 64"

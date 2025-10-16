@@ -1,6 +1,4 @@
 import React from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../../types';
 
 const StarIcon: React.FC<{ filled: boolean; className?: string; }> = ({ filled, className }) => (
   <svg className={`${filled ? 'text-accent' : 'text-border-color'} ${className || 'w-5 h-5'}`} fill="currentColor" viewBox="0 0 20 20">

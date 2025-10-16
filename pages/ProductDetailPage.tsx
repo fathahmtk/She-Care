@@ -1,6 +1,4 @@
 import React, { useState, useMemo } from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
 import { useProducts } from '../contexts/ProductContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -16,13 +14,16 @@ import { useRatings } from '../contexts/RatingContext';
 import ProductReviewsSection from '../components/ProductReviewsSection';
 import RecommendedProducts from '../components/RecommendedProducts';
 import AccordionItem from '../components/AccordionItem';
+import SocialIconFacebook from '../components/icons/SocialIconFacebook';
+import SocialIconInstagram from '../components/icons/SocialIconInstagram';
+import SocialIconTwitter from '../components/icons/SocialIconTwitter';
 
 
 interface ProductDetailPageProps {
   productId: number;
 }
 
-export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
+const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   const { getProductById, loading } = useProducts();
   const product = getProductById(productId);
   const { addToCart } = useCart();
@@ -90,6 +91,25 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
   const handleQuantityChange = (amount: number) => {
     setQuantity(prev => Math.max(1, prev + amount));
   }
+  
+  const handleShare = (platform: 'facebook' | 'twitter') => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Check out this amazing product from SheCareHub: ${product.name}!`);
+    let shareUrl = '';
+
+    switch (platform) {
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+        break;
+    }
+    
+    if (shareUrl) {
+      window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+    }
+  };
 
   const productSpecifications = [
     { title: 'Color', value: product.color },
@@ -192,6 +212,20 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                                     Live Try-On
                                 </button>
                             )}
+                            <div className="flex items-center gap-4 pt-4 border-t border-border-color">
+                                <span className="text-sm font-semibold text-text-secondary">Share:</span>
+                                <div className="flex items-center gap-2">
+                                    <button onClick={() => handleShare('facebook')} aria-label="Share on Facebook" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
+                                        <SocialIconFacebook className="w-5 h-5" />
+                                    </button>
+                                    <button onClick={() => handleShare('twitter')} aria-label="Share on Twitter" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
+                                        <SocialIconTwitter className="w-5 h-5" />
+                                    </button>
+                                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Share on Instagram" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
+                                        <SocialIconInstagram className="w-5 h-5" />
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -231,3 +265,5 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
     </>
   );
 };
+
+export default ProductDetailPage;

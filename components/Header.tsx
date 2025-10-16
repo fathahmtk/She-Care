@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import 'Product' type and 'types.ts' for global JSX namespace augmentation.
-import type { Product } from '../types';
-import '../types';
+import { Product } from '../types';
 import Logo from './Logo';
 import { useCart } from '../contexts/CartContext';
 import { useSearch } from '../contexts/SearchContext';
@@ -11,7 +9,6 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import CartIcon from './icons/CartIcon';
 import SearchIcon from './icons/SearchIcon';
-import UserIcon from './icons/UserIcon';
 import SunIcon from './icons/SunIcon';
 import MoonIcon from './icons/MoonIcon';
 import MobileMenu from './MobileMenu';
@@ -24,7 +21,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartItems } = useCart();
   const { wishlistItems } = useWishlist();
@@ -133,58 +129,36 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
             </div>
         </div>
         
-        <div className="flex items-center gap-1 sm:gap-2">
-           {/* Theme Toggle */}
+        <div className="flex items-center gap-2 sm:gap-3">
+           {/* Theme Toggle - Desktop Only */}
           <button
             onClick={toggleTheme}
-            className="text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10"
+            className="hidden md:block text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
             {theme === 'light' ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
           </button>
 
-          {/* Auth Section */}
-           <div className="relative">
+          {/* Auth Section - Desktop Only */}
+           <div className="hidden md:flex items-center gap-4">
               {isAuthenticated && user ? (
-                 <div className="flex items-center gap-4">
-                    <a href="#/profile" className="hidden md:block text-sm text-text-secondary hover:text-accent transition-colors">Welcome, {user.name.split(' ')[0]}!</a>
-                    <button onClick={logout} className="hidden md:block text-sm font-semibold text-text-primary hover:text-accent transition-colors duration-300">
+                 <>
+                    <a href="#/profile" className="text-sm text-text-secondary hover:text-accent transition-colors">Welcome, {user.name.split(' ')[0]}!</a>
+                    <button onClick={logout} className="text-sm font-semibold text-text-primary hover:text-accent transition-colors duration-300">
                         Logout
                     </button>
-                    <button onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} className="md:hidden text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10" aria-label="Open profile menu" aria-expanded={isProfileMenuOpen}>
-                      <UserIcon className="h-6 w-6"/>
-                    </button>
-                 </div>
+                 </>
               ) : (
-                <>
-                  <button onClick={onLoginClick} className="hidden md:block bg-accent text-surface font-body font-semibold py-2 px-5 border-2 border-accent hover:bg-accent-hover transition-all duration-300 ease-in-out text-sm rounded-md transform hover:scale-105">
+                  <button onClick={onLoginClick} className="bg-accent text-surface font-body font-semibold py-2 px-5 border-2 border-accent hover:bg-accent-hover transition-all duration-300 ease-in-out text-sm rounded-md transform hover:scale-105">
                       Login
                   </button>
-                  <button onClick={onLoginClick} className="md:hidden text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10" aria-label="Open login modal">
-                      <UserIcon className="h-6 w-6"/>
-                  </button>
-                </>
               )}
-               {isAuthenticated && isProfileMenuOpen && (
-                 <div className="md:hidden absolute top-full right-0 mt-4 animate-fade-in z-50 bg-surface p-4 rounded-lg shadow-2xl border border-border-color w-48">
-                    <div className="pb-2 mb-2 border-b border-border-color">
-                      <p className="text-sm font-semibold text-text-primary">{user?.name}</p>
-                      <p className="text-xs text-text-secondary truncate">{user?.email}</p>
-                    </div>
-                    <a href="#/profile" onClick={() => setIsProfileMenuOpen(false)} className="block w-full text-left text-sm text-text-primary hover:text-accent transition-colors py-1">
-                        My Profile
-                    </a>
-                    <button onClick={() => { logout(); setIsProfileMenuOpen(false); }} className="w-full text-left text-sm text-text-primary hover:text-accent transition-colors py-1">
-                      Logout
-                    </button>
-                 </div>
-               )}
           </div>
 
-          {/* Wishlist Icon */}
+          {/* Wishlist Icon - Desktop Only */}
           <a
             href="#/wishlist"
-            className="relative text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10"
+            className="relative hidden md:block text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10"
             aria-label={`Open wishlist with ${wishlistCount} items`}
           >
             <HeartIcon className="h-6 w-6"/>
@@ -195,7 +169,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
             )}
           </a>
 
-          {/* Cart Icon */}
+          {/* Cart Icon - Always Visible */}
           <a
             href="#/cart"
             className="relative text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10"
@@ -209,6 +183,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
             )}
           </a>
         
+          {/* Mobile Menu Toggle */}
           <button 
             className="md:hidden text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -220,7 +195,11 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
         </div>
       </div>
     </header>
-    <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+    <MobileMenu 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)}
+        onLoginClick={onLoginClick}
+    />
     </>
   );
 };

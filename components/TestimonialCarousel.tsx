@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// FIX: Import 'Testimonial' type and 'types.ts' for global JSX namespace augmentation.
-import type { Testimonial } from '../types';
-import '../types';
+import { Testimonial } from '../types';
 import * as api from '../utils/api';
 import StarIcon from './icons/StarIcon';
 import ArrowLeftIcon from './icons/ArrowLeftIcon';

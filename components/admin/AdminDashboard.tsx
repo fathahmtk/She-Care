@@ -1,6 +1,4 @@
 import React from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../../types';
 import { useOrders } from '../../contexts/OrderContext';
 import { useProducts } from '../../contexts/ProductContext';
 import OrdersIcon from '../icons/OrdersIcon';

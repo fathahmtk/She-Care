@@ -1,8 +1,5 @@
-
 import React, { useState, useRef } from 'react';
-// FIX: Import 'Product' type and 'types.ts' for global JSX namespace augmentation.
-import type { Product } from '../../types';
-import '../../types';
+import { Product } from '../../types';
 import { useProducts } from '../../contexts/ProductContext';
 import EditIcon from '../icons/EditIcon';
 import DeleteIcon from '../icons/DeleteIcon';
@@ -258,7 +255,8 @@ const AdminProducts: React.FC = () => {
         </button>
       </div>
       
-      <div className="bg-surface rounded-lg shadow-sm overflow-x-auto">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-surface rounded-lg shadow-sm overflow-x-auto">
         <table className="w-full text-left">
           <thead className="border-b border-border-color bg-surface/50">
             <tr>
@@ -275,7 +273,7 @@ const AdminProducts: React.FC = () => {
                 <tr><td colSpan={6} className="p-4 text-center text-text-secondary">Loading products...</td></tr>
             ) : products.length > 0 ? (
                 products.map(product => (
-              <tr key={product.id} className="border-b border-border-color hover:bg-accent/5">
+              <tr key={product.id} className="border-b border-border-color last:border-b-0 hover:bg-accent/5">
                 <td className="p-3 text-sm flex items-center gap-3">
                     <img src={product.imageUrls[0]} alt={product.name} className="w-12 h-12 object-cover rounded-md"/>
                     <span className="font-semibold text-text-primary">{product.name}</span>
@@ -307,6 +305,41 @@ const AdminProducts: React.FC = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List */}
+      <div className="md:hidden space-y-4">
+          {loading && <p className="text-center text-text-secondary">Loading products...</p>}
+          {products.map(product => (
+              <div key={product.id} className="bg-surface rounded-lg shadow-md overflow-hidden">
+                  <div className="flex gap-4 p-4">
+                      <img src={product.imageUrls[0]} alt={product.name} className="w-24 h-24 object-cover rounded-md flex-shrink-0" />
+                      <div className="flex-grow">
+                          <p className="font-bold text-text-primary leading-tight">{product.name}</p>
+                          <p className="text-xs text-text-secondary">{product.brand}</p>
+                          <p className="text-lg font-bold text-accent mt-2">₹{product.price.toFixed(2)}</p>
+                          <span className={`mt-2 inline-block px-2 py-1 text-xs font-semibold rounded-full ${product.inStock ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                              {product.inStock ? 'In Stock' : 'Out of Stock'}
+                          </span>
+                      </div>
+                  </div>
+                  <div className="grid grid-cols-2 border-t border-border-color">
+                      <button onClick={() => handleEditProduct(product)} className="py-3 text-center text-sm font-semibold text-text-secondary hover:bg-accent/10 hover:text-accent transition-colors flex items-center justify-center gap-2">
+                          <EditIcon className="w-4 h-4" /> Edit
+                      </button>
+                      <button onClick={() => handleDeleteProduct(product.id)} className="py-3 text-center text-sm font-semibold text-text-secondary border-l border-border-color hover:bg-red-500/10 hover:text-red-500 transition-colors flex items-center justify-center gap-2">
+                          <DeleteIcon className="w-4 h-4" /> Delete
+                      </button>
+                  </div>
+              </div>
+          ))}
+           {!loading && products.length === 0 && (
+                <AdminEmptyState
+                    icon={<EmptyProductsIcon className="w-20 h-20 text-border-color" />}
+                    title="No Products Found"
+                    description="You haven't added any products yet. Click 'Add Product' to get started."
+                />
+            )}
       </div>
       
       {isModalOpen && (

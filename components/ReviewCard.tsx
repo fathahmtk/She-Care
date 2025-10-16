@@ -1,7 +1,5 @@
 import React from 'react';
-// FIX: Import 'Review' type and 'types.ts' for global JSX namespace augmentation.
-import type { Review } from '../types';
-import '../types';
+import { Review } from '../types';
 import StarIcon from './icons/StarIcon';
 
 interface ReviewCardProps {

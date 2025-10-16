@@ -1,59 +1,15 @@
-import React, { useState, useEffect } from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
-// FIX: Switched to generateContent with gemini-2.5-flash-image to address quota issues.
-import { GoogleGenAI, Modality } from "@google/genai";
+import React from 'react';
 import BrandLogo from './BrandLogo';
+import { useSettings } from '../contexts/SettingsContext';
 
-const FALLBACK_IMAGE_URL = "https://m.media-amazon.com/images/I/71yD2O6p7JL.jpg";
+const FALLBACK_IMAGE_URL = "https://images.pexels.com/photos/3762800/pexels-photo-3762800.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
 const Hero: React.FC = () => {
-  const [imageUrl, setImageUrl] = useState(FALLBACK_IMAGE_URL);
-  const [isLoading, setIsLoading] = useState(true);
+  const { settings } = useSettings();
 
-  useEffect(() => {
-    const generateHeroImage = async () => {
-      setIsLoading(true);
-      try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        const prompt = "A minimalist flat lay of premium women's wellness and skincare products on a soft, textured background. Include items like a sleek menstrual pain relief belt, elegant serum bottles, and natural elements like rose petals. The color palette should be soft pinks, creams, and gold accents, evoking a sense of luxury and calm. 16:9 aspect ratio.";
-        
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash-image',
-          contents: {
-            parts: [{ text: prompt }],
-          },
-          config: {
-            responseModalities: [Modality.IMAGE],
-          },
-        });
-
-        let imageFound = false;
-        if (response.candidates && response.candidates.length > 0) {
-            for (const part of response.candidates[0].content.parts) {
-              if (part.inlineData) {
-                const base64ImageBytes: string = part.inlineData.data;
-                const mimeType = part.inlineData.mimeType;
-                const generatedUrl = `data:${mimeType};base64,${base64ImageBytes}`;
-                setImageUrl(generatedUrl);
-                imageFound = true;
-                break;
-              }
-            }
-        }
-        
-        if (!imageFound) {
-            console.warn("AI image generation returned no images, using fallback.");
-        }
-      } catch (error) {
-        console.error("Failed to generate hero image with AI, using fallback:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    generateHeroImage();
-  }, []);
+  const imageUrl = settings.heroImageUrl || FALLBACK_IMAGE_URL;
+  const tagline = settings.heroTagline || "shecarehub.com";
+  const subtitle = settings.heroSubtitle || "Experience instant menstrual pain relief with our smart thermal belt — designed for modern women.";
 
   return (
     <section 
@@ -62,16 +18,19 @@ const Hero: React.FC = () => {
     >
       <div className="absolute inset-0 bg-background-start/40 dark:bg-black/60"></div>
       
-      {isLoading && (
-        <div className="absolute inset-0 bg-black/20 animate-pulse duration-1000"></div>
-      )}
-
       <div className="relative z-10 px-6 flex flex-col items-center">
-        <h1 className="mb-4" aria-label="shecarehub.com">
-          <BrandLogo variant="solid" className="h-16 md:h-20 lg:h-24 w-auto text-white" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))' }} />
-        </h1>
+        {tagline === "shecarehub.com" ? (
+             <h1 className="mb-4" aria-label="shecarehub.com">
+                <BrandLogo variant="solid" className="h-16 md:h-20 lg:h-24 w-auto text-white" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))' }} />
+             </h1>
+        ) : (
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white mb-4" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))' }}>
+                {tagline}
+            </h1>
+        )}
+       
         <p className="text-lg md:text-xl font-body font-light mb-8 max-w-2xl mx-auto text-white/90 drop-shadow-md">
-          Experience instant menstrual pain relief with our smart thermal belt — designed for modern women.
+          {subtitle}
         </p>
         <a 
           href="/#products" 

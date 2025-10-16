@@ -1,25 +1,34 @@
-// FIX: Convert this file to a module by importing React types and exporting all declarations.
-// This resolves issues where the file was not treated as a module, causing problems with
-// global augmentations and making types unavailable for import in other files.
-// Importing React brings its types into scope, fixing "Cannot find namespace 'React'" errors.
-import * as React from 'react';
+// FIX: Add React import to ensure the global JSX namespace from React's type
+// definitions is available for augmentation, preventing it from being overwritten.
+import React from 'react';
 
+// Centralized JSX namespace augmentation for 'model-viewer'
+// This ensures that the global JSX IntrinsicElements interface is extended
+// without overwriting standard HTML element types like 'div' or 'p'.
+// By placing it in this global types file, it's available application-wide.
 declare global {
   namespace JSX {
+    // FIX: By redeclaring the IntrinsicElements interface within the global JSX namespace,
+    // we use TypeScript's declaration merging to add our custom 'model-viewer' element
+    // without overwriting the standard HTML element types.
     interface IntrinsicElements {
-      // FIX: Use camelCase props for custom element attributes to align with React's convention.
-      // React automatically converts camelCase props to kebab-case attributes for web components.
-      // Use `React.DetailedHTMLProps` for augmenting IntrinsicElements to ensure all properties like `ref` and `key` are included.
       'model-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         src?: string;
         alt?: string;
         cameraControls?: boolean;
         autoRotate?: boolean;
-        // FIX: Changed shadowIntensity type to number to match the model-viewer API.
         shadowIntensity?: number;
       };
     }
   }
+}
+
+export interface Settings {
+  logoUrl: string;
+  heroImageUrl: string;
+  heroAiPrompt: string;
+  heroTagline: string;
+  heroSubtitle: string;
 }
 
 export interface Shade {
@@ -109,10 +118,9 @@ export interface FooterLink {
 }
 
 export interface WhyChooseUsItem {
-  // Using React.ReactNode which is globally available via @types/react
   icon: React.ReactNode;
   title: string;
-  description: string; // This will be the AI-generated content
+  description: string;
 }
 
 export interface BlogPost {

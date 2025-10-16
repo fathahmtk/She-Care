@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import '../types';
+// FIX: Remove redundant side-effect import; named type imports are sufficient.
 import * as api from '../utils/api';
 import type { Review } from '../types';
 import { useAuth } from '../contexts/AuthContext';

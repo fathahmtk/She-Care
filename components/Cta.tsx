@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
 
 const Cta: React.FC = () => {
   const [email, setEmail] = useState('');

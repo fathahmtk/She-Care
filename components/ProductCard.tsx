@@ -1,8 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
-// FIX: Import 'Product' type and 'types.ts' for global JSX namespace augmentation.
-import type { Product } from '../types';
-import '../types';
+import { Product } from '../types';
 import ProductGallery from './ProductGallery';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -100,17 +97,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </button>
 
           {/* --- START: Refined Hover Effect Overlay --- */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 rounded-lg transition-all duration-500 ease-out flex flex-col items-center justify-center p-4">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:bg-black/0 md:group-hover:bg-black/60 rounded-lg transition-all duration-500 ease-out flex flex-col items-center justify-end pb-4 md:justify-center md:pb-0 p-4">
             <a 
                 href={`#/product/${product.id}`} 
-                className="bg-surface text-text-primary font-body font-semibold py-3 px-8 mb-4 rounded-md transition-all duration-500 ease-out transform opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-105 delay-100"
+                className="bg-surface text-text-primary font-body font-semibold py-3 px-8 mb-4 rounded-md transition-all duration-500 ease-out transform opacity-100 translate-y-0 md:opacity-0 md:translate-y-8 md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:scale-105 md:delay-100"
             >
                 View Details
             </a>
             <button 
                 onClick={handleAddToCart}
                 disabled={isAdded}
-                className={`w-auto text-surface py-3 px-8 rounded-md transition-all duration-500 ease-out font-body font-semibold tracking-wider shadow-md transform disabled:cursor-not-allowed flex items-center justify-center opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-105 delay-200 ${
+                className={`w-auto text-surface py-3 px-8 rounded-md transition-all duration-500 ease-out font-body font-semibold tracking-wider shadow-md transform disabled:cursor-not-allowed flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-8 md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:scale-105 md:delay-200 ${
                 isAdded 
                     ? 'bg-emerald-500' 
                     : 'bg-accent hover:bg-accent-hover'

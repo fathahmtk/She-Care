@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import 'Review' type and 'types.ts' for global JSX namespace augmentation.
-import type { Review } from '../types';
-import '../types';
+import { Review } from '../types';
 import * as api from '../utils/api';
 import ProductCard from './ProductCard';
 import ReviewCard from './ReviewCard';
@@ -95,20 +93,24 @@ const ProductShowcase: React.FC = () => {
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Our Products</h2>
           
-          <div className="flex justify-center flex-wrap gap-4 mb-6">
-            {categories.map(category => (
-              <button key={category} onClick={() => setSelectedCategory(category)} className={`px-6 py-2 font-body font-semibold rounded-full transition-all duration-300 border-2 ${selectedCategory === category ? 'bg-accent text-surface border-accent' : 'bg-transparent text-accent border-accent hover:bg-accent/10 transform hover:-translate-y-px'}`}>
-                {category}
-              </button>
-            ))}
+          <div className="w-full overflow-x-auto pb-4 no-scrollbar mb-2">
+              <div className="flex justify-start md:justify-center flex-nowrap gap-4">
+                  {categories.map(category => (
+                    <button key={category} onClick={() => setSelectedCategory(category)} className={`flex-shrink-0 px-6 py-2 font-body font-semibold rounded-full transition-all duration-300 border-2 ${selectedCategory === category ? 'bg-accent text-surface border-accent' : 'bg-transparent text-accent border-accent hover:bg-accent/10 transform hover:-translate-y-px'}`}>
+                      {category}
+                    </button>
+                  ))}
+              </div>
           </div>
           
-          <div className="flex justify-center flex-wrap gap-3 mb-8">
-            {tags.map(tag => (
-              <button key={tag} onClick={() => setSelectedTag(tag)} className={`px-4 py-1 text-sm font-body font-medium rounded-full transition-all duration-300 border ${selectedTag === tag ? 'bg-accent/20 text-accent border-accent/30' : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'}`}>
-                {tag}
-              </button>
-            ))}
+          <div className="w-full overflow-x-auto pb-4 no-scrollbar mb-4">
+              <div className="flex justify-start md:justify-center flex-nowrap gap-3">
+                  {tags.map(tag => (
+                    <button key={tag} onClick={() => setSelectedTag(tag)} className={`flex-shrink-0 px-4 py-1 text-sm font-body font-medium rounded-full transition-all duration-300 border ${selectedTag === tag ? 'bg-accent/20 text-accent border-accent/30' : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'}`}>
+                      {tag}
+                    </button>
+                  ))}
+              </div>
           </div>
 
           <div className="max-w-xl mx-auto mb-12">

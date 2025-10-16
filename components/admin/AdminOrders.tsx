@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from 'react';
-// FIX: Import 'Order', 'OrderStatus' types and 'types.ts' for global JSX namespace augmentation.
-import type { Order, OrderStatus } from '../../types';
-import '../../types';
+import { Order, OrderStatus } from '../../types';
 import { useOrders, } from '../../contexts/OrderContext';
 import AdminOrderDetail from './AdminOrderDetail';
 import AdminEmptyState from './AdminEmptyState';
@@ -63,7 +61,8 @@ const AdminOrders: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-surface rounded-lg shadow-sm overflow-x-auto">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-surface rounded-lg shadow-sm overflow-x-auto">
         <table className="w-full text-left">
           <thead className="border-b border-border-color bg-surface/50">
             <tr>
@@ -80,7 +79,7 @@ const AdminOrders: React.FC = () => {
                 <tr><td colSpan={6} className="p-4 text-center text-text-secondary">Loading orders...</td></tr>
             ) : filteredAndSortedOrders.length > 0 ? (
               filteredAndSortedOrders.map(order => (
-                <tr key={order.id} className="border-b border-border-color hover:bg-accent/5">
+                <tr key={order.id} className="border-b border-border-color last:border-b-0 hover:bg-accent/5">
                   <td className="p-3 text-sm text-text-primary font-mono">{order.id}</td>
                   <td className="p-3 text-sm text-text-secondary">{new Date(order.orderDate).toLocaleString()}</td>
                   <td className="p-3 text-sm text-text-secondary">{order.customer.fullName}</td>
@@ -123,6 +122,52 @@ const AdminOrders: React.FC = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List */}
+      <div className="md:hidden space-y-4">
+        {loading && <p className="text-center text-text-secondary">Loading orders...</p>}
+        {filteredAndSortedOrders.map(order => (
+          <div key={order.id} className="bg-surface rounded-lg shadow-md p-4 space-y-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold text-text-primary">{order.customer.fullName}</p>
+                <p className="font-mono text-xs text-text-secondary">#{order.id}</p>
+              </div>
+              <p className="text-lg font-bold text-accent">₹{order.total.toFixed(2)}</p>
+            </div>
+            <div className="text-xs text-text-secondary border-t border-border-color pt-2">
+              Date: {new Date(order.orderDate).toLocaleString()}
+            </div>
+            <div className="flex justify-between items-center gap-4 pt-2 border-t border-border-color">
+              <div className="flex-1">
+                <label htmlFor={`status-${order.id}`} className="sr-only">Order Status</label>
+                <select 
+                    id={`status-${order.id}`}
+                    value={order.status} 
+                    onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
+                    className={`w-full p-2 text-sm font-semibold rounded-md border-2 bg-transparent focus:ring-1 focus:ring-accent ${
+                        order.status === 'Delivered' ? 'border-green-500/40 text-green-400' :
+                        order.status === 'Shipped' ? 'border-blue-500/40 text-blue-400' :
+                        order.status === 'Processing' ? 'border-yellow-500/40 text-yellow-400' :
+                        order.status === 'Cancelled' ? 'border-red-500/40 text-red-400' :
+                        'border-gray-500/40 text-gray-400'
+                    }`}
+                >
+                    {statusOptions.map(s => <option className="bg-surface text-text-primary" key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+              <button onClick={() => setSelectedOrder(order)} className="bg-accent/20 text-accent font-semibold text-sm py-2 px-4 rounded-md hover:bg-accent/30 transition-colors">Details</button>
+            </div>
+          </div>
+        ))}
+        {!loading && orders.length === 0 && (
+             <AdminEmptyState
+                icon={<EmptyOrdersIcon className="w-20 h-20 text-border-color" />}
+                title="No Orders Yet"
+                description="When a new order is placed by a customer, it will appear here."
+            />
+        )}
       </div>
       
       {selectedOrder && (

@@ -1,7 +1,5 @@
 import React from 'react';
-// FIX: Import 'Order' type and 'types.ts' for global JSX namespace augmentation.
-import type { Order } from '../../types';
-import '../../types';
+import { Order } from '../../types';
 import Logo from '../Logo';
 import CloseIcon from '../icons/CloseIcon';
 import PrintIcon from '../icons/PrintIcon';

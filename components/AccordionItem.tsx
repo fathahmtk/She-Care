@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../types';
 import ChevronDownIcon from './icons/ChevronDownIcon';
 
 interface AccordionItemProps {

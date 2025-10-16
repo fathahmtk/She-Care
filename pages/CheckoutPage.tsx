@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-// FIX: Import types to resolve 'Cannot find name' errors and add global JSX augmentations.
-import '../types';
-import type { ShippingInfo, PaymentInfo, Order } from '../types';
+import { ShippingInfo, PaymentInfo, Order } from '../types';
 import { useCart } from '../contexts/CartContext';
 import AnimatedSection from '../components/AnimatedSection';
 import { useOrders } from '../contexts/OrderContext';

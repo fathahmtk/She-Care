@@ -1,5 +1,4 @@
 import React from 'react';
-import '../types';
 import AccordionItem from './AccordionItem';
 import { FAQ_DATA } from '../constants';
 

@@ -1,6 +1,4 @@
 import React, { useState, useEffect, forwardRef } from "react";
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
 
 type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
   /** A default image URL to display if the primary `src` fails to load. */

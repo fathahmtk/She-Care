@@ -1,6 +1,4 @@
 import React from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
-import '../types';
 import { FOOTER_LINKS, SOCIAL_LINKS } from '../constants';
 import Logo from './Logo';
 

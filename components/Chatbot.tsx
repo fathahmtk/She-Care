@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
-// FIX: Corrected the path for the types import from './types' to '../types'.
-import '../types';
+// FIX: Removed unnecessary import of 'types.ts' as the global JSX namespace is now correctly handled.
 import { GoogleGenAI } from "@google/genai";
 import ChatIcon from './icons/ChatIcon';
 import CloseIcon from './icons/CloseIcon';

@@ -1,5 +1,4 @@
 import React from 'react';
-import '../types';
 import type { BlogPost } from '../types';
 import ArrowRightIcon from './icons/ArrowRightIcon';
 

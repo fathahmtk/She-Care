@@ -1,7 +1,6 @@
 import React from 'react';
 
-// This component has been removed as the recipe generator feature is not relevant
-// to the shecarehub.com brand.
+// This component has been removed as it was unused and not relevant to the application's purpose.
 const RecipeGenerator: React.FC = () => {
     return null;
 };

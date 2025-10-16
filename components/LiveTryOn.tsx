@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
-import '../types';
+// FIX: Remove redundant side-effect import; named type imports are sufficient.
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { Shade } from '../types';
 import CloseIcon from './icons/CloseIcon';
@@ -33,7 +32,6 @@ const LiveTryOn: React.FC<LiveTryOnProps> = ({ shades, onClose }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  // FIX: Replaced `NodeJS.Timeout` with the browser-compatible `ReturnType<typeof setInterval>` to resolve the "Cannot find namespace 'NodeJS'" error.
   const processingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const stopCamera = useCallback(() => {

@@ -1,7 +1,5 @@
-// FIX: Import React before augmenting its types.
-// This ensures that the base JSX namespace is available before being extended.
-import React, { useState, useEffect } from 'react';
-// FIX: Import 'types.ts' to make global JSX namespace augmentations available.
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+// FIX: The global types, including JSX augmentations, are loaded here once for the entire application.
 import './types';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -14,18 +12,19 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { WishlistProvider } from './contexts/WishlistContext';
 import { RatingProvider } from './contexts/RatingContext';
 import AuthModal from './components/AuthModal';
-import HomePage from './pages/HomePage';
-// FIX: Changed to a named import as ProductDetailPage was missing a default export.
-import { ProductDetailPage } from './pages/ProductDetailPage';
-import CartPage from './pages/CartPage';
-import WishlistPage from './pages/WishlistPage';
-import CheckoutPage from './pages/CheckoutPage';
-import OrderConfirmationPage from './pages/OrderConfirmationPage';
-import AdminPage from './pages/admin/AdminPage';
-import AddPoliciesPage from './pages/AddPoliciesPage';
-import UserProfilePage from './pages/UserProfilePage';
 import Chatbot from './components/Chatbot';
 import { OrderProvider } from './contexts/OrderContext';
+import { SettingsProvider } from './contexts/SettingsContext';
+
+// Lazy load page components
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const WishlistPage = lazy(() => import('./pages/WishlistPage'));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+const OrderConfirmationPage = lazy(() => import('./pages/OrderConfirmationPage'));
+const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
+const UserProfilePage = lazy(() => import('./pages/UserProfilePage'));
 
 const NotFound: React.FC = () => (
     <div className="container mx-auto text-center py-48 px-6">
@@ -37,6 +36,33 @@ const NotFound: React.FC = () => (
     </div>
 );
 
+const LoadingSpinner: React.FC = () => (
+    <div className="flex justify-center items-center h-screen">
+      <div role="status" className="flex flex-col items-center">
+        <svg
+          className="animate-spin h-10 w-10 text-accent"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <h1 className="text-2xl font-heading text-text-secondary mt-4">Loading...</h1>
+      </div>
+    </div>
+  );
 
 const AppContent: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -84,8 +110,6 @@ const AppContent: React.FC = () => {
         return <CheckoutPage />;
       case '#/confirmation':
         return <OrderConfirmationPage />;
-      case '#/add-policies':
-        return <AddPoliciesPage />;
       case '#/profile':
         return <UserProfilePage onLoginClick={() => setIsAuthModalOpen(true)} />;
       case '':
@@ -101,17 +125,22 @@ const AppContent: React.FC = () => {
   };
   
   const isAdminRoute = route.startsWith('#/admin');
-  const isPolicyRoute = route.startsWith('#/add-policies');
 
   return (
     <>
-      {isAdminRoute || isPolicyRoute ? (
-         <main className="bg-background-start">{renderContent()}</main>
+      {isAdminRoute ? (
+         <main className="bg-background-start">
+            <Suspense fallback={<LoadingSpinner />}>
+                {renderContent()}
+            </Suspense>
+         </main>
       ) : (
         <div className="flex flex-col min-h-screen bg-gradient-to-br from-background-start to-background-end text-text-primary font-body">
           <Header onLoginClick={() => setIsAuthModalOpen(true)} />
           <main className="flex-grow pt-24">
-            {renderContent()}
+            <Suspense fallback={<LoadingSpinner />}>
+              {renderContent()}
+            </Suspense>
           </main>
           <Footer />
           <ScrollToTopButton />
@@ -127,21 +156,23 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <ProductProvider>
-          <RatingProvider>
-            <OrderProvider>
-              <CartProvider>
-                <WishlistProvider>
-                  <SearchProvider>
-                    <AppContent />
-                  </SearchProvider>
-                </WishlistProvider>
-              </CartProvider>
-            </OrderProvider>
-          </RatingProvider>
-        </ProductProvider>
-      </AuthProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <ProductProvider>
+            <RatingProvider>
+              <OrderProvider>
+                <CartProvider>
+                  <WishlistProvider>
+                    <SearchProvider>
+                      <AppContent />
+                    </SearchProvider>
+                  </WishlistProvider>
+                </CartProvider>
+              </OrderProvider>
+            </RatingProvider>
+          </ProductProvider>
+        </AuthProvider>
+      </SettingsProvider>
     </ThemeProvider>
   );
 };

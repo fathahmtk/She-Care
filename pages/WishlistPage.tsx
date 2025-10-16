@@ -1,6 +1,5 @@
 import React from 'react';
-// FIX: Import 'types.ts' to make the global JSX namespace augmentations available to this component.
-import '../types';
+// FIX: Remove redundant side-effect import; named type imports are sufficient.
 import { useWishlist } from '../contexts/WishlistContext';
 import { useCart } from '../contexts/CartContext';
 import type { Product } from '../types';
