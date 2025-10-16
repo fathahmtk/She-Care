@@ -13,8 +13,8 @@ const SETTINGS_STORAGE_KEY = 'shecarehub-site-settings';
 
 const defaultSettings: Settings = {
     logoUrl: '',
-    heroImageUrl: '',
-    heroAiPrompt: "A minimalist flat lay of premium women's wellness and skincare products on a soft, textured background. Include items like a sleek menstrual pain relief belt, elegant serum bottles, and natural elements like rose petals. The color palette should be soft pinks, creams, and gold accents, evoking a sense of luxury and calm. 16:9 aspect ratio.",
+    heroImageUrl: 'https://images.pexels.com/photos/4153251/pexels-photo-4153251.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    heroAiPrompt: "A modern Indian model with a confident, natural look, showcasing radiant skin. The setting is minimalist and luxurious, with soft, natural lighting. The mood is serene and empowering. High-resolution, photorealistic. 16:9 aspect ratio.",
     heroTagline: 'shecarehub.com',
     heroSubtitle: 'Experience instant menstrual pain relief with our smart thermal belt — designed for modern women.'
 };

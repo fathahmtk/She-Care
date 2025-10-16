@@ -1,6 +1,5 @@
 import React from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { useCart } from '../contexts/CartContext';
 import AnimatedSection from '../components/AnimatedSection';
 import CloseIcon from '../components/icons/CloseIcon';
@@ -55,9 +54,9 @@ const CartPage: React.FC = () => {
                     {/* Right side: Controls */}
                     <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
                       <div className="flex items-center border border-border-color rounded-md">
-                        <button onClick={() => handleQuantityChange(item.id, item.quantity, -1)} className="px-3 py-2 text-md font-bold hover:bg-accent/10 transition-colors rounded-l-md">-</button>
-                        <input type="text" readOnly value={item.quantity} className="w-12 text-center font-semibold text-md bg-transparent border-x border-border-color py-2 focus:outline-none" />
-                        <button onClick={() => handleQuantityChange(item.id, item.quantity, 1)} className="px-3 py-2 text-md font-bold hover:bg-accent/10 transition-colors rounded-r-md">+</button>
+                        <button onClick={() => handleQuantityChange(item.id, item.quantity, -1)} className="px-3 py-2 text-md font-bold hover:bg-accent/10 transition-colors rounded-l-md" aria-label={`Decrease quantity for ${item.name}`}>-</button>
+                        <input type="text" readOnly value={item.quantity} className="w-12 text-center font-semibold text-md bg-transparent border-x border-border-color py-2 focus:outline-none" aria-label={`Current quantity for ${item.name}`} />
+                        <button onClick={() => handleQuantityChange(item.id, item.quantity, 1)} className="px-3 py-2 text-md font-bold hover:bg-accent/10 transition-colors rounded-r-md" aria-label={`Increase quantity for ${item.name}`}>+</button>
                       </div>
                       <p className="hidden sm:block font-semibold text-lg text-text-primary w-24 text-right">₹{(item.price * item.quantity).toFixed(2)}</p>
                       <button onClick={() => removeFromCart(item.id)} className="text-text-secondary hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-500/10" aria-label={`Remove ${item.name}`}>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 
 const ScrollToTopButton: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -31,7 +30,7 @@ const ScrollToTopButton: React.FC = () => {
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed bottom-8 right-8 z-50 p-3 rounded-full bg-surface/80 backdrop-blur-sm text-accent shadow-lg transition-all duration-300 ease-in-out hover:bg-accent hover:text-background-start transform hover:scale-110 ${
+      className={`fixed bottom-8 right-6 z-50 p-3 rounded-full bg-surface/80 backdrop-blur-sm text-accent shadow-lg transition-all duration-300 ease-in-out hover:bg-accent hover:text-background-start transform hover:scale-110 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5 pointer-events-none'
       }`}
       aria-label="Go to top"

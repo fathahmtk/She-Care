@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { Product } from '../../types';
 import { useProducts } from '../../contexts/ProductContext';
 import EditIcon from '../icons/EditIcon';
@@ -304,8 +303,8 @@ const AdminProducts: React.FC = () => {
                    </span>
                 </td>
                 <td className="p-3 text-sm">
-                    <button onClick={() => handleEditProduct(product)} className="text-text-secondary hover:text-accent p-2 rounded-md"><EditIcon className="w-5 h-5"/></button>
-                    <button onClick={() => handleDeleteProduct(product.id)} className="text-text-secondary hover:text-red-500 p-2 rounded-md"><DeleteIcon className="w-5 h-5"/></button>
+                    <button onClick={() => handleEditProduct(product)} className="text-text-secondary hover:text-accent p-2 rounded-md" aria-label={`Edit ${product.name}`}><EditIcon className="w-5 h-5"/></button>
+                    <button onClick={() => handleDeleteProduct(product.id)} className="text-text-secondary hover:text-red-500 p-2 rounded-md" aria-label={`Delete ${product.name}`}><DeleteIcon className="w-5 h-5"/></button>
                 </td>
               </tr>
                 ))
@@ -341,10 +340,10 @@ const AdminProducts: React.FC = () => {
                       </div>
                   </div>
                   <div className="grid grid-cols-2 border-t border-border-color">
-                      <button onClick={() => handleEditProduct(product)} className="py-3 text-center text-sm font-semibold text-text-secondary hover:bg-accent/10 hover:text-accent transition-colors flex items-center justify-center gap-2">
+                      <button onClick={() => handleEditProduct(product)} className="py-3 text-center text-sm font-semibold text-text-secondary hover:bg-accent/10 hover:text-accent transition-colors flex items-center justify-center gap-2" aria-label={`Edit ${product.name}`}>
                           <EditIcon className="w-4 h-4" /> Edit
                       </button>
-                      <button onClick={() => handleDeleteProduct(product.id)} className="py-3 text-center text-sm font-semibold text-text-secondary border-l border-border-color hover:bg-red-500/10 hover:text-red-500 transition-colors flex items-center justify-center gap-2">
+                      <button onClick={() => handleDeleteProduct(product.id)} className="py-3 text-center text-sm font-semibold text-text-secondary border-l border-border-color hover:bg-red-500/10 hover:text-red-500 transition-colors flex items-center justify-center gap-2" aria-label={`Delete ${product.name}`}>
                           <DeleteIcon className="w-4 h-4" /> Delete
                       </button>
                   </div>

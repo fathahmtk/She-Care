@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { Order, OrderStatus } from '../../types';
 import { useOrders, } from '../../contexts/OrderContext';
 import AdminOrderDetail from './AdminOrderDetail';
@@ -90,6 +89,7 @@ const AdminOrders: React.FC = () => {
                      <select 
                           value={order.status} 
                           onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
+                          aria-label={`Update status for order ${order.id}`}
                           className={`p-1 text-xs font-semibold rounded-md border-2 bg-transparent focus:ring-1 focus:ring-accent ${
                               order.status === 'Delivered' ? 'border-green-500/40 text-green-400' :
                               order.status === 'Shipped' ? 'border-blue-500/40 text-blue-400' :
@@ -143,7 +143,7 @@ const AdminOrders: React.FC = () => {
             </div>
             <div className="flex justify-between items-center gap-4 pt-2 border-t border-border-color">
               <div className="flex-1">
-                <label htmlFor={`status-${order.id}`} className="sr-only">Order Status</label>
+                <label htmlFor={`status-${order.id}`} className="sr-only">Order Status for order #{order.id}</label>
                 <select 
                     id={`status-${order.id}`}
                     value={order.status} 

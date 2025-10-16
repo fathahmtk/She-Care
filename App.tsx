@@ -15,6 +15,7 @@ import AuthModal from './components/AuthModal';
 import Chatbot from './components/Chatbot';
 import { OrderProvider } from './contexts/OrderContext';
 import { SettingsProvider } from './contexts/SettingsContext';
+import WhatsAppLink from './components/WhatsAppLink';
 
 // Lazy load page components
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -144,6 +145,7 @@ const AppContent: React.FC = () => {
           </main>
           <Footer />
           <ScrollToTopButton />
+          <WhatsAppLink />
           <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
           <Chatbot />
         </div>

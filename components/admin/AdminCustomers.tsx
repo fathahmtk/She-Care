@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { useOrders } from '../../contexts/OrderContext';
 import type { ShippingInfo } from '../../types';
 import AdminEmptyState from './AdminEmptyState';

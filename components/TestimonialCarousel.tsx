@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { Testimonial } from '../types';
 import * as api from '../utils/api';
 import StarIcon from './icons/StarIcon';
@@ -11,6 +10,7 @@ const TestimonialCarousel: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [announcement, setAnnouncement] = useState('');
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -26,6 +26,12 @@ const TestimonialCarousel: React.FC = () => {
     };
     fetchTestimonials();
   }, []);
+
+  useEffect(() => {
+    if (testimonials.length > 0) {
+      setAnnouncement(`Showing testimonial ${currentIndex + 1} of ${testimonials.length} from ${testimonials[currentIndex].author}`);
+    }
+  }, [currentIndex, testimonials]);
 
   const nextTestimonial = useCallback(() => {
     if (testimonials.length === 0) return;
@@ -49,7 +55,7 @@ const TestimonialCarousel: React.FC = () => {
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-heading text-accent mb-12">What Our Clients Say</h2>
         
-        <div className="relative max-w-3xl mx-auto">
+        <div className="relative max-w-3xl mx-auto" role="region" aria-roledescription="carousel" aria-label="Customer testimonials">
           {loading ? (
             <div className="flex flex-col items-center justify-center h-72 md:h-60 px-4 md:px-10 animate-pulse">
                 <div className="h-5 bg-border-color/20 rounded w-full max-w-md mb-4"></div>
@@ -58,10 +64,14 @@ const TestimonialCarousel: React.FC = () => {
             </div>
           ) : (
             <>
+              <div className="sr-only" aria-live="polite" aria-atomic="true">{announcement}</div>
               <div className="relative h-72 md:h-60 overflow-hidden">
                 {testimonials.map((testimonial, index) => (
                   <div
                     key={testimonial.id}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${index + 1} of ${testimonials.length}`}
                     className={`absolute inset-0 transition-all duration-500 ease-in-out ${index === currentIndex ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-5 scale-95 pointer-events-none'}`}
                     aria-hidden={index !== currentIndex}
                   >

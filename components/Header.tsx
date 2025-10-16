@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { Product } from '../types';
 import Logo from './Logo';
 import { useCart } from '../contexts/CartContext';
@@ -22,6 +21,56 @@ interface HeaderProps {
   onLoginClick: () => void;
 }
 
+const escapeRegExp = (string: string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+const Highlight: React.FC<{ text: string; query: string }> = ({ text, query }) => {
+    if (!query.trim()) {
+        return <>{text}</>;
+    }
+    const safeQuery = escapeRegExp(query.trim());
+    const regex = new RegExp(`(${safeQuery})`, 'gi');
+    const parts = text.split(regex);
+
+    return (
+        <>
+            {parts.filter(part => part).map((part, i) =>
+                regex.test(part) ? (
+                    <span key={i} className="font-semibold bg-accent/20 rounded-sm">{part}</span>
+                ) : (
+                    part
+                )
+            )}
+        </>
+    );
+};
+
+const getDescriptionSnippet = (description: string, query: string): string => {
+    if (!query.trim()) {
+        return description.length > 80 ? description.substring(0, 80) + '...' : description;
+    }
+
+    const lowerCaseDesc = description.toLowerCase();
+    const lowerCaseQuery = query.toLowerCase().trim();
+    const index = lowerCaseDesc.indexOf(lowerCaseQuery);
+    const maxLength = 80;
+
+    if (index === -1) {
+        return description.length > maxLength ? description.substring(0, maxLength) + '...' : description;
+    }
+
+    const start = Math.max(0, index - Math.floor((maxLength - lowerCaseQuery.length) / 2));
+    const end = Math.min(description.length, start + maxLength);
+    
+    let snippet = description.substring(start, end);
+    if (start > 0) snippet = '...' + snippet;
+    if (end < description.length) snippet = snippet + '...';
+    
+    return snippet;
+};
+
+
 const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartItems } = useCart();
@@ -36,17 +85,46 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      const lowerCaseQuery = searchQuery.toLowerCase();
-      const filtered = products.filter(
-        product =>
-          product.name.toLowerCase().includes(lowerCaseQuery) ||
-          product.description.toLowerCase().includes(lowerCaseQuery)
-      );
-      setSearchResults(filtered);
-      setIsSearchDropdownVisible(true);
+        const lowerCaseQuery = searchQuery.toLowerCase().trim();
+
+        const scoredProducts = products.map(product => {
+            let score = 0;
+            const lowerCaseName = product.name.toLowerCase();
+            const lowerCaseDesc = product.description.toLowerCase();
+
+            // Higher score for matches in name
+            if (lowerCaseName.includes(lowerCaseQuery)) {
+                score += 30;
+                if (lowerCaseName.startsWith(lowerCaseQuery)) {
+                    score += 20; // Bonus for starting with query
+                }
+            }
+            
+            // Lower score for matches in description
+            if (lowerCaseDesc.includes(lowerCaseQuery)) {
+                score += 10;
+            }
+
+            // Simple fuzzy match for name (sequential characters for typos)
+            let patternIndex = 0;
+            for (let i = 0; i < lowerCaseName.length && patternIndex < lowerCaseQuery.length; i++) {
+                if (lowerCaseName[i] === lowerCaseQuery[patternIndex]) {
+                    patternIndex++;
+                }
+            }
+            score += patternIndex;
+
+            return { product, score };
+        })
+        .filter(({ score }) => score > 5) // Use a threshold to avoid weak matches
+        .sort((a, b) => b.score - a.score);
+        
+        setSearchResults(scoredProducts.map(p => p.product));
+        setIsSearchDropdownVisible(true);
+
     } else {
-      setSearchResults([]);
-      setIsSearchDropdownVisible(false);
+        setSearchResults([]);
+        setIsSearchDropdownVisible(false);
     }
   }, [searchQuery, products]);
 
@@ -110,14 +188,19 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
               {isSearchDropdownVisible && (
                 <div className="absolute top-full mt-2 w-full lg:w-96 bg-surface rounded-lg shadow-2xl border border-border-color z-50 overflow-hidden animate-fade-in">
                     {searchResults.length > 0 ? (
-                        <ul className="max-h-80 overflow-y-auto no-scrollbar">
+                        <ul role="listbox" aria-label="Search results" className="max-h-80 overflow-y-auto no-scrollbar">
                             {searchResults.map(product => (
-                                <li key={product.id}>
-                                    <a href={`#/product/${product.id}`} className="flex items-center p-3 hover:bg-accent/10 transition-colors duration-200">
-                                        <img src={product.imageUrls[0]} alt={product.name} className="w-12 h-12 object-cover rounded-md mr-4 flex-shrink-0" />
+                                <li key={product.id} role="presentation">
+                                    <a href={`#/product/${product.id}`} role="option" className="flex items-center p-3 hover:bg-accent/10 transition-colors duration-200">
+                                        <img src={product.imageUrls[0]} alt={product.name} className="w-16 h-16 object-cover rounded-md mr-4 flex-shrink-0" />
                                         <div className="flex-grow overflow-hidden">
-                                            <p className="font-semibold text-text-primary text-sm truncate">{product.name}</p>
-                                            <p className="text-accent font-semibold text-sm">₹{product.price}</p>
+                                            <p className="font-semibold text-text-primary text-sm truncate">
+                                                <Highlight text={product.name} query={searchQuery} />
+                                            </p>
+                                             <p className="text-text-secondary text-xs truncate mt-1">
+                                                <Highlight text={getDescriptionSnippet(product.description, searchQuery)} query={searchQuery} />
+                                            </p>
+                                            <p className="text-accent font-semibold text-sm mt-1">₹{product.price}</p>
                                         </div>
                                     </a>
                                 </li>
@@ -137,6 +220,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
             onClick={toggleTheme}
             className="hidden md:block text-text-primary hover:text-accent transition-all duration-300 transform hover:scale-110 p-2 rounded-full hover:bg-accent/10"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-pressed={theme === 'dark'}
           >
             {theme === 'light' ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
           </button>
@@ -145,7 +229,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
            <div className="hidden md:flex items-center gap-4">
               {isAuthenticated && user ? (
                  <>
-                    <a href="#/profile" className="text-sm text-text-secondary hover:text-accent transition-colors">Welcome, {user.name.split(' ')[0]}!</a>
+                    <a href="#/profile" className="text-sm text-text-secondary hover:text-accent transition-colors" aria-label={`View profile for ${user.name}`}>Welcome, {user.name.split(' ')[0]}!</a>
                     <button onClick={logout} className="text-sm font-semibold text-text-primary hover:text-accent transition-colors duration-300">
                         Logout
                     </button>
@@ -165,7 +249,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
           >
             <HeartIcon className="h-6 w-6"/>
             {wishlistCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 bg-accent text-white dark:text-gray-900 text-xs rounded-full">
+              <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 bg-accent text-white dark:text-gray-900 text-xs rounded-full" aria-hidden="true">
                 {wishlistCount}
               </span>
             )}
@@ -179,7 +263,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
           >
             <CartIcon className="h-6 w-6"/>
             {totalQuantity > 0 && (
-              <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 bg-accent text-white dark:text-gray-900 text-xs rounded-full">
+              <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 bg-accent text-white dark:text-gray-900 text-xs rounded-full" aria-hidden="true">
                 {totalQuantity}
               </span>
             )}

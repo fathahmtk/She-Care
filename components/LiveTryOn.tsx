@@ -147,7 +147,8 @@ const LiveTryOn: React.FC<LiveTryOnProps> = ({ shades, onClose }) => {
   }, [selectedShade, processFrame]);
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center p-4 animate-fade-in" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center p-4 animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="live-try-on-title">
+      <h2 id="live-try-on-title" className="sr-only">Live Lipstick Try-On</h2>
       <canvas ref={canvasRef} className="hidden" />
       <button onClick={onClose} className="absolute top-4 right-4 text-white hover:text-accent transition-transform duration-300 transform hover:scale-125 z-20" aria-label="Close Live Try-On">
         <CloseIcon className="w-8 h-8"/>
@@ -158,7 +159,7 @@ const LiveTryOn: React.FC<LiveTryOnProps> = ({ shades, onClose }) => {
         {processedImage && <img src={processedImage} alt="Lipstick Try-On" className="absolute inset-0 w-full h-full object-cover transform scale-x-[-1]" />}
         
         {(isInitializing || (isProcessing && !processedImage)) && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50" role="status">
                 <div className="flex flex-col items-center text-white">
                     <svg className="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     <p className="mt-3 text-sm">{isInitializing ? 'Starting camera...' : 'Applying shade...'}</p>
@@ -166,7 +167,7 @@ const LiveTryOn: React.FC<LiveTryOnProps> = ({ shades, onClose }) => {
             </div>
         )}
         {error && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/80 p-6">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/80 p-6" role="alert">
                 <p className="text-white text-center">{error}</p>
             </div>
         )}
@@ -181,6 +182,7 @@ const LiveTryOn: React.FC<LiveTryOnProps> = ({ shades, onClose }) => {
               className={`w-12 h-12 rounded-full border-2 transition-all duration-300 transform hover:scale-110 ${selectedShade?.name === shade.name ? 'border-accent ring-2 ring-accent ring-offset-2 ring-offset-black/20' : 'border-white/50'}`}
               style={{ backgroundColor: shade.hex }}
               aria-label={`Select shade ${shade.name}`}
+              aria-pressed={selectedShade?.name === shade.name}
             >
             </button>
           ))}

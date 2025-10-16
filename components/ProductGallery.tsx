@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import ImageWithFallback from './ImageWithFallback';
 import Icon3D from './icons/Icon3D';
 import VideoIcon from './icons/VideoIcon';
@@ -89,6 +88,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, alt, modelUrl, 
                     : 'border-transparent hover:border-accent/50 opacity-70 hover:opacity-100'
                 }`}
                 aria-label={`View image ${index + 1}`}
+                aria-pressed={view === 'image' && activeIndex === index}
                 >
                 <ImageWithFallback
                     src={image}
@@ -106,6 +106,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, alt, modelUrl, 
                         : 'border-border-color hover:border-accent/50 text-text-secondary hover:text-accent'
                     }`}
                     aria-label="Switch to 3D view"
+                    aria-pressed={view === '3d'}
                 >
                     <Icon3D className="w-8 h-8"/>
                 </button>
@@ -119,6 +120,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, alt, modelUrl, 
                         : 'border-border-color hover:border-accent/50 text-text-secondary hover:text-accent'
                     }`}
                     aria-label="Watch product video"
+                    aria-pressed={view === 'video'}
                 >
                     <VideoIcon className="w-8 h-8"/>
                 </button>

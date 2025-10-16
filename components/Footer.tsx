@@ -1,6 +1,5 @@
 import React from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { FOOTER_LINKS, SOCIAL_LINKS } from '../constants';
 import Logo from './Logo';
 

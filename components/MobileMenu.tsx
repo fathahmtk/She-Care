@@ -73,8 +73,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLoginClick }
         aria-labelledby="mobile-menu-title"
       >
         <div className="p-6 flex flex-col h-full">
-            <div className="absolute top-4 right-4">
-                 <button onClick={onClose} className="p-2 text-text-secondary hover:text-accent transition-colors">
+            <div className="flex justify-between items-center mb-6">
+                 <h2 id="mobile-menu-title" className="sr-only">Main Menu</h2>
+                 <button onClick={onClose} className="absolute top-4 right-4 p-2 text-text-secondary hover:text-accent transition-colors">
+                    <span className="sr-only">Close menu</span>
                     <CloseIcon className="w-6 h-6" />
                  </button>
             </div>
@@ -127,12 +129,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLoginClick }
                         {link.name}
                     </a>
                     ))}
-                     <a href="#/wishlist" onClick={() => handleLinkClick('#/wishlist')} className="flex justify-between items-center p-3 text-xl font-heading text-text-primary transition-colors duration-300 ease-out hover:text-accent hover:bg-accent/10 rounded-md">
+                     <a href="#/wishlist" onClick={() => handleLinkClick('#/wishlist')} className="flex justify-between items-center p-3 text-xl font-heading text-text-primary transition-colors duration-300 ease-out hover:text-accent hover:bg-accent/10 rounded-md" aria-label={`View wishlist, ${wishlistCount} items`}>
                         <span className="flex items-center gap-4">
                             <HeartIcon className="w-6 h-6"/>
                             <span>Wishlist</span>
                         </span>
-                        {wishlistCount > 0 && <span className="flex items-center justify-center h-7 w-7 bg-accent text-white text-sm rounded-full">{wishlistCount}</span>}
+                        {wishlistCount > 0 && <span className="flex items-center justify-center h-7 w-7 bg-accent text-white text-sm rounded-full" aria-hidden="true">{wishlistCount}</span>}
                     </a>
                 </nav>
 
@@ -151,6 +153,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLoginClick }
                     onClick={toggleTheme} 
                     className="p-2 rounded-full bg-surface/50 text-text-primary hover:text-accent hover:bg-accent/10 transition-colors"
                     aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                    aria-pressed={theme === 'dark'}
                 >
                     {theme === 'light' ? <MoonIcon className="w-6 h-6"/> : <SunIcon className="w-6 h-6"/>}
                 </button>

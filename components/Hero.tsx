@@ -1,10 +1,9 @@
 import React from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import BrandLogo from './BrandLogo';
 import { useSettings } from '../contexts/SettingsContext';
 
-const FALLBACK_IMAGE_URL = "https://images.pexels.com/photos/3762800/pexels-photo-3762800.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const FALLBACK_IMAGE_URL = "https://images.pexels.com/photos/4153251/pexels-photo-4153251.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
 const Hero: React.FC = () => {
   const { settings } = useSettings();
@@ -17,6 +16,8 @@ const Hero: React.FC = () => {
     <section 
       className="relative h-screen flex items-center justify-center text-center text-text-primary bg-cover bg-center transition-all duration-1000" 
       style={{ backgroundImage: `url('${imageUrl}')` }}
+      role="banner"
+      aria-label="Homepage hero section"
     >
       <div className="absolute inset-0 bg-background-start/40 dark:bg-black/60"></div>
       

@@ -4,21 +4,41 @@
     <meta charset="UTF--8" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>shecarehub.com – Premium Women’s Wellness</title>
-    <meta name="description" content="Luxury wellness and skincare for modern women." />
+    <title>SheCareHub.com | Premium Women's Wellness & Beauty Shop in Kerala, India</title>
+    <meta name="description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
+    <meta name="keywords" content="ladies online shop, women's wellness, beauty products, skincare India, menstrual pain relief, SheCareHub, online shopping Kerala" />
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://shecarehub.com/" />
-    <meta property="og:title" content="shecarehub.com – Premium Women’s Wellness" />
-    <meta property="og:description" content="Luxury wellness and skincare for modern women." />
+    <meta property="og:title" content="SheCareHub.com | Premium Women’s Wellness & Beauty Shop in Kerala, India" />
+    <meta property="og:description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
     <meta property="og:image" content="https://shecarehub.com/logo.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://shecarehub.com/" />
-    <meta property="twitter:title" content="shecarehub.com – Premium Women’s Wellness" />
-    <meta property="twitter:description" content="Luxury wellness and skincare for modern women." />
+    <meta property="twitter:title" content="SheCareHub.com | Premium Women’s Wellness & Beauty Shop in Kerala, India" />
+    <meta property="twitter:description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
     <meta property="twitter:image" content="https://shecarehub.com/logo.png" />
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR-PIXEL-ID'); // IMPORTANT: Replace YOUR-PIXEL-ID with your actual Meta Pixel ID.
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=YOUR-PIXEL-ID&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
 
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -70,6 +90,18 @@
       .animate-fade-in {
         animation: fadeIn 0.4s ease-in-out;
       }
+      /* For screen-reader accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
     </style>
 
     <script>
@@ -109,6 +141,34 @@
   }
 }
 </script>
+
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SheCareHub.com",
+      "url": "https://shecarehub.com/",
+      "logo": "https://shecarehub.com/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/",
+        "https://www.twitter.com/",
+        "https://www.instagram.com/"
+      ]
+    }
+</script>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://shecarehub.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://shecarehub.com/#?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+</script>
+
 </head>
   <body>
     <div id="root"></div>

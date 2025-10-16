@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { useAuth } from '../contexts/AuthContext';
 import CloseIcon from './icons/CloseIcon';
 import EmailIcon from './icons/EmailIcon';
@@ -130,6 +129,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="auth-modal-title"
     >
       <div 
         className="bg-surface rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-border-color overflow-hidden"
@@ -144,7 +144,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         </button>
 
         <div className={`transition-all duration-300 ease-in-out ${step === 'enter-otp' ? '-translate-x-full opacity-0 absolute' : 'translate-x-0 opacity-100'}`}>
-          <h2 className="text-3xl font-heading text-text-primary mb-2 text-center">Login or Sign Up</h2>
+          <h2 id="auth-modal-title" className="text-3xl font-heading text-text-primary mb-2 text-center">Login or Sign Up</h2>
           <p className="text-text-secondary mb-8 text-center text-sm">Enter your email to receive a secure code.</p>
           <form onSubmit={handleEmailSubmit} className="space-y-6">
             <div className="relative">
@@ -186,21 +186,26 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </div>
 
             <form onSubmit={handleOtpSubmit}>
-                <div className="flex justify-center gap-2 mb-4">
+                <div className="flex justify-center gap-2 mb-4" role="group" aria-labelledby="otp-label">
+                  <p id="otp-label" className="sr-only">Enter your 6-digit one-time password</p>
                   {otp.map((data, index) => (
                     <input
                       key={index}
                       ref={el => { otpInputsRef.current[index] = el }}
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       maxLength={1}
                       value={data}
                       onChange={e => handleOtpChange(e.target, index)}
                       onKeyDown={e => handleKeyDown(e, index)}
                       className="w-12 h-14 text-center text-2xl font-semibold bg-surface border border-border-color rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                      aria-label={`Enter digit ${index + 1} of your one-time password`}
+                      autoComplete="one-time-code"
                     />
                   ))}
                 </div>
-                {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
+                {error && <p className="text-red-500 text-sm text-center mt-4" role="alert">{error}</p>}
                 <button type="submit" disabled={isLoading} className="mt-6 w-full bg-accent text-surface py-3 rounded-lg transition-all duration-300 font-body font-semibold tracking-wider text-lg shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed">
                   {isLoading ? 'Verifying...' : 'Verify & Login'}
                 </button>

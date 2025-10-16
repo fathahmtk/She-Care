@@ -70,8 +70,9 @@ const Chatbot: React.FC = () => {
       {/* Chat Bubble */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-accent text-surface w-16 h-16 rounded-full shadow-lg flex items-center justify-center transform transition-all duration-300 ease-in-out hover:scale-110 hover:bg-accent-hover"
+        className="fixed bottom-44 right-6 z-50 bg-accent text-surface w-16 h-16 rounded-full shadow-lg flex items-center justify-center transform transition-all duration-300 ease-in-out hover:scale-110 hover:bg-accent-hover"
         aria-label={isOpen ? "Close chat" : "Open chat"}
+        aria-expanded={isOpen}
       >
         {isOpen ? <CloseIcon className="w-8 h-8"/> : <ChatIcon className="w-8 h-8"/>}
       </button>
@@ -83,10 +84,11 @@ const Chatbot: React.FC = () => {
         }`}
         role="dialog"
         aria-hidden={!isOpen}
+        aria-labelledby="chatbot-header"
       >
         {/* Header */}
         <div className="p-4 bg-surface/80 backdrop-blur-sm border-b border-border-color rounded-t-2xl">
-          <h3 className="text-lg font-semibold text-text-primary text-center font-heading">SheCare Assistant 💛</h3>
+          <h3 id="chatbot-header" className="text-lg font-semibold text-text-primary text-center font-heading">SheCare Assistant 💛</h3>
         </div>
 
         {/* Messages */}
@@ -129,6 +131,7 @@ const Chatbot: React.FC = () => {
               className="w-full bg-border-color/20 border border-border-color rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all text-sm"
               disabled={isLoading}
               autoComplete="off"
+              aria-label="Type your message"
             />
             <button
               type="submit"

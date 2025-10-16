@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 
 const Cta: React.FC = () => {
   const [email, setEmail] = useState('');

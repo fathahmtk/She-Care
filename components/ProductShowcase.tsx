@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
-import { Review } from '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
+import { Review, Product } from '../types';
 import * as api from '../utils/api';
 import ProductCard from './ProductCard';
 import ReviewCard from './ReviewCard';
@@ -10,6 +9,7 @@ import { useProducts } from '../contexts/ProductContext';
 import SearchIcon from './icons/SearchIcon';
 import ArrowLeftIcon from './icons/ArrowLeftIcon';
 import ArrowRightIcon from './icons/ArrowRightIcon';
+import QuickViewModal from './QuickViewModal';
 
 
 const ProductCardSkeleton: React.FC = () => (
@@ -33,6 +33,7 @@ const ProductShowcase: React.FC = () => {
   const { products, loading: productsLoading } = useProducts();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedTag, setSelectedTag] = useState('All');
@@ -88,6 +89,14 @@ const ProductShowcase: React.FC = () => {
       }, 100);
     }
   };
+  
+  const handleOpenQuickView = (product: Product) => {
+    setQuickViewProduct(product);
+  };
+
+  const handleCloseQuickView = () => {
+    setQuickViewProduct(null);
+  };
 
   return (
     <>
@@ -102,7 +111,9 @@ const ProductShowcase: React.FC = () => {
                   <div className="w-full overflow-x-auto pb-2 -mb-2 no-scrollbar">
                       <div className="flex justify-start md:justify-center flex-nowrap gap-3">
                           {categories.map(category => (
-                            <button key={category} onClick={() => setSelectedCategory(category)} className={`flex-shrink-0 px-5 py-2 font-body font-semibold rounded-full transition-all duration-300 border-2 text-sm ${selectedCategory === category ? 'bg-accent text-surface border-accent shadow-md' : 'bg-surface text-text-primary border-border-color hover:border-accent hover:text-accent transform hover:-translate-y-px'}`}>
+                            <button key={category} onClick={() => setSelectedCategory(category)} className={`flex-shrink-0 px-5 py-2 font-body font-semibold rounded-full transition-all duration-300 border-2 text-sm ${selectedCategory === category ? 'bg-accent text-surface border-accent shadow-md' : 'bg-surface text-text-primary border-border-color hover:border-accent hover:text-accent transform hover:-translate-y-px'}`}
+                              aria-pressed={selectedCategory === category}
+                            >
                               {category}
                             </button>
                           ))}
@@ -115,7 +126,9 @@ const ProductShowcase: React.FC = () => {
                     <h3 className="text-sm font-semibold text-text-secondary tracking-wider uppercase mb-3 text-left md:text-center">Tag</h3>
                     <div className="flex justify-start md:justify-center flex-wrap gap-2">
                         {tags.map(tag => (
-                          <button key={tag} onClick={() => setSelectedTag(tag)} className={`flex-shrink-0 px-4 py-1 text-xs font-body font-medium rounded-full transition-all duration-300 border ${selectedTag === tag ? 'bg-accent text-surface border-accent/80 shadow-sm' : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'}`}>
+                          <button key={tag} onClick={() => setSelectedTag(tag)} className={`flex-shrink-0 px-4 py-1 text-xs font-body font-medium rounded-full transition-all duration-300 border ${selectedTag === tag ? 'bg-accent text-surface border-accent/80 shadow-sm' : 'bg-surface text-text-secondary border-border-color hover:border-accent/50 hover:text-accent transform hover:-translate-y-px'}`}
+                            aria-pressed={selectedTag === tag}
+                          >
                             {tag}
                           </button>
                         ))}
@@ -149,7 +162,7 @@ const ProductShowcase: React.FC = () => {
                 </>
             ) : currentProducts.length > 0 ? (
                 currentProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} onQuickViewClick={handleOpenQuickView} />
                 ))
             ) : (
                 <div className="text-center py-16">
@@ -222,6 +235,10 @@ const ProductShowcase: React.FC = () => {
           </div>
         </div>
       </section>
+      
+      {quickViewProduct && (
+        <QuickViewModal product={quickViewProduct} onClose={handleCloseQuickView} />
+      )}
     </>
   );
 };

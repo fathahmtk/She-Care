@@ -1,6 +1,5 @@
 import React from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { Order } from '../../types';
 import Logo from '../Logo';
 import CloseIcon from '../icons/CloseIcon';
@@ -58,10 +57,10 @@ const AdminOrderDetail: React.FC<AdminOrderDetailProps> = ({ order, onClose }) =
         <div className="flex justify-between items-center p-4 border-b border-border-color">
           <h2 className="text-xl font-semibold text-text-primary">Order Details</h2>
           <div>
-            <button onClick={handlePrint} className="text-text-secondary hover:text-accent p-2 rounded-md transition-colors mr-2">
+            <button onClick={handlePrint} className="text-text-secondary hover:text-accent p-2 rounded-md transition-colors mr-2" aria-label="Print invoice">
                 <PrintIcon className="w-5 h-5"/>
             </button>
-            <button onClick={onClose} className="text-text-secondary hover:text-accent p-2 rounded-md transition-colors">
+            <button onClick={onClose} className="text-text-secondary hover:text-accent p-2 rounded-md transition-colors" aria-label="Close order details">
                 <CloseIcon className="w-5 h-5"/>
             </button>
           </div>

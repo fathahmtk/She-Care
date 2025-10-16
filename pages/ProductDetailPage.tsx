@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { useProducts } from '../contexts/ProductContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -34,6 +33,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   const [isAdded, setIsAdded] = useState(false);
   const [isTryOnOpen, setIsTryOnOpen] = useState(false);
   const { getProductRatingSummary } = useRatings();
+  const [cartAnnouncement, setCartAnnouncement] = useState('');
 
   const { averageRating, totalReviews } = useMemo(() => {
     if (!product) return { averageRating: 0, totalReviews: 0 };
@@ -85,9 +85,13 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
     if (isAdded) return;
     addToCart(product, quantity);
     setIsAdded(true);
+    setCartAnnouncement(`${product.name} (quantity: ${quantity}) has been added to your cart.`);
     setTimeout(() => {
         setIsAdded(false);
     }, 2500);
+    setTimeout(() => {
+        setCartAnnouncement('');
+    }, 5000);
   };
   
   const handleQuantityChange = (amount: number) => {
@@ -123,6 +127,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   return (
     <>
     <div className="container mx-auto px-6 py-12">
+        <div className="sr-only" role="status" aria-live="polite">{cartAnnouncement}</div>
         <AnimatedSection>
             {/* Breadcrumbs */}
             <nav className="text-sm font-body text-text-secondary mb-8" aria-label="Breadcrumb">
@@ -136,7 +141,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                         <svg className="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
                     </li>
                     <li>
-                        <span className="text-text-primary">{product.name}</span>
+                        <span className="text-text-primary" aria-current="page">{product.name}</span>
                     </li>
                 </ol>
             </nav>
@@ -183,9 +188,9 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                         <div className="mt-auto pt-6 border-t border-border-color space-y-6">
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center border border-border-color rounded-md">
-                                    <button onClick={() => handleQuantityChange(-1)} className="px-4 py-3 text-lg font-bold hover:bg-accent/10 transition-colors rounded-l-md">-</button>
-                                    <input type="text" readOnly value={quantity} className="w-14 text-center font-semibold text-lg bg-transparent border-x border-border-color py-3 focus:outline-none" />
-                                    <button onClick={() => handleQuantityChange(1)} className="px-4 py-3 text-lg font-bold hover:bg-accent/10 transition-colors rounded-r-md">+</button>
+                                    <button onClick={() => handleQuantityChange(-1)} className="px-4 py-3 text-lg font-bold hover:bg-accent/10 transition-colors rounded-l-md" aria-label="Decrease quantity">-</button>
+                                    <input type="text" readOnly value={quantity} className="w-14 text-center font-semibold text-lg bg-transparent border-x border-border-color py-3 focus:outline-none" aria-label="Current quantity" />
+                                    <button onClick={() => handleQuantityChange(1)} className="px-4 py-3 text-lg font-bold hover:bg-accent/10 transition-colors rounded-r-md" aria-label="Increase quantity">+</button>
                                 </div>
                                 <button
                                     onClick={handleAddToCart}
@@ -200,6 +205,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                                     onClick={handleToggleWishlist}
                                     className="p-4 border border-border-color rounded-lg text-accent transition-colors duration-300 hover:bg-accent/10"
                                     aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                                    aria-pressed={isWishlisted}
                                 >
                                     <HeartIcon className="w-6 h-6" filled={isWishlisted} />
                                 </button>
