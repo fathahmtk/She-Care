@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { useProducts } from '../contexts/ProductContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';

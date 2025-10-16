@@ -1,5 +1,6 @@
 import React from 'react';
-// FIX: The side-effect import of 'types.ts' is no longer needed as the global JSX namespace is fixed.
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { useOrders } from '../contexts/OrderContext';
 import AnimatedSection from '../components/AnimatedSection';

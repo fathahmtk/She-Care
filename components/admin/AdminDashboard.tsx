@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 import { useOrders } from '../../contexts/OrderContext';
 import { useProducts } from '../../contexts/ProductContext';
 import OrdersIcon from '../icons/OrdersIcon';

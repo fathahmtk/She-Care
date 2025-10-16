@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { Review } from '../types';
 import * as api from '../utils/api';
 import ProductCard from './ProductCard';

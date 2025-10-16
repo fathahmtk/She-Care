@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 import { Order, OrderStatus } from '../../types';
 import { useOrders, } from '../../contexts/OrderContext';
 import AdminOrderDetail from './AdminOrderDetail';

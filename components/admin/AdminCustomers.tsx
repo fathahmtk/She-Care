@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 import { useOrders } from '../../contexts/OrderContext';
 import type { ShippingInfo } from '../../types';
 import AdminEmptyState from './AdminEmptyState';
@@ -91,21 +93,18 @@ const AdminCustomers: React.FC = () => {
                 </div>
             </div>
             <div className="mt-3 pt-3 border-t border-border-color">
-                <p className="text-sm text-text-secondary">
-                    <span className="font-semibold text-text-primary">{customer.orderCount}</span> {customer.orderCount === 1 ? 'order' : 'orders'} placed.
-                </p>
+                <p className="text-sm text-text-secondary">Orders: <span className="font-semibold text-text-primary">{customer.orderCount}</span></p>
             </div>
           </div>
         ))}
-         {!loading && customers.length === 0 && (
-             <AdminEmptyState
-                icon={<EmptyCustomersIcon className="w-20 h-20 text-border-color" />}
-                title="No Customers Yet"
-                description="Customer information will appear here after they place an order."
-            />
+        {!loading && customers.length === 0 && (
+          <AdminEmptyState
+            icon={<EmptyCustomersIcon className="w-20 h-20 text-border-color" />}
+            title="No Customers Yet"
+            description="Customer information will appear here after they place an order."
+          />
         )}
       </div>
-
     </div>
   );
 };

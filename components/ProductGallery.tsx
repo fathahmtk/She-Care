@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import ImageWithFallback from './ImageWithFallback';
 import Icon3D from './icons/Icon3D';
 import IconImage from './icons/IconImage';

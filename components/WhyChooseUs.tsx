@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Remove redundant side-effect import; named type imports are sufficient.
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { GoogleGenAI, Type } from "@google/genai";
 import type { WhyChooseUsItem } from '../types';
 import QualityIcon from './icons/QualityIcon';

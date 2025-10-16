@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { useAuth } from '../contexts/AuthContext';
 import CloseIcon from './icons/CloseIcon';
 import EmailIcon from './icons/EmailIcon';

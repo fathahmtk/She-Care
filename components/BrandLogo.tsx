@@ -1,5 +1,6 @@
 import React from 'react';
-// FIX: Removed unnecessary import of 'types.ts' as the global JSX namespace is now correctly handled.
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { useSettings } from '../contexts/SettingsContext';
 
 // FIX: Added `style` prop to allow custom inline styles.

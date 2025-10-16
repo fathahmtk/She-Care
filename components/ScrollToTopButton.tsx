@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 
 const ScrollToTopButton: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);

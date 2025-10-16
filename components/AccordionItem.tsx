@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import ChevronDownIcon from './icons/ChevronDownIcon';
 
 interface AccordionItemProps {

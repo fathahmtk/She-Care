@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../../types';
 import AdminDashboard from '../../components/admin/AdminDashboard';
 import AdminOrders from '../../components/admin/AdminOrders';
 import AdminProducts from '../../components/admin/AdminProducts';

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { ShippingInfo, PaymentInfo, Order } from '../types';
 import { useCart } from '../contexts/CartContext';
 import AnimatedSection from '../components/AnimatedSection';

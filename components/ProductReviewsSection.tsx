@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// FIX: Remove redundant side-effect import; named type imports are sufficient.
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import * as api from '../utils/api';
 import type { Review } from '../types';
 import { useAuth } from '../contexts/AuthContext';

@@ -1,5 +1,6 @@
 import React from 'react';
-// FIX: Remove redundant side-effect import; named type imports are sufficient.
+// FIX: Import global types to make JSX augmentations available.
+import '../types';
 import { useProducts } from '../contexts/ProductContext';
 import type { Product } from '../types';
 import StarRating from './StarRating';
