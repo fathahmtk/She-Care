@@ -13,10 +13,11 @@ const SETTINGS_STORAGE_KEY = 'shecarehub-site-settings';
 
 const defaultSettings: Settings = {
     logoUrl: '',
-    heroImageUrl: 'https://images.pexels.com/photos/4153251/pexels-photo-4153251.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    heroAiPrompt: "A modern Indian model with a confident, natural look, showcasing radiant skin. The setting is minimalist and luxurious, with soft, natural lighting. The mood is serene and empowering. High-resolution, photorealistic. 16:9 aspect ratio.",
-    heroTagline: 'shecarehub.com',
-    heroSubtitle: 'Experience instant menstrual pain relief with our smart thermal belt — designed for modern women.'
+    heroImageUrl: 'https://images.pexels.com/photos/3762800/pexels-photo-3762800.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    heroAiPrompt: "A close-up of a happy, modern Indian woman with a radiant smile, showcasing healthy skin. The background is soft and minimalist, with natural light. The mood is joyful, confident, and serene. High-resolution beauty photography.",
+    heroTagline: 'Your Wellness, Reimagined.',
+    heroSubtitle: 'Discover premium wellness and beauty products designed for the modern woman.',
+    storeAddress: 'SheCareHub Fashions\n123 Style Avenue, Fashion City\nKochi, Kerala, 682001\nIndia'
 };
 
 const getInitialSettings = (): Settings => {

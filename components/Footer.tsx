@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
               <Logo />
             </div>
             <p className="text-text-secondary max-w-sm">
-              Premium wellness and skincare dedicated to celebrating and nurturing the essence of womanhood.
+              Curated collections of contemporary and traditional fashion, celebrating the essence of modern Indian style.
             </p>
           </div>
 

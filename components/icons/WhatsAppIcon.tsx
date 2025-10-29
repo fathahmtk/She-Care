@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 
 const WhatsAppIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>

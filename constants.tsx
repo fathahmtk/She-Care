@@ -28,9 +28,9 @@ export interface SocialLink {
 }
 
 export const SOCIAL_LINKS: SocialLink[] = [
-  { name: "Facebook", href: "#", icon: SocialIconFacebook },
-  { name: "Instagram", href: "#", icon: SocialIconInstagram },
-  { name: "Twitter", href: "#", icon: SocialIconTwitter },
+  { name: "Facebook", href: "https://facebook.com", icon: SocialIconFacebook },
+  { name: "Instagram", href: "https://instagram.com", icon: SocialIconInstagram },
+  { name: "Twitter", href: "https://twitter.com", icon: SocialIconTwitter },
 ];
 
 export interface FaqItem {
@@ -40,23 +40,23 @@ export interface FaqItem {
 
 export const FAQ_DATA: FaqItem[] = [
   {
-    question: "What is the Menstrual Pain Relief Belt?",
-    answer: "Our Menstrual Pain Relief Belt is a smart, wearable device that uses a combination of heat and massage therapy to soothe menstrual cramps and discomfort. It's designed to be discreet, comfortable, and easy to use on the go.",
+    question: "How do I find the right size?",
+    answer: "Each product page includes a detailed size guide with measurements. We recommend comparing these with your own measurements to find the perfect fit. If you're between sizes, we suggest sizing up for a more comfortable fit.",
   },
   {
-    question: "Is the heating belt safe to use?",
-    answer: "Absolutely. The belt is made with skin-safe materials and features multiple temperature settings to ensure your comfort. It also has an automatic shut-off feature to prevent overheating. We recommend starting with the lowest heat setting and not using it for more than 30 minutes at a time directly on the skin.",
+    question: "What is your return policy?",
+    answer: "We offer a 14-day return policy for unworn items with tags still attached. Please visit our Shipping & Returns page for detailed instructions on how to initiate a return or exchange.",
   },
   {
-    question: "How do I care for my shecarehub.com products?",
-    answer: "Care instructions vary by product. For our Relief Belt, we recommend wiping it clean with a damp cloth. For skincare items, please store them in a cool, dry place away from direct sunlight. Detailed instructions are provided with each product.",
+    question: "What materials are your products made from?",
+    answer: "We are committed to quality and use a range of premium materials, from organic cottons and silks to genuine leather. Specific material information is available in the 'Details' section on each product page.",
   },
   {
     question: "How long does shipping take?",
     answer: "We offer free standard shipping across India. Orders are typically processed within 1-2 business days and delivered within 3-5 business days, depending on your location.",
   },
   {
-    question: "What is your return policy?",
-    answer: "We have a 7-day return policy for unused and unopened products in their original packaging. If you're not satisfied with your purchase, please contact our support team to initiate a return. You can find more details on our Shipping & Returns page.",
+    question: "How should I care for my garments?",
+    answer: "To ensure longevity, we recommend following the care instructions on the garment's label. For most of our delicate items, we suggest gentle hand washing or dry cleaning.",
   },
 ];

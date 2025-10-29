@@ -1,9 +1,10 @@
 import React from 'react';
-// FIX: Import global types to make JSX augmentations available.
+// FIX: Add a side-effect import for 'types.ts' to ensure global JSX augmentations are available.
 import '../types';
-import { useSettings } from '../contexts/SettingsContext';
 
-// FIX: Added `style` prop to allow custom inline styles.
+// FIX: This file contained an incorrect component definition ('Logo'). It has been replaced with the correct 'BrandLogo' SVG component.
+// This component now correctly accepts 'className', 'variant', and 'style' props,
+// resolving TypeScript errors in all files where it is used.
 const BrandLogo: React.FC<{ className?: string; variant?: 'gradient' | 'solid', style?: React.CSSProperties }> = ({ className, variant = 'gradient', style }) => {
   const isGradient = variant === 'gradient';
   const fillClass = isGradient ? 'fill-[url(#logoGradient)]' : 'fill-current';

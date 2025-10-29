@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { GoogleGenAI } from "@google/genai";
 import ChatIcon from './icons/ChatIcon';
 import CloseIcon from './icons/CloseIcon';
@@ -29,7 +28,7 @@ const Chatbot: React.FC = () => {
       // Add initial greeting message when chat opens for the first time
       setMessages([{
         sender: 'ai',
-        text: "Hello! I'm SheCare, your personal wellness assistant from SheCareHub. How can I help you today? 🌸"
+        text: "Hello! I'm your personal stylist from SheCareHub. Looking for the perfect outfit or styling advice? I'm here to help! ✨"
       }]);
     }
   }, [isOpen]);
@@ -88,7 +87,7 @@ const Chatbot: React.FC = () => {
       >
         {/* Header */}
         <div className="p-4 bg-surface/80 backdrop-blur-sm border-b border-border-color rounded-t-2xl">
-          <h3 id="chatbot-header" className="text-lg font-semibold text-text-primary text-center font-heading">SheCare Assistant 💛</h3>
+          <h3 id="chatbot-header" className="text-lg font-semibold text-text-primary text-center font-heading">Style Assistant ✨</h3>
         </div>
 
         {/* Messages */}
@@ -127,7 +126,7 @@ const Chatbot: React.FC = () => {
               type="text"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
-              placeholder="Ask me anything..."
+              placeholder="Ask for styling advice..."
               className="w-full bg-border-color/20 border border-border-color rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all text-sm"
               disabled={isLoading}
               autoComplete="off"

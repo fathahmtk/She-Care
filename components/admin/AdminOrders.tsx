@@ -1,10 +1,15 @@
-import React, { useState, useMemo } from 'react';
-// FIX: Removed redundant side-effect import for 'types.ts'.
+import React, { useState, useMemo, useEffect } from 'react';
+// FIX: Add side-effect import to ensure JSX namespace is correctly augmented.
+import '../../types';
 import { Order, OrderStatus } from '../../types';
 import { useOrders, } from '../../contexts/OrderContext';
 import AdminOrderDetail from './AdminOrderDetail';
 import AdminEmptyState from './AdminEmptyState';
 import EmptyOrdersIcon from '../icons/EmptyOrdersIcon';
+import { usePagination } from '../../hooks/usePagination';
+import PaginationControls from './PaginationControls';
+
+const ORDERS_PER_PAGE = 10;
 
 const AdminOrders: React.FC = () => {
   const { orders, loading, updateOrderStatus } = useOrders();
@@ -32,144 +37,109 @@ const AdminOrders: React.FC = () => {
 
     return result;
   }, [orders, filter, sort]);
+
+  const { currentPageData, currentPage, totalPages, setCurrentPage } = usePagination(filteredAndSortedOrders, ORDERS_PER_PAGE);
+  
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, sort, setCurrentPage]);
   
   const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
     updateOrderStatus(orderId, newStatus);
   };
   
   const statusOptions: OrderStatus[] = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+  const inputStyles = "p-2 border border-border-color bg-surface rounded-md text-sm focus:ring-1 focus:ring-accent focus:border-accent";
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-text-primary mb-6">Manage Orders</h1>
+      <h1 className="text-4xl font-bold font-heading text-text-primary mb-8">Manage Orders</h1>
 
-      <div className="bg-surface p-4 rounded-lg shadow-sm mb-6 flex flex-wrap items-center gap-4">
-        <div>
-          <label htmlFor="status-filter" className="text-sm font-medium text-text-secondary mr-2">Filter by Status:</label>
-          <select id="status-filter" value={filter} onChange={e => setFilter(e.target.value as any)} className="p-2 border border-border-color bg-surface rounded-md text-sm focus:ring-accent focus:border-accent">
-            <option value="All">All</option>
-            {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="sort-order" className="text-sm font-medium text-text-secondary mr-2">Sort by:</label>
-          <select id="sort-order" value={sort} onChange={e => setSort(e.target.value as any)} className="p-2 border border-border-color bg-surface rounded-md text-sm focus:ring-accent focus:border-accent">
-            <option value="date-desc">Newest First</option>
-            <option value="date-asc">Oldest First</option>
-            <option value="total-desc">Total (High to Low)</option>
-            <option value="total-asc">Total (Low to High)</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Desktop Table */}
-      <div className="hidden md:block bg-surface rounded-lg shadow-sm overflow-x-auto">
-        <table className="w-full text-left">
-          <thead className="border-b border-border-color bg-surface/50">
-            <tr>
-              <th className="p-3 text-sm font-semibold text-text-secondary">Order ID</th>
-              <th className="p-3 text-sm font-semibold text-text-secondary">Date</th>
-              <th className="p-3 text-sm font-semibold text-text-secondary">Customer</th>
-              <th className="p-3 text-sm font-semibold text-text-secondary">Total</th>
-              <th className="p-3 text-sm font-semibold text-text-secondary">Status</th>
-              <th className="p-3 text-sm font-semibold text-text-secondary">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-                <tr><td colSpan={6} className="p-4 text-center text-text-secondary">Loading orders...</td></tr>
-            ) : filteredAndSortedOrders.length > 0 ? (
-              filteredAndSortedOrders.map(order => (
-                <tr key={order.id} className="border-b border-border-color last:border-b-0 hover:bg-accent/5">
-                  <td className="p-3 text-sm text-text-primary font-mono">{order.id}</td>
-                  <td className="p-3 text-sm text-text-secondary">{new Date(order.orderDate).toLocaleString()}</td>
-                  <td className="p-3 text-sm text-text-secondary">{order.customer.fullName}</td>
-                  <td className="p-3 text-sm text-text-primary font-semibold">₹{order.total.toFixed(2)}</td>
-                  <td className="p-3 text-sm">
-                     <select 
-                          value={order.status} 
-                          onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
-                          aria-label={`Update status for order ${order.id}`}
-                          className={`p-1 text-xs font-semibold rounded-md border-2 bg-transparent focus:ring-1 focus:ring-accent ${
-                              order.status === 'Delivered' ? 'border-green-500/40 text-green-400' :
-                              order.status === 'Shipped' ? 'border-blue-500/40 text-blue-400' :
-                              order.status === 'Processing' ? 'border-yellow-500/40 text-yellow-400' :
-                              order.status === 'Cancelled' ? 'border-red-500/40 text-red-400' :
-                              'border-gray-500/40 text-gray-400'
-                          }`}
-                      >
-                          {statusOptions.map(s => <option className="bg-surface text-text-primary" key={s} value={s}>{s}</option>)}
-                      </select>
-                  </td>
-                  <td className="p-3 text-sm">
-                    <button onClick={() => setSelectedOrder(order)} className="text-accent hover:underline font-semibold">View Details</button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-                <tr>
-                    <td colSpan={6} className="p-4 text-center text-text-secondary">No orders found for the selected filter.</td>
-                </tr>
-            )}
-            {!loading && orders.length === 0 && (
-                 <tr>
-                    <td colSpan={6}>
-                        <AdminEmptyState
-                            icon={<EmptyOrdersIcon className="w-20 h-20 text-border-color" />}
-                            title="No Orders Yet"
-                            description="When a new order is placed by a customer, it will appear here."
-                        />
-                    </td>
-                 </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Mobile Card List */}
-      <div className="md:hidden space-y-4">
-        {loading && <p className="text-center text-text-secondary">Loading orders...</p>}
-        {filteredAndSortedOrders.map(order => (
-          <div key={order.id} className="bg-surface rounded-lg shadow-md p-4 space-y-3">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-semibold text-text-primary">{order.customer.fullName}</p>
-                <p className="font-mono text-xs text-text-secondary">#{order.id}</p>
-              </div>
-              <p className="text-lg font-bold text-accent">₹{order.total.toFixed(2)}</p>
-            </div>
-            <div className="text-xs text-text-secondary border-t border-border-color pt-2">
-              Date: {new Date(order.orderDate).toLocaleString()}
-            </div>
-            <div className="flex justify-between items-center gap-4 pt-2 border-t border-border-color">
-              <div className="flex-1">
-                <label htmlFor={`status-${order.id}`} className="sr-only">Order Status for order #{order.id}</label>
-                <select 
-                    id={`status-${order.id}`}
-                    value={order.status} 
-                    onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
-                    className={`w-full p-2 text-sm font-semibold rounded-md border-2 bg-transparent focus:ring-1 focus:ring-accent ${
-                        order.status === 'Delivered' ? 'border-green-500/40 text-green-400' :
-                        order.status === 'Shipped' ? 'border-blue-500/40 text-blue-400' :
-                        order.status === 'Processing' ? 'border-yellow-500/40 text-yellow-400' :
-                        order.status === 'Cancelled' ? 'border-red-500/40 text-red-400' :
-                        'border-gray-500/40 text-gray-400'
-                    }`}
-                >
-                    {statusOptions.map(s => <option className="bg-surface text-text-primary" key={s} value={s}>{s}</option>)}
+      <div className="bg-surface p-4 rounded-xl border border-border-color mb-6 flex flex-wrap items-center gap-4">
+        <div className="flex-grow flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+                <label htmlFor="status-filter" className="text-sm font-medium text-text-secondary">Status</label>
+                <select id="status-filter" value={filter} onChange={e => setFilter(e.target.value as any)} className={inputStyles}>
+                    <option value="All">All</option>
+                    {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
-              </div>
-              <button onClick={() => setSelectedOrder(order)} className="bg-accent/20 text-accent font-semibold text-sm py-2 px-4 rounded-md hover:bg-accent/30 transition-colors">Details</button>
             </div>
-          </div>
-        ))}
-        {!loading && orders.length === 0 && (
-             <AdminEmptyState
-                icon={<EmptyOrdersIcon className="w-20 h-20 text-border-color" />}
-                title="No Orders Yet"
-                description="When a new order is placed by a customer, it will appear here."
-            />
-        )}
+            <div className="flex items-center gap-2">
+                <label htmlFor="sort-order" className="text-sm font-medium text-text-secondary">Sort by</label>
+                <select id="sort-order" value={sort} onChange={e => setSort(e.target.value as any)} className={inputStyles}>
+                    <option value="date-desc">Newest First</option>
+                    <option value="date-asc">Oldest First</option>
+                    <option value="total-desc">Total (High to Low)</option>
+                    <option value="total-asc">Total (Low to High)</option>
+                </select>
+            </div>
+        </div>
+      </div>
+      
+      <div className="bg-surface rounded-xl border border-border-color overflow-hidden">
+        <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-[rgb(var(--color-admin-bg))] text-xs text-text-primary uppercase tracking-wider">
+                <tr>
+                  <th className="px-6 py-3 font-medium">Order ID</th>
+                  <th className="px-6 py-3 font-medium">Date</th>
+                  <th className="px-6 py-3 font-medium">Customer</th>
+                  <th className="px-6 py-3 font-medium">Total</th>
+                  <th className="px-6 py-3 font-medium">Status</th>
+                  <th className="px-6 py-3 font-medium text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-color">
+                {loading ? (
+                    <tr><td colSpan={6} className="px-6 py-16 text-center text-text-secondary">Loading orders...</td></tr>
+                ) : currentPageData.length > 0 ? (
+                  // FIX: Explicitly type 'order' to resolve property access errors on 'unknown' type.
+                  currentPageData.map((order: Order) => (
+                    <tr key={order.id} className="hover:bg-accent/5">
+                      <td className="px-6 py-4 font-mono text-text-primary font-medium">{order.id}</td>
+                      <td className="px-6 py-4 text-text-secondary whitespace-nowrap">{new Date(order.orderDate).toLocaleString()}</td>
+                      <td className="px-6 py-4 text-text-secondary">{order.customer.fullName}</td>
+                      <td className="px-6 py-4 text-text-primary font-semibold">₹{order.total.toFixed(2)}</td>
+                      <td className="px-6 py-4">
+                         <select 
+                              value={order.status} 
+                              onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
+                              aria-label={`Update status for order ${order.id}`}
+                              className={`p-1.5 text-xs font-semibold rounded-md border-2 bg-transparent focus:ring-1 focus:ring-accent w-full max-w-[120px] ${
+                                  order.status === 'Delivered' ? 'border-green-500/40 text-green-500' :
+                                  order.status === 'Shipped' ? 'border-blue-500/40 text-blue-500' :
+                                  order.status === 'Processing' ? 'border-yellow-500/40 text-yellow-500' :
+                                  order.status === 'Cancelled' ? 'border-red-500/40 text-red-500' :
+                                  'border-gray-500/40 text-gray-500'
+                              }`}
+                          >
+                              {statusOptions.map(s => <option className="bg-surface text-text-primary" key={s} value={s}>{s}</option>)}
+                          </select>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button onClick={() => setSelectedOrder(order)} className="text-accent hover:underline font-semibold text-sm">View Details</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                    <tr>
+                        <td colSpan={6}>
+                           {orders.length === 0 ? (
+                                <AdminEmptyState
+                                    icon={<EmptyOrdersIcon className="w-20 h-20 text-border-color" />}
+                                    title="No Orders Yet"
+                                    description="When a new order is placed by a customer, it will appear here."
+                                />
+                           ) : (
+                                <div className="text-center py-16 px-6 text-text-secondary">No orders found for the selected filter.</div>
+                           )}
+                        </td>
+                    </tr>
+                )}
+              </tbody>
+            </table>
+        </div>
+         <PaginationControls currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </div>
       
       {selectedOrder && (

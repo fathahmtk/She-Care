@@ -6,10 +6,8 @@ import React from 'react';
 // This ensures that the global JSX IntrinsicElements interface is extended
 // without overwriting standard HTML element types like 'div' or 'p'.
 // By placing it in this global types file, it's available application-wide.
-declare module 'react' {
+declare global {
   namespace JSX {
-    // FIX: Correctly augment the IntrinsicElements interface instead of replacing it with a type alias.
-    // This allows TypeScript to recognize both standard HTML elements and custom elements like 'model-viewer'.
     interface IntrinsicElements {
       'model-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         src?: string;
@@ -28,6 +26,7 @@ export interface Settings {
   heroAiPrompt: string;
   heroTagline: string;
   heroSubtitle: string;
+  storeAddress: string;
 }
 
 export interface Shade {

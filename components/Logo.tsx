@@ -7,7 +7,7 @@ const Logo: React.FC = () => {
   const { settings } = useSettings();
   
   return (
-    <a href="#/" aria-label="SheCareHub.com Home" className="inline-block transition-transform duration-300 ease-in-out transform hover:scale-105">
+    <a href="#/" aria-label="SheCareHub.com Home" className="inline-block transition-transform duration-300 ease-in-out transform hover:scale-105 animate-logo-fade-in">
       {settings.logoUrl ? (
         <img src={settings.logoUrl} alt="shecarehub.com logo" className="h-10 w-auto object-contain" />
       ) : (

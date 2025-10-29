@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { GoogleGenAI, Type } from "@google/genai";
 import type { WhyChooseUsItem } from '../types';
 import QualityIcon from './icons/QualityIcon';
-import WellnessIcon from './icons/WellnessIcon';
 import ShippingIcon from './icons/ShippingIcon';
 import SupportIcon from './icons/SupportIcon';
+import ArtisanIcon from './icons/ArtisanIcon';
 
 const featurePillars = [
   {
@@ -14,8 +13,8 @@ const featurePillars = [
     title: "Premium Quality",
   },
   {
-    icon: <WellnessIcon className="w-10 h-10 text-accent" />,
-    title: "Holistic Wellness",
+    icon: <ArtisanIcon className="w-10 h-10 text-accent" />,
+    title: "Artisanal Craft",
   },
   {
     icon: <ShippingIcon className="w-10 h-10 text-accent" />,
@@ -39,10 +38,10 @@ const descriptionsSchema = {
     },
 };
 
-const WHY_CHOOSE_US_CACHE_KEY = 'shecarehub-why-choose-us-features';
+const WHY_CHOOSE_US_CACHE_KEY = 'shecarehub-why-choose-us-kerala-fashion';
 const FALLBACK_FEATURES: WhyChooseUsItem[] = [
-    { icon: <QualityIcon className="w-10 h-10 text-accent" />, title: "Premium Quality", description: "We use only the finest, ethically-sourced materials to create products that are safe, durable, and luxurious." },
-    { icon: <WellnessIcon className="w-10 h-10 text-accent" />, title: "Holistic Wellness", description: "Our products are thoughtfully designed to address the unique wellness needs of modern women, nurturing both body and mind." },
+    { icon: <QualityIcon className="w-10 h-10 text-accent" />, title: "Premium Quality", description: "We use only the finest fabrics and materials, ensuring every piece from our collection feels as good as it looks." },
+    { icon: <ArtisanIcon className="w-10 h-10 text-accent" />, title: "Artisanal Craft", description: "Our collections celebrate the rich heritage of Kerala's craftsmanship, bringing you authentic, handcrafted elegance." },
     { icon: <ShippingIcon className="w-10 h-10 text-accent" />, title: "Free & Fast Shipping", description: "Enjoy complimentary shipping on all orders, delivered swiftly to your doorstep across India." },
     { icon: <SupportIcon className="w-10 h-10 text-accent" />, title: "Dedicated Support", description: "Our dedicated care team is here to assist you with any questions, ensuring a seamless and supportive experience." },
 ];
@@ -76,7 +75,7 @@ const WhyChooseUs: React.FC = () => {
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const pillarTitles = featurePillars.map(p => `"${p.title}"`).join(', ');
-        const prompt = `You are a branding expert for SheCareHub.com, a luxury women's wellness brand in India. For each of the following brand pillars, write a compelling, short description. The tone should be elegant, trustworthy, and aspirational. The pillars are: ${pillarTitles}. Return the result as a JSON array where each object has a "title" and "description" key, in the same order as the input titles.`;
+        const prompt = `You are a branding expert for SheCareHub.com, a premium boutique for Kerala fashion. For each of the following brand pillars, write a compelling, short description. The tone should be elegant, trustworthy, and celebrate heritage. The pillars are: ${pillarTitles}. Return the result as a JSON array where each object has a "title" and "description" key, in the same order as the input titles.`;
         
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -113,7 +112,7 @@ const WhyChooseUs: React.FC = () => {
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-heading text-accent mb-4">Why SheCareHub?</h2>
         <p className="text-text-secondary mb-16 max-w-3xl mx-auto">
-          We are dedicated to elevating your self-care journey with products that are as effective as they are beautiful.
+          We are dedicated to bringing you curated fashion that is as authentic and beautiful as the culture it comes from.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {(isLoading ? Array(4).fill({}) : features).map((feature, index) => (

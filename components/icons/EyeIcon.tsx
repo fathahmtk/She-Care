@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 
 const EyeIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { Product } from '../types';
 import { useCart } from '../contexts/CartContext';
 import { useRatings } from '../contexts/RatingContext';

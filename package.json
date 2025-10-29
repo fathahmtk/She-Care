@@ -1,5 +1,5 @@
 {
-  "name": "shecarehub.com-–-premium-women’s-wellness-and-beauty",
+  "name": "shecarehub.com-|-curated-fashion,-jewelry-&-accessories-for-women",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "react": "^19.2.0",
+    "@google/genai": "^1.25.0",
     "react-dom": "^19.2.0",
-    "@google/genai": "^1.24.0"
+    "vite": "^7.1.10",
+    "path": "^0.12.7",
+    "@vitejs/plugin-react": "^5.0.4",
+    "url": "^0.11.4"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
 // FIX: Import the 'Product' type to resolve 'Cannot find name' errors.
-import type { Product } from '../types';
+import { Product } from '../types';
 import * as api from '../utils/api';
 
 interface ProductContextType {

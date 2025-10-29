@@ -1,25 +1,39 @@
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "vite": "https://aistudiocdn.com/vite@^7.1.10",
+    "path": "https://aistudiocdn.com/path@^0.12.7",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.0.4",
+    "url": "https://aistudiocdn.com/url@^0.11.4"
+  }
+}
+</script>
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF--8" />
+    <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SheCareHub.com | Premium Women's Wellness & Beauty Shop in Kerala, India</title>
-    <meta name="description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
-    <meta name="keywords" content="ladies online shop, women's wellness, beauty products, skincare India, menstrual pain relief, SheCareHub, online shopping Kerala" />
+    <title>SheCareHub.com | Curated Fashion, Jewelry & Accessories for Women</title>
+    <meta name="description" content="Explore luxury collections of clothing, accessories, jewelry, and footwear at SheCareHub.com. Discover your signature style with our curated online boutique." />
+    <meta name="keywords" content="online fashion store, women's clothing, designer accessories, jewelry online, luxury fashion India, SheCareHub, online shopping Kerala" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://shecarehub.com/" />
-    <meta property="og:title" content="SheCareHub.com | Premium Women’s Wellness & Beauty Shop in Kerala, India" />
-    <meta property="og:description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
+    <meta property="og:title" content="SheCareHub.com | Curated Fashion, Jewelry & Accessories for Women" />
+    <meta property="og:description" content="Explore luxury collections of clothing, accessories, jewelry, and footwear at SheCareHub.com. Discover your signature style with our curated online boutique." />
     <meta property="og:image" content="https://shecarehub.com/logo.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://shecarehub.com/" />
-    <meta property="twitter:title" content="SheCareHub.com | Premium Women’s Wellness & Beauty Shop in Kerala, India" />
-    <meta property="twitter:description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
+    <meta property="twitter:title" content="SheCareHub.com | Curated Fashion, Jewelry & Accessories for Women" />
+    <meta property="twitter:description" content="Explore luxury collections of clothing, accessories, jewelry, and footwear at SheCareHub.com. Discover your signature style with our curated online boutique." />
     <meta property="twitter:image" content="https://shecarehub.com/logo.png" />
 
     <!-- Meta Pixel Code -->
@@ -50,25 +64,27 @@
     
     <style>
       :root {
-        --color-background-start: 248 225 221; /* #F8E1DD */
-        --color-background-end: 232 213 181;   /* #E8D5B5 */
+        --color-background-start: 245 245 245; /* #F5F5F5 - Light Beige */
+        --color-background-end: 239 236 231;   /* #EFECE7 - Alabaster */
         --color-surface: 255 255 255;          /* #FFFFFF */
-        --color-accent: 176 122 60;            /* #B07A3C */
-        --color-accent-hover: 156 106 50;      /* #9C6A32 */
-        --color-text-primary: 58 46 46;        /* #3A2E2E */
-        --color-text-secondary: 107 94 94;     /* #6B5E5E */
-        --color-border: 224 216 204;           /* #E0D8CC */
+        --color-accent: 183 144 94;            /* #B7905E - Muted Gold */
+        --color-accent-hover: 163 128 84;      /* #A38054 - Darker Gold */
+        --color-text-primary: 28 25 23;        /* #1C1917 - Rich Black */
+        --color-text-secondary: 87 83 78;     /* #57534E - Muted Gray */
+        --color-border: 214 211 209;           /* #D6D3D1 */
+        --color-admin-bg: 249 250 251;       /* #F9FAFB */
       }
 
       html.dark {
-        --color-background-start: 28 30 32;    /* #1C1E20 */
-        --color-background-end: 40 42 44;      /* #282A2C */
-        --color-surface: 50 52 55;             /* #323437 */
-        --color-accent: 212 168 106;           /* #D4A86A */
+        --color-background-start: 28 25 23;    /* #1C1917 */
+        --color-background-end: 41 37 36;      /* #292524 */
+        --color-surface: 50 46 45;             /* #322E2D */
+        --color-accent: 210 170 115;           /* #D2AA73 - Lighter Gold */
         --color-accent-hover: 230 186 126;     /* #E6BA7E */
-        --color-text-primary: 240 240 240;     /* #F0F0F0 */
-        --color-text-secondary: 168 168 168;   /* #A8A8A8 */
-        --color-border: 69 71 74;              /* #45474A */
+        --color-text-primary: 245 245 244;     /* #F5F5F4 */
+        --color-text-secondary: 168 162 158;   /* #A8A29E */
+        --color-border: 68 64 60;              /* #44403C */
+        --color-admin-bg: 28 25 23;            /* #1C1917 */
       }
 
       html {
@@ -90,6 +106,33 @@
       .animate-fade-in {
         animation: fadeIn 0.4s ease-in-out;
       }
+      @keyframes zoomEffect {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.08); }
+      }
+      .hero-animated-bg {
+        animation: zoomEffect 20s infinite alternate ease-in-out;
+      }
+      @keyframes logoFadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-logo-fade-in {
+        animation: logoFadeIn 0.8s ease-out forwards;
+      }
+      @keyframes fadeInUpScale {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .animate-fade-in-up-scale {
+        animation: fadeInUpScale 0.8s ease-out both;
+      }
       /* For screen-reader accessibility */
       .sr-only {
         position: absolute;
@@ -103,74 +146,9 @@
         border-width: 0;
       }
     </style>
-
-    <script>
-      tailwind.config = {
-        darkMode: 'class', // Enable class-based dark mode
-        theme: {
-          extend: {
-            colors: {
-              // Using rgb values allows for opacity modifiers in Tailwind, e.g., bg-surface/50
-              'background-start': 'rgb(var(--color-background-start) / <alpha-value>)',
-              'background-end': 'rgb(var(--color-background-end) / <alpha-value>)',
-              'surface': 'rgb(var(--color-surface) / <alpha-value>)',
-              'accent': 'rgb(var(--color-accent) / <alpha-value>)',
-              'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
-              'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
-              'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
-              'border-color': 'rgb(var(--color-border) / <alpha-value>)',
-              'action-blue': 'rgb(59 130 246 / <alpha-value>)',
-              'action-blue-hover': 'rgb(37 99 235 / <alpha-value>)',
-            },
-            fontFamily: {
-              heading: ['"Cormorant Garamond"', 'serif'],
-              body: ['Poppins', 'sans-serif'],
-            }
-          }
-        }
-      }
-    </script>
-    
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.24.0"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "SheCareHub.com",
-      "url": "https://shecarehub.com/",
-      "logo": "https://shecarehub.com/logo.png",
-      "sameAs": [
-        "https://www.facebook.com/",
-        "https://www.twitter.com/",
-        "https://www.instagram.com/"
-      ]
-    }
-</script>
-<script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "url": "https://shecarehub.com/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://shecarehub.com/#?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-</script>
-
-</head>
+  </head>
   <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

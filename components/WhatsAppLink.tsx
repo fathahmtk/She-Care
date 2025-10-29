@@ -1,5 +1,5 @@
 import React from 'react';
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import WhatsAppIcon from './icons/WhatsAppIcon';
 
 const PHONE_NUMBER = '911234567890'; // Placeholder Indian number

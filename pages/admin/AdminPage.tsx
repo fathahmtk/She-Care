@@ -5,15 +5,15 @@ import AdminOrders from '../../components/admin/AdminOrders';
 import AdminProducts from '../../components/admin/AdminProducts';
 import AdminCustomers from '../../components/admin/AdminCustomers';
 import AdminSettings from '../../components/admin/AdminSettings';
-
+import BrandLogo from '../../components/BrandLogo';
 import DashboardIcon from '../../components/icons/DashboardIcon';
 import OrdersIcon from '../../components/icons/OrdersIcon';
 import ProductsIcon from '../../components/icons/ProductsIcon';
 import CustomersIcon from '../../components/icons/CustomersIcon';
 import SettingsIcon from '../../components/icons/SettingsIcon';
-import Logo from '../../components/Logo';
 import MenuIcon from '../../components/icons/MenuIcon';
 import CloseIcon from '../../components/icons/CloseIcon';
+import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 
 type AdminView = 'dashboard' | 'orders' | 'products' | 'customers' | 'settings';
 
@@ -65,10 +65,10 @@ const AdminPage: React.FC = () => {
   }> = ({ targetView, icon, children }) => (
     <button
       onClick={() => handleNavClick(targetView)}
-      className={`flex items-center w-full px-4 py-3 text-left transition-colors duration-200 rounded-lg ${
+      className={`flex items-center w-full px-4 py-3 text-left transition-all duration-200 rounded-lg text-sm font-medium ${
         view === targetView
-          ? 'bg-accent/20 text-accent font-semibold'
-          : 'text-text-secondary hover:bg-black/10 dark:hover:bg-white/10'
+          ? 'bg-accent text-surface shadow-sm'
+          : 'text-text-secondary hover:bg-accent/10 hover:text-accent'
       }`}
     >
       {icon}
@@ -77,39 +77,46 @@ const AdminPage: React.FC = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-background-start text-text-primary font-body transition-colors duration-300">
+    <div className="flex h-screen bg-[rgb(var(--color-admin-bg))] text-text-primary font-body overflow-hidden">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 w-64 bg-surface shadow-md flex-shrink-0 flex flex-col z-30 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
-        <div className="p-6 border-b border-border-color">
-            <Logo />
+      <aside className={`fixed inset-y-0 left-0 w-64 bg-surface border-r border-border-color flex-shrink-0 flex flex-col z-30 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+        <div className="p-5 border-b border-border-color h-20 flex items-center">
+            <a href="#/admin" aria-label="Admin Dashboard Home">
+              <BrandLogo className="h-10 w-auto" />
+            </a>
         </div>
         <nav className="p-4 space-y-2 flex-grow">
-            <NavLink targetView="dashboard" icon={<DashboardIcon className="w-6 h-6" />}>Dashboard</NavLink>
-            <NavLink targetView="orders" icon={<OrdersIcon className="w-6 h-6" />}>Orders</NavLink>
-            <NavLink targetView="products" icon={<ProductsIcon className="w-6 h-6" />}>Products</NavLink>
-            <NavLink targetView="customers" icon={<CustomersIcon className="w-6 h-6" />}>Customers</NavLink>
-            <NavLink targetView="settings" icon={<SettingsIcon className="w-6 h-6" />}>Site Settings</NavLink>
+            <NavLink targetView="dashboard" icon={<DashboardIcon className="w-5 h-5" />}>Dashboard</NavLink>
+            <NavLink targetView="orders" icon={<OrdersIcon className="w-5 h-5" />}>Orders</NavLink>
+            <NavLink targetView="products" icon={<ProductsIcon className="w-5 h-5" />}>Products</NavLink>
+            <NavLink targetView="customers" icon={<CustomersIcon className="w-5 h-5" />}>Customers</NavLink>
+            <NavLink targetView="settings" icon={<SettingsIcon className="w-5 h-5" />}>Site Settings</NavLink>
         </nav>
         <div className="p-4 border-t border-border-color">
-            <a href="#" className="text-sm text-text-secondary hover:text-accent">&larr; Back to Storefront</a>
+            <a href="#" className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent font-medium">
+                <ArrowLeftIcon className="w-4 h-4"/>
+                <span>Back to Storefront</span>
+            </a>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Mobile Header */}
-        <header className="md:hidden flex justify-between items-center p-4 bg-surface border-b border-border-color sticky top-0 z-20">
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} aria-label="Toggle menu" className="p-2">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="flex justify-between items-center p-4 bg-surface border-b border-border-color h-20 flex-shrink-0">
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} aria-label="Toggle menu" className="p-2 md:hidden">
             {isSidebarOpen ? <CloseIcon className="w-6 h-6"/> : <MenuIcon className="w-6 h-6"/>}
           </button>
-          <div className="flex-grow flex justify-center">
-            <Logo />
+          <div className="flex-1">
+             {/* Search or other header items can go here */}
           </div>
-          <div className="w-8"></div> {/* Spacer to balance the button */}
+          <div className="text-right">
+             <span className="text-sm text-text-secondary">Admin Panel</span>
+          </div>
         </header>
 
         {/* Content */}
-        <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
+        <main className="flex-1 p-6 md:p-8 lg:p-10 overflow-y-auto">
           {renderView()}
         </main>
       </div>

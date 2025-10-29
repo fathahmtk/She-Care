@@ -1,15 +1,16 @@
 import React from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { useProducts } from '../contexts/ProductContext';
 import type { Product } from '../types';
 import StarRating from './StarRating';
+import EyeIcon from './icons/EyeIcon';
 
 interface RecommendedProductsProps {
   currentProduct: Product;
+  onQuickViewClick: (product: Product) => void;
 }
 
-const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ currentProduct }) => {
+const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ currentProduct, onQuickViewClick }) => {
   const { products } = useProducts();
 
   // Enhanced recommendation logic:
@@ -38,20 +39,29 @@ const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ currentProduc
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {recommended.map(product => (
           <div key={product.id} className="bg-surface/50 rounded-lg shadow-sm overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <a href={`#/product/${product.id}`} className="block">
-              <div className="relative overflow-hidden">
-                <img 
-                    src={product.imageUrls[0]} 
-                    alt={product.name} 
-                    className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
-                />
+             <div className="relative overflow-hidden">
+                <a href={`#/product/${product.id}`} className="block">
+                    <img 
+                        src={product.imageUrls[0]} 
+                        alt={product.name} 
+                        className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                </a>
                 {product.tag && (
                     <span className="absolute top-3 left-3 bg-accent text-white text-xs px-2 py-1 rounded-full font-body">
                         {product.tag}
                     </span>
                 )}
+                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button
+                        onClick={() => onQuickViewClick(product)}
+                        className="flex items-center gap-2 bg-surface text-text-primary font-semibold px-4 py-2 rounded-md transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:scale-105"
+                    >
+                        <EyeIcon className="w-5 h-5" />
+                        Quick View
+                    </button>
+                </div>
               </div>
-            </a>
             <div className="p-4 flex flex-col flex-grow">
               <a href={`#/product/${product.id}`} className="font-semibold text-text-primary hover:text-accent transition-colors mb-2 flex-grow">
                 {product.name}

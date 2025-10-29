@@ -1,6 +1,6 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
 // FIX: Add a side-effect import for 'types.ts' to ensure global JSX augmentations are available.
 import './types';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';

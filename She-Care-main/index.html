@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF--8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SheCareHub.com | Premium Women's Wellness & Beauty Shop in Kerala, India</title>
+    <meta name="description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
+    <meta name="keywords" content="ladies online shop, women's wellness, beauty products, skincare India, menstrual pain relief, SheCareHub, online shopping Kerala" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://shecarehub.com/" />
+    <meta property="og:title" content="SheCareHub.com | Premium Women’s Wellness & Beauty Shop in Kerala, India" />
+    <meta property="og:description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
+    <meta property="og:image" content="https://shecarehub.com/logo.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://shecarehub.com/" />
+    <meta property="twitter:title" content="SheCareHub.com | Premium Women’s Wellness & Beauty Shop in Kerala, India" />
+    <meta property="twitter:description" content="Discover luxury wellness, skincare, and beauty products at SheCareHub.com. Shop the best ladies' online collection in Kerala, India, with free shipping." />
+    <meta property="twitter:image" content="https://shecarehub.com/logo.png" />
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR-PIXEL-ID'); // IMPORTANT: Replace YOUR-PIXEL-ID with your actual Meta Pixel ID.
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=YOUR-PIXEL-ID&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+    
+    <style>
+      :root {
+        --color-background-start: 248 225 221; /* #F8E1DD */
+        --color-background-end: 232 213 181;   /* #E8D5B5 */
+        --color-surface: 255 255 255;          /* #FFFFFF */
+        --color-accent: 176 122 60;            /* #B07A3C */
+        --color-accent-hover: 156 106 50;      /* #9C6A32 */
+        --color-text-primary: 58 46 46;        /* #3A2E2E */
+        --color-text-secondary: 107 94 94;     /* #6B5E5E */
+        --color-border: 224 216 204;           /* #E0D8CC */
+      }
+
+      html.dark {
+        --color-background-start: 28 30 32;    /* #1C1E20 */
+        --color-background-end: 40 42 44;      /* #282A2C */
+        --color-surface: 50 52 55;             /* #323437 */
+        --color-accent: 212 168 106;           /* #D4A86A */
+        --color-accent-hover: 230 186 126;     /* #E6BA7E */
+        --color-text-primary: 240 240 240;     /* #F0F0F0 */
+        --color-text-secondary: 168 168 168;   /* #A8A8A8 */
+        --color-border: 69 71 74;              /* #45474A */
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.4s ease-in-out;
+      }
+      @keyframes fadeInUpScale {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .animate-fade-in-up-scale {
+        animation: fadeInUpScale 0.8s ease-out both;
+      }
+      /* For screen-reader accessibility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+    </style>
+
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // Enable class-based dark mode
+        theme: {
+          extend: {
+            colors: {
+              // Using rgb values allows for opacity modifiers in Tailwind, e.g., bg-surface/50
+              'background-start': 'rgb(var(--color-background-start) / <alpha-value>)',
+              'background-end': 'rgb(var(--color-background-end) / <alpha-value>)',
+              'surface': 'rgb(var(--color-surface) / <alpha-value>)',
+              'accent': 'rgb(var(--color-accent) / <alpha-value>)',
+              'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+              'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
+              'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
+              'border-color': 'rgb(var(--color-border) / <alpha-value>)',
+              'action-blue': 'rgb(59 130 246 / <alpha-value>)',
+              'action-blue-hover': 'rgb(37 99 235 / <alpha-value>)',
+            },
+            fontFamily: {
+              heading: ['"Cormorant Garamond"', 'serif'],
+              body: ['Poppins', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.24.0"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SheCareHub.com",
+      "url": "https://shecarehub.com/",
+      "logo": "https://shecarehub.com/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/",
+        "https://www.twitter.com/",
+        "https://www.instagram.com/"
+      ]
+    }
+</script>
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://shecarehub.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://shecarehub.com/#?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+</script>
+
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../../types';
+// FIX: Removed redundant side-effect import for 'types.ts'.
 import { GoogleGenAI, Modality } from "@google/genai";
 import { useSettings } from '../../contexts/SettingsContext';
 import UploadIcon from '../icons/UploadIcon';
-import CloseIcon from '../icons/CloseIcon';
 import SparklesIcon from '../icons/SparklesIcon';
 
 const fileToBase64 = (file: File): Promise<string> => {
@@ -88,29 +86,35 @@ const AdminSettings: React.FC = () => {
         alert("Settings saved successfully!");
     };
     
-    const inputStyles = "w-full mt-1 p-2 bg-surface border border-border-color rounded-md text-text-primary focus:ring-2 focus:ring-accent focus:border-accent";
+    const inputStyles = "w-full mt-1 p-2 bg-background-start dark:bg-gray-800 border border-border-color rounded-md text-text-primary text-sm focus:ring-1 focus:ring-accent focus:border-accent";
     const labelStyles = "text-sm font-medium text-text-secondary";
 
-    if (!isInitialized) return <div>Loading settings...</div>;
+    if (!isInitialized) return <div className="text-center text-text-secondary">Loading settings...</div>;
 
     return (
         <div>
-            <h1 className="text-3xl font-bold text-text-primary mb-6">Site Settings</h1>
-            <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
-                <div className="bg-surface p-6 rounded-lg shadow-sm">
-                    <h2 className="text-xl font-semibold text-text-primary mb-4">Branding</h2>
-                    <div>
-                        <label className={labelStyles}>Logo</label>
-                        <div className="mt-2 flex items-center gap-6">
-                            <div className="w-24 h-24 bg-border-color/20 rounded-md flex items-center justify-center">
-                                {localSettings.logoUrl ? <img src={localSettings.logoUrl} alt="Logo preview" className="max-w-full max-h-full object-contain" /> : <span className="text-xs text-text-secondary">Preview</span>}
+            <h1 className="text-4xl font-bold font-heading text-text-primary mb-8">Site Settings</h1>
+            <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
+                <div className="bg-surface p-6 rounded-xl border border-border-color">
+                    <h2 className="text-xl font-semibold text-text-primary mb-4">Branding & Store Info</h2>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className={labelStyles}>Logo</label>
+                            <div className="mt-2 flex items-center gap-4">
+                                <div className="w-20 h-20 bg-border-color/20 rounded-lg flex items-center justify-center border border-border-color">
+                                    {localSettings.logoUrl ? <img src={localSettings.logoUrl} alt="Logo preview" className="max-w-full max-h-full object-contain" /> : <span className="text-xs text-text-secondary">Preview</span>}
+                                </div>
+                                <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'logoUrl')} className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent/10 file:text-accent hover:file:bg-accent/20" />
                             </div>
-                            <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'logoUrl')} className="text-sm" />
                         </div>
-                    </div>
+                        <div>
+                            <label htmlFor="storeAddress" className={labelStyles}>Store Address (for shipping labels)</label>
+                            <textarea id="storeAddress" name="storeAddress" value={localSettings.storeAddress} onChange={handleChange} className={inputStyles} rows={4}></textarea>
+                        </div>
+                     </div>
                 </div>
 
-                <div className="bg-surface p-6 rounded-lg shadow-sm">
+                <div className="bg-surface p-6 rounded-xl border border-border-color">
                     <h2 className="text-xl font-semibold text-text-primary mb-4">Homepage Hero Section</h2>
                     <div className="space-y-4">
                          <div>
@@ -123,26 +127,26 @@ const AdminSettings: React.FC = () => {
                         </div>
                         <div>
                             <label className={labelStyles}>Hero Image</label>
-                            <div className="mt-2 flex flex-col sm:flex-row items-center gap-6">
-                                <div className="w-48 h-48 bg-border-color/20 rounded-md flex items-center justify-center flex-shrink-0">
-                                    {localSettings.heroImageUrl ? <img src={localSettings.heroImageUrl} alt="Hero preview" className="max-w-full max-h-full object-cover rounded-md" /> : <span className="text-xs text-text-secondary">Preview</span>}
+                            <div className="mt-2 flex flex-col items-start gap-4">
+                                <div className="w-full md:w-64 h-40 bg-border-color/20 rounded-lg flex items-center justify-center border border-border-color flex-shrink-0">
+                                    {localSettings.heroImageUrl ? <img src={localSettings.heroImageUrl} alt="Hero preview" className="w-full h-full object-cover rounded-lg" /> : <span className="text-xs text-text-secondary">Preview</span>}
                                 </div>
-                                <div className="w-full space-y-4">
+                                <div className="w-full space-y-4 rounded-lg bg-background-start dark:bg-gray-800/50 border border-border-color p-4">
+                                    <h3 className="text-sm font-semibold">Update Image</h3>
                                     <div>
-                                        <p className="text-sm text-text-secondary mb-1">Option 1: Upload an image</p>
-                                        <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'heroImageUrl')} className="text-sm w-full" />
+                                        <p className="text-xs text-text-secondary mb-2">Option 1: Upload an image</p>
+                                        <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'heroImageUrl')} className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent/10 file:text-accent hover:file:bg-accent/20" />
                                     </div>
                                     <div className="relative flex items-center">
                                         <hr className="w-full border-t border-border-color" />
-                                        <span className="absolute left-1/2 -translate-x-1/2 bg-surface px-2 text-xs text-text-secondary">OR</span>
+                                        <span className="absolute left-1/2 -translate-x-1/2 bg-background-start dark:bg-gray-800/50 px-2 text-xs text-text-secondary">OR</span>
                                     </div>
                                     <div>
-                                        <p className="text-sm text-text-secondary mb-1">Option 2: Generate with AI</p>
-                                        <div className="flex gap-2">
-                                            <input type="text" name="heroAiPrompt" value={localSettings.heroAiPrompt} onChange={handleChange} className={inputStyles} placeholder="e.g., A model using a skincare product"/>
-                                            <button type="button" onClick={handleGenerateHeroImage} disabled={isGenerating} className="px-4 py-2 bg-accent text-surface rounded-md hover:bg-accent-hover disabled:opacity-70 disabled:cursor-wait h-fit mt-1 flex items-center gap-2">
-                                                <SparklesIcon className="w-4 h-4" />
-                                                {isGenerating ? 'Generating...' : 'Generate'}
+                                        <p className="text-xs text-text-secondary mb-1">Option 2: Generate with AI</p>
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <input type="text" name="heroAiPrompt" value={localSettings.heroAiPrompt} onChange={handleChange} className={`${inputStyles} mt-0`} placeholder="e.g., A model using a skincare product"/>
+                                            <button type="button" onClick={handleGenerateHeroImage} disabled={isGenerating} className="px-4 py-2 bg-accent text-surface rounded-md hover:bg-accent-hover disabled:opacity-70 disabled:cursor-wait h-fit text-sm font-semibold flex items-center justify-center gap-2">
+                                                {isGenerating ? 'Generating...' : <><SparklesIcon className="w-4 h-4" /> Generate</>}
                                             </button>
                                         </div>
                                     </div>
@@ -152,8 +156,8 @@ const AdminSettings: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex justify-end">
-                    <button type="submit" disabled={isSaving} className="px-8 py-3 bg-action-blue text-white rounded-lg hover:bg-action-blue-hover font-semibold disabled:opacity-70 disabled:cursor-wait">
+                <div className="flex justify-end pt-4">
+                    <button type="submit" disabled={isSaving} className="px-8 py-3 bg-accent text-surface rounded-lg hover:bg-accent-hover font-semibold disabled:opacity-70 disabled:cursor-wait transition-colors">
                          {isSaving ? 'Saving...' : 'Save All Settings'}
                     </button>
                 </div>

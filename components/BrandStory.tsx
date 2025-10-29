@@ -5,34 +5,38 @@ import BrandLogo from './BrandLogo';
 
 const BrandStory: React.FC = () => {
   return (
-    <section id="our-story" className="py-24">
+    <section id="our-story" className="py-24 bg-surface/30">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Brand Identity Board Column */}
-           <div className="w-full aspect-square bg-gradient-to-br from-[#F5EDE6] to-[#f8f2ed] rounded-lg shadow-xl p-8 flex flex-col justify-center items-center text-center transition-all duration-500">
-              <div className="animate-fade-in w-full">
-                <BrandLogo className="h-16 md:h-20 w-auto mx-auto mb-6" />
-                <p className="text-md mt-4" style={{ color: '#B76E79' }}>Luxury wellness for every woman — made in India.</p>
-                <div className="w-20 h-px bg-accent/30 my-6 mx-auto"></div>
-                <p className="text-3xl font-heading" style={{ color: '#B76E79' }}>Comfort meets confidence</p>
-                <p className="text-xs text-text-secondary mt-6">Designed for Indian women. Experience premium self-care.</p>
-              </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Image Column */}
+           <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group order-last md:order-first">
+                <img 
+                    src="https://images.pexels.com/photos/15822340/pexels-photo-15822340/free-photo-of-a-woman-in-a-traditional-indian-sari.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                    alt="A woman wearing a beautiful traditional Kerala saree" 
+                    className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute bottom-8 left-8 text-white">
+                    <BrandLogo variant="solid" className="h-12 w-auto mb-4" style={{ filter: 'drop-shadow(0 1px 4px rgba(0,0,0,0.5))' }} />
+                    <p className="font-body text-lg drop-shadow-md">The Essence of Southern Elegance.</p>
+                </div>
+            </div>
 
           {/* Text Content Column */}
           <div className="text-left">
-            <h2 className="text-4xl md:text-5xl font-heading text-accent mb-6">The Heart of SheCareHub</h2>
+            <p className="text-sm font-semibold tracking-widest text-text-secondary uppercase mb-2">Our Vision</p>
+            <h2 className="text-4xl md:text-5xl font-heading text-accent mb-6">Celebrating Heritage</h2>
             <p className="text-text-secondary font-body leading-relaxed mb-4">
-              SheCareHub was born from a simple yet profound realization: modern wellness often overlooks the deep, nuanced needs of women. Our journey began not in a boardroom, but from personal stories and shared experiences of searching for solutions that were not only effective but also gentle, safe, and nurturing. We saw a need for a brand that listened before it created.
+              SheCareHub was born from a deep love for Kerala's rich textile heritage and a vision to share its timeless beauty with the world. We believe that true style is a blend of tradition and modernity, a narrative woven into every thread and design.
             </p>
             <p className="text-text-secondary font-body leading-relaxed mb-6">
-              Our mission is to craft premium, thoughtfully designed wellness products that empower you to reconnect with your body. We are committed to using high-quality, ethically sourced materials and transparent practices. From soothing menstrual pain to revitalizing your skin, each product is a testament to our dedication to your well-being, transforming daily routines into cherished rituals of self-care.
+              Our mission is to curate a collection that honors artisanal craftsmanship while embracing contemporary aesthetics. From the classic elegance of a Kasavu saree to the modern chic of a linen kurti, each piece is handpicked to empower you, celebrate your roots, and tell a story of Southern grace.
             </p>
             <a
               href="#products"
               className="inline-block bg-transparent text-accent font-body font-semibold py-3 px-8 border-2 border-accent hover:bg-accent hover:text-surface transition-all duration-300 ease-in-out transform hover:scale-105"
             >
-              Explore Our Collection
+              Explore Our Heritage
             </a>
           </div>
         </div>

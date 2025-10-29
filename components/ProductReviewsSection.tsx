@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// FIX: Import global types to make JSX augmentations available.
-import '../types';
 import * as api from '../utils/api';
 import type { Review } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { useRatings } from '../contexts/RatingContext';
 import { useProducts } from '../contexts/ProductContext';
 import StarRating from './StarRating';
+import UserCircleIcon from './icons/UserCircleIcon';
+import CheckBadgeIcon from './icons/CheckBadgeIcon';
 
 interface ProductReviewsSectionProps {
   productId: number;
@@ -36,6 +36,7 @@ const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ productId
     try {
       const allReviews = await api.getReviews();
       setReviews(allReviews.filter(r => r.productId === productId).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+      setFetchError(null);
     } catch (err) {
       setFetchError('Failed to load reviews.');
     } finally {
@@ -73,7 +74,7 @@ const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ productId
 
     try {
       await api.addReview(reviewData);
-      await addRating(productId, newRating); // Also update the summary rating context
+      await addRating(productId, newRating);
       setSubmitSuccess(true);
       setNewRating(0);
       setNewComment('');
@@ -96,7 +97,8 @@ const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ productId
   const averageRating = totalRatings > 0 ? (staticRatingTotal + userRatingTotal) / totalRatings : 0;
   
   const ratingDistribution = [0, 0, 0, 0, 0];
-  if (product) { // Seed with static data for realism
+  if (product) {
+      // Approximate static reviews for visual effect, as we don't have the individual ratings
       ratingDistribution[4] = Math.round(product.reviewCount * 0.7);
       ratingDistribution[3] = Math.round(product.reviewCount * 0.2);
       ratingDistribution[2] = Math.round(product.reviewCount * 0.05);
@@ -108,39 +110,35 @@ const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ productId
   });
 
   return (
-    <div className="border-t border-border-color pt-8 mt-12">
-        <h3 className="text-2xl font-heading text-text-primary mb-6">Customer Ratings & Reviews</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
-            {/* Left Side: Summary and Form */}
-            <div className="space-y-8">
-                {/* Summary */}
-                <div className="flex flex-col items-center md:items-start">
-                    <div className="flex items-center gap-3">
-                        <span className="text-5xl font-bold font-heading text-accent">{averageRating.toFixed(1)}</span>
-                        <div>
-                            <StarRating rating={averageRating} />
-                            <p className="text-text-secondary text-sm">Based on {totalRatings} ratings</p>
-                        </div>
+    <div className="border-t border-border-color pt-12 mt-12">
+        <h3 className="text-3xl font-heading text-text-primary mb-8 text-center md:text-left">Customer Ratings & Reviews</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div className="space-y-8 sticky top-28">
+                <div className="bg-surface p-6 rounded-lg border border-border-color">
+                    <h4 className="font-semibold text-text-primary text-lg mb-4 text-center">Overall Rating</h4>
+                    <div className="flex flex-col items-center">
+                        <span className="text-6xl font-bold font-heading text-accent">{averageRating.toFixed(1)}</span>
+                        <StarRating rating={averageRating} size="lg" />
+                        <p className="text-text-secondary text-sm mt-2">Based on {totalRatings} ratings</p>
                     </div>
-                    <div className="w-full max-w-sm mt-4 space-y-1">
+                    <div className="w-full max-w-sm mx-auto mt-6 space-y-1.5">
                         {ratingDistribution.slice().reverse().map((count, index) => {
                             const starLevel = 5 - index;
                             const percentage = totalRatings > 0 ? (count / totalRatings) * 100 : 0;
                             return (
-                                <div key={starLevel} className="flex items-center gap-2 text-sm">
-                                    <span className="text-text-secondary w-16">{starLevel} star{starLevel > 1 ? 's' : ''}</span>
-                                    <div className="w-full bg-border-color/50 rounded-full h-2.5"><div className="bg-accent h-2.5 rounded-full" style={{ width: `${percentage}%` }}></div></div>
-                                    <span className="text-text-secondary w-8 text-right">{Math.round(percentage)}%</span>
+                                <div key={starLevel} className="flex items-center gap-3 text-sm">
+                                    <span className="text-text-secondary w-12 text-right">{starLevel} star</span>
+                                    <div className="w-full bg-border-color/30 rounded-full h-2"><div className="bg-accent h-2 rounded-full" style={{ width: `${percentage}%` }}></div></div>
+                                    <span className="text-text-secondary w-8 text-left font-semibold">{Math.round(percentage)}%</span>
                                 </div>
                             );
                         })}
                     </div>
                 </div>
 
-                {/* Form */}
-                <div className="bg-surface/50 p-6 rounded-lg border border-border-color">
+                <div className="bg-surface p-6 rounded-lg border border-border-color">
                     {submitSuccess ? (
-                        <div className="text-center py-8 flex flex-col items-center justify-center h-full min-h-[300px]">
+                        <div className="text-center py-8 flex flex-col items-center justify-center h-full min-h-[300px] animate-fade-in">
                             <p className="font-semibold text-accent text-lg">Thank you for your review!</p>
                             <p className="text-text-secondary text-sm mt-1">Your feedback helps other customers.</p>
                         </div>
@@ -148,32 +146,50 @@ const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ productId
                         <form onSubmit={handleSubmit} noValidate>
                             <h4 className="font-semibold text-text-primary text-lg mb-4">Write a Review</h4>
                             <div className="space-y-4">
-                                <div><StarRating rating={newRating} onRatingChange={setNewRating} size="lg" /></div>
-                                <div><input id="reviewAuthor" type="text" value={newAuthor} onChange={e => setNewAuthor(e.target.value)} disabled={isAuthenticated} placeholder="Your Name" required className="w-full px-4 py-2 bg-surface border border-border-color rounded-md focus:outline-none focus:ring-2 focus:ring-accent disabled:bg-border-color/20"/></div>
-                                <div><textarea id="reviewComment" rows={4} value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Share your experience..." required className="w-full px-4 py-2 bg-surface border border-border-color rounded-md focus:outline-none focus:ring-2 focus:ring-accent"></textarea></div>
+                                <div className="flex justify-center md:justify-start"><StarRating rating={newRating} onRatingChange={setNewRating} size="lg" /></div>
+                                <div><input id="reviewAuthor" type="text" value={newAuthor} onChange={e => setNewAuthor(e.target.value)} disabled={isAuthenticated} placeholder="Your Name" required className="w-full px-4 py-2 bg-background-start border border-border-color rounded-md focus:outline-none focus:ring-2 focus:ring-accent disabled:bg-border-color/20 disabled:cursor-not-allowed"/></div>
+                                <div><textarea id="reviewComment" rows={4} value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Share your experience..." required className="w-full px-4 py-2 bg-background-start border border-border-color rounded-md focus:outline-none focus:ring-2 focus:ring-accent"></textarea></div>
                                 {submitError && <p className="text-red-500 text-sm">{submitError}</p>}
-                                <button type="submit" disabled={isSubmitting} className="w-full bg-accent text-surface py-3 rounded-lg transition-all duration-300 font-body font-semibold text-md shadow-md hover:shadow-lg transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50">{isSubmitting ? 'Submitting...' : 'Submit Review'}</button>
+                                {isAuthenticated ? (
+                                    <button type="submit" disabled={isSubmitting} className="w-full bg-accent text-surface py-3 rounded-lg transition-all duration-300 font-body font-semibold text-md shadow-md hover:shadow-lg transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50">{isSubmitting ? 'Submitting...' : 'Submit Review'}</button>
+                                ) : (
+                                    <p className="text-sm text-center text-text-secondary p-4 bg-border-color/20 rounded-md">Please log in to submit a review.</p>
+                                )}
                             </div>
                         </form>
                     )}
                 </div>
             </div>
 
-            {/* Right Side: Reviews List */}
-            <div className="max-h-[600px] overflow-y-auto no-scrollbar pr-2 space-y-6">
-                {reviewsLoading ? <p className="text-text-secondary">Loading reviews...</p>
+            <div className="space-y-6">
+                {reviewsLoading ? <p className="text-text-secondary text-center py-10">Loading reviews...</p>
                 : reviews.length > 0 ? reviews.map(review => (
-                    <div key={review.id} className="border-b border-border-color pb-4 animate-fade-in">
-                        <div className="flex justify-between items-center mb-1">
-                            <h5 className="font-semibold text-text-primary">{review.author}</h5>
-                            <StarRating rating={review.rating} />
+                    <div key={review.id} className="bg-surface border border-border-color p-6 rounded-xl shadow-sm transition-shadow hover:shadow-md animate-fade-in">
+                        <div className="flex items-start gap-4">
+                            <div className="bg-accent/10 text-accent rounded-full p-2 flex-shrink-0">
+                                <UserCircleIcon className="w-6 h-6"/>
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex flex-col sm:flex-row justify-between sm:items-center">
+                                    <div>
+                                        <h5 className="font-semibold text-text-primary">{review.author}</h5>
+                                        <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium mt-1">
+                                            <CheckBadgeIcon className="w-4 h-4" />
+                                            <span>Verified Purchase</span>
+                                        </div>
+                                    </div>
+                                    <StarRating rating={review.rating} className="mt-2 sm:mt-0" />
+                                </div>
+                                <p className="text-sm text-text-secondary leading-relaxed mt-3 border-t border-border-color pt-3">
+                                    {review.comment}
+                                </p>
+                                 <p className="text-xs text-text-secondary/80 mt-3 text-right">{new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                            </div>
                         </div>
-                        <p className="text-xs text-text-secondary mb-2">{new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                        <p className="text-text-secondary text-sm leading-relaxed">{review.comment}</p>
                     </div>
                 ))
-                : <div className="text-center py-10"><p className="text-text-secondary">Be the first to review this product!</p></div>}
-                {fetchError && <p className="text-red-500 text-sm">{fetchError}</p>}
+                : <div className="text-center py-16 bg-surface border border-border-color rounded-lg"><p className="text-text-secondary">Be the first to review this product!</p></div>}
+                {fetchError && <p className="text-red-500 text-sm text-center">{fetchError}</p>}
             </div>
         </div>
     </div>

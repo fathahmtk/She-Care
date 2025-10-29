@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-// FIX: Removed redundant side-effect import for 'types.ts'.
 import { useProducts } from '../contexts/ProductContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -14,10 +13,12 @@ import StarRating from '../components/StarRating';
 import { useRatings } from '../contexts/RatingContext';
 import ProductReviewsSection from '../components/ProductReviewsSection';
 import RecommendedProducts from '../components/RecommendedProducts';
-import AccordionItem from '../components/AccordionItem';
 import SocialIconFacebook from '../components/icons/SocialIconFacebook';
 import SocialIconInstagram from '../components/icons/SocialIconInstagram';
 import SocialIconTwitter from '../components/icons/SocialIconTwitter';
+import QuickViewModal from '../components/QuickViewModal';
+import { Product } from '../types';
+import ProductDetails from '../components/ProductDetails';
 
 
 interface ProductDetailPageProps {
@@ -34,6 +35,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   const [isTryOnOpen, setIsTryOnOpen] = useState(false);
   const { getProductRatingSummary } = useRatings();
   const [cartAnnouncement, setCartAnnouncement] = useState('');
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   const { averageRating, totalReviews } = useMemo(() => {
     if (!product) return { averageRating: 0, totalReviews: 0 };
@@ -70,6 +72,14 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
       </div>
     );
   }
+  
+  const handleOpenQuickView = (product: Product) => {
+    setQuickViewProduct(product);
+  };
+
+  const handleCloseQuickView = () => {
+    setQuickViewProduct(null);
+  };
 
   const isWishlisted = isInWishlist(product.id);
 
@@ -117,13 +127,6 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
     }
   };
 
-  const productSpecifications = [
-    { title: 'Color', value: product.color },
-    { title: 'Materials', value: product.materials },
-    { title: 'Dimensions', value: product.dimensions },
-    { title: 'Care', value: product.careInstructions },
-  ].filter(spec => spec.value);
-
   return (
     <>
     <div className="container mx-auto px-6 py-12">
@@ -134,11 +137,11 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                 <ol className="list-none p-0 inline-flex">
                     <li className="flex items-center">
                         <a href="#/" className="hover:text-accent transition-colors">Home</a>
-                        <svg className="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+                        <svg className="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c-9.373 9.373 24.569 9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
                     </li>
                     <li className="flex items-center">
                         <a href="/#products" className="hover:text-accent transition-colors">{product.category}</a>
-                        <svg className="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+                        <svg className="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569 9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
                     </li>
                     <li>
                         <span className="text-text-primary" aria-current="page">{product.name}</span>
@@ -154,6 +157,21 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                         <span className="text-sm font-semibold tracking-widest text-text-secondary uppercase mb-2">{product.brand}</span>
                         <h1 className="text-4xl lg:text-5xl font-heading text-text-primary mb-3 leading-tight">{product.name}</h1>
                         
+                        <div className="flex items-center gap-3 mb-6">
+                            <span className="text-sm font-semibold text-text-secondary">Share:</span>
+                            <div className="flex items-center gap-1">
+                                <button onClick={() => handleShare('facebook')} aria-label="Share on Facebook" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
+                                    <SocialIconFacebook className="w-4 h-4" />
+                                </button>
+                                <button onClick={() => handleShare('twitter')} aria-label="Share on Twitter" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
+                                    <SocialIconTwitter className="w-4 h-4" />
+                                </button>
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Share on Instagram" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
+                                    <SocialIconInstagram className="w-4 h-4" />
+                                </a>
+                            </div>
+                        </div>
+
                         <div className="flex items-center gap-2 mb-6">
                           <StarRating rating={averageRating} />
                           <a href="#reviews-section" className="text-text-secondary text-sm hover:underline">({totalReviews} customer ratings)</a>
@@ -220,55 +238,27 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
                                     Live Try-On
                                 </button>
                             )}
-                            <div className="flex items-center gap-4 pt-4 border-t border-border-color">
-                                <span className="text-sm font-semibold text-text-secondary">Share:</span>
-                                <div className="flex items-center gap-2">
-                                    <button onClick={() => handleShare('facebook')} aria-label="Share on Facebook" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
-                                        <SocialIconFacebook className="w-5 h-5" />
-                                    </button>
-                                    <button onClick={() => handleShare('twitter')} aria-label="Share on Twitter" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
-                                        <SocialIconTwitter className="w-5 h-5" />
-                                    </button>
-                                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Share on Instagram" className="text-text-secondary hover:text-accent transition-all duration-300 p-2 rounded-full hover:bg-accent/10 transform hover:scale-110">
-                                        <SocialIconInstagram className="w-5 h-5" />
-                                    </a>
-                                </div>
-                            </div>
                         </div>
 
                     </div>
                 </div>
             </div>
 
-            {/* Product Details Accordion */}
-            <div className="mt-12 max-w-4xl mx-auto">
-                <AccordionItem title="Product Specifications">
-                    <ul className="space-y-2 text-text-secondary">
-                        {productSpecifications.map(spec => (
-                            <li key={spec.title} className="flex justify-between">
-                                <span className="font-semibold">{spec.title}:</span>
-                                <span>{spec.value}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </AccordionItem>
-                <AccordionItem title="Shipping & Returns">
-                    <p className="text-text-secondary">
-                        We offer free standard shipping across India on all orders. Typically, orders are delivered within 3-5 business days. We also have a 7-day return policy for unused and unopened products. For more details, please visit our policy page.
-                    </p>
-                </AccordionItem>
-            </div>
+            <ProductDetails product={product} />
             
             <div id="reviews-section" className="mt-12">
               <ProductReviewsSection productId={productId} />
             </div>
 
-            <RecommendedProducts currentProduct={product} />
+            <RecommendedProducts currentProduct={product} onQuickViewClick={handleOpenQuickView} />
 
         </AnimatedSection>
     </div>
     {isTryOnOpen && product.shades && (
         <LiveTryOn shades={product.shades} onClose={() => setIsTryOnOpen(false)} />
+    )}
+    {quickViewProduct && (
+      <QuickViewModal product={quickViewProduct} onClose={handleCloseQuickView} />
     )}
     </>
   );
