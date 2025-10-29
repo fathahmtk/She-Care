@@ -51,9 +51,6 @@
     fbq('init', 'YOUR-PIXEL-ID'); // IMPORTANT: Replace YOUR-PIXEL-ID with your actual Meta Pixel ID.
     fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=YOUR-PIXEL-ID&ev=PageView&noscript=1"
-    /></noscript>
     <!-- End Meta Pixel Code -->
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -110,10 +107,10 @@
       }
       @keyframes zoomEffect {
         0% { transform: scale(1); }
-        100% { transform: scale(1.08); }
+        100% { transform: scale(1.05); }
       }
       .hero-animated-bg {
-        animation: zoomEffect 20s infinite alternate ease-in-out;
+        animation: zoomEffect 30s infinite alternate ease-in-out;
       }
       @keyframes logoFadeIn {
         from { opacity: 0; transform: translateY(-8px); }
@@ -122,18 +119,18 @@
       .animate-logo-fade-in {
         animation: logoFadeIn 0.8s ease-out forwards;
       }
-      @keyframes fadeInUpScale {
+      @keyframes fadeInUp {
         from {
           opacity: 0;
-          transform: translateY(20px) scale(0.98);
+          transform: translateY(20px);
         }
         to {
           opacity: 1;
-          transform: translateY(0) scale(1);
+          transform: translateY(0);
         }
       }
-      .animate-fade-in-up-scale {
-        animation: fadeInUpScale 0.8s ease-out both;
+      .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out both;
       }
       /* For screen-reader accessibility */
       .sr-only {
@@ -150,6 +147,11 @@
     </style>
   </head>
   <body>
+    <!-- Meta Pixel Code (noscript fallback) -->
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=YOUR-PIXEL-ID&ev=PageView&noscript=1"
+    /></noscript>
+    
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>

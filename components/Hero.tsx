@@ -27,21 +27,21 @@ const Hero: React.FC = () => {
       
       <div className="relative z-10 px-6 flex flex-col items-center">
         {tagline === "shecarehub.com" ? (
-             <h1 className="mb-4 animate-fade-in-up-scale" aria-label="shecarehub.com" style={{ animationDelay: '0.2s' }}>
+             <h1 className="mb-4 animate-fade-in-up" aria-label="shecarehub.com" style={{ animationDelay: '0.2s' }}>
                 <BrandLogo variant="solid" className="h-16 md:h-20 lg:h-24 w-auto text-white" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))' }} />
              </h1>
         ) : (
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white mb-4 animate-fade-in-up-scale" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))', animationDelay: '0.2s' }}>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white mb-4 animate-fade-in-up" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))', animationDelay: '0.2s' }}>
                 {tagline}
             </h1>
         )}
        
-        <p className="text-lg md:text-xl font-body font-light mb-8 max-w-2xl mx-auto text-white/90 drop-shadow-md animate-fade-in-up-scale" style={{ animationDelay: '0.4s' }}>
+        <p className="text-lg md:text-xl font-body font-light mb-8 max-w-2xl mx-auto text-white/90 drop-shadow-md animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
           {subtitle}
         </p>
         <a 
           href="/#products" 
-          className="group inline-flex items-center justify-center bg-accent text-surface font-body font-semibold py-3 px-10 border-2 border-accent hover:bg-accent-hover transition-all duration-300 ease-in-out transform hover:scale-105 tracking-widest animate-fade-in-up-scale"
+          className="group inline-flex items-center justify-center bg-accent text-surface font-body font-semibold py-3 px-10 border-2 border-accent hover:bg-accent-hover transition-all duration-300 ease-in-out transform hover:scale-105 tracking-widest animate-fade-in-up"
           style={{ animationDelay: '0.6s' }}
         >
           <span>Explore The Collection</span>
